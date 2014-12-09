@@ -1,0 +1,17 @@
+{
+  "name": "grapher",
+  "repository": "ayasdi/grapher",
+  "description": "WebGL/Canvas Network Graphing using PIXI",
+  "version": "0.0.1",
+  "license": "not sure yet",
+  "scripts": {
+    "test": "npm run duo && npm run jasmine",
+    "duo": "duo index.js > build/grapher.js",
+    "jasmine": "grunt jasmine"
+  },
+  "devDependencies": {
+    "duo": "~0.8.10",
+    "grunt": "~0.4.5",
+    "grunt-contrib-jasmine": "~0.8.1"
+  }
+}
