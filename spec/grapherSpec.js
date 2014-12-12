@@ -1,10 +1,10 @@
 describe('grapher', function () {
   var Grapher = Ayasdi.Grapher;
+  var palette = [0x666666, 0x999999, 0xcccccc];
 
-  it('contains textures for links and nodes', function () {
+  it('contains palettes and textures', function () {
+    expect(Grapher.palettes).toBeDefined();
     expect(Grapher.textures).toBeDefined();
-    expect(Grapher.textures.link).toBeDefined();
-    expect(Grapher.textures.node).toBeDefined();
   });
 
   xit('can load its textures', function (done) {
@@ -12,21 +12,19 @@ describe('grapher', function () {
     Grapher.load().then(done);
   });
 
-  it('contains palettes', function () {
-    expect(Grapher.palettes).toBeDefined();
-  });
-
   it('can define new palettes', function () {
-    var palette = [0x000000, 0x333333, 0x666666, 0x999999];
     Grapher.setPalette('greyscale', palette);
-
-    var returnedPalette = Grapher.getPalette('greyscale');
-    expect(returnedPalette).toBeDefined();
+    expect(Grapher.getPalette('greyscale')).toBeDefined();
   });
 
-  it('has textures after defining palettes', function () {
-    var texture = Grapher.getTexture('node', 0x000000);
-    expect(texture).toBeDefined();
+  it('has textures after defining a palette', function () {
+    expect(Grapher.getTexture('nodes', 0xcccccc)).toBeDefined();
+  });
+
+  it('generates interpolated textures and swatches for links', function () {
+    var swatch = Grapher.getPalette('greyscale')['0-1'];
+    expect(swatch).toBeDefined();
+    expect(Grapher.getTexture('links', swatch)).toBeDefined();
   });
 });
 
@@ -44,13 +42,13 @@ describe('a grapher instance', function () {
   beforeEach(function () {
     network = {
       nodes: [
-        {x: 0, y: 0, radius: 20},
-        {x: 1, y: 1, radius: 15},
-        {x: 1, y: 2, radius: 25}
+        {x: 0, y: 0, r: 20},
+        {x: 1, y: 1, r: 15},
+        {x: 1, y: 2, r: 25}
       ],
       links: [
-        {source: {x: 1, y: 1}, target: {x: 0, y: 0}},
-        {source: {x: 1, y: 2}, target: {x: 0, y: 0}}
+        {from: 0, to: 1},
+        {from: 1, to: 2}
       ]
     };
     grapher = new Grapher(width, height, options);
@@ -70,11 +68,16 @@ describe('a grapher instance', function () {
 
   it('has sprite batches', function () {
     expect(grapher.batches).toBeDefined();
-    expect(grapher.batches.link).toBeDefined();
-    expect(grapher.batches.node).toBeDefined();
+    expect(grapher.batches.links).toBeDefined();
+    expect(grapher.batches.nodes).toBeDefined();
   });
 
-  it('can create or remove nodes and links', function () {
+  it('can set and retrieve data', function () {
+    grapher.data(network);
+    expect(grapher.data()).toBe(network);
+  });
+
+  it('creates or removes nodes and links when setting data', function () {
     grapher.data(network);
     expect(grapher.nodes.length).toEqual(network.nodes.length);
     expect(grapher.links.length).toEqual(network.links.length);
@@ -85,7 +88,21 @@ describe('a grapher instance', function () {
     network.nodes[0].x = 2;
     grapher.update();
 
-    var node = grapher.nodes.getChildAt(0);
-    expect(node.position.x).toEqual(network.nodes[0].x);
+    var node = grapher.nodes[0],
+        nodeCenter = node.position.x + node.width / 2;
+    expect(nodeCenter).toEqual(network.nodes[0].x);
+  });
+
+  it('can add custom mouse event handlers', function () {
+    var handler = function () { return true; };
+    grapher.on('nodes', 'mousedown', handler);
+    grapher.on('nodes', 'mouseover', handler);
+    grapher.on('nodes', 'mouseout', handler);
+
+    // TODO: we may want to check that 'handler' is actually called on these events
+
+    expect(grapher.listeners['nodes']['mousedown']).toBe(handler);
+    expect(grapher.listeners['nodes']['mouseover']).toBe(handler);
+    expect(grapher.listeners['nodes']['mouseout']).toBe(handler);
   });
 });
