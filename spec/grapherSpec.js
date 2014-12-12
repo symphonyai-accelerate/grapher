@@ -35,9 +35,11 @@ describe('a grapher instance', function () {
       height = 100,
       options = {};
 
-  var network = {nodes: [], links: []};
+  var network, grapher;
 
-  var grapher;
+  function getNodeCenter (node) {
+    return node.position.x + node.width / 2;
+  };
 
   beforeEach(function () {
     network = {
@@ -88,9 +90,41 @@ describe('a grapher instance', function () {
     network.nodes[0].x = 2;
     grapher.update();
 
-    var node = grapher.nodes[0],
-        nodeCenter = node.position.x + node.width / 2;
-    expect(nodeCenter).toEqual(network.nodes[0].x);
+    expect(getNodeCenter(grapher.nodes[0])).toEqual(network.nodes[0].x);
+  });
+
+  it('can update a range of nodes and links', function () {
+    grapher.data(network);
+
+    network.nodes[0].x = 2;
+    network.nodes[1].x = 5;
+
+    grapher.update('nodes', 0, 2);
+
+    expect(getNodeCenter(grapher.nodes[0])).toEqual(network.nodes[0].x);
+    expect(getNodeCenter(grapher.nodes[1])).toEqual(network.nodes[1].x);
+  });
+
+  it('can update specific nodes and links by index', function () {
+    grapher.data(network);
+
+    network.nodes[0].x = 2;
+    network.nodes[1].x = 5;
+
+    grapher.update('nodes', [0, 1]);
+
+    expect(getNodeCenter(grapher.nodes[0])).toEqual(network.nodes[0].x);
+    expect(getNodeCenter(grapher.nodes[1])).toEqual(network.nodes[1].x);
+  });
+
+  it('can transform given a scale and tranlate', function () {
+    var transform = {scale: 0.5, translate: [100, 200]};
+
+    grapher.transform(transform);
+    expect(grapher.network.scale.x).toEqual(transform.scale);
+    expect(grapher.network.scale.y).toEqual(transform.scale);
+    expect(grapher.network.position.x).toEqual(transform.translate[0]);
+    expect(grapher.network.position.y).toEqual(transform.translate[1]);
   });
 
   it('can add custom mouse event handlers', function () {

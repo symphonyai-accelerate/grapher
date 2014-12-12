@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Simple Graph</title>
+    <title>Colors</title>
   </head>
   <body>
     <style type="text/css">
+      html, body {
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+      }
       canvas {
-        width: 800px;
-        height: 600px;
+        width: 100%;
+        height: 100%;
       }
     </style>
     <script type="text/javascript" src="../build/grapher.js"></script>
@@ -15,27 +22,30 @@
       // 5-class GnBu ColorBrewer palette.
       var palette = ['#f0f9e8', '#bae4bc', '#7bccc4', '#43a2ca', '#0868ac'];
 
-      // Network data
-      var network = {
-        nodes: [ // colors here are the indices into the palette array
-          {x: 620, y: 190, r: 20, color: 3},
-          {x: 50 , y: 100, r: 15, color: 2},
-          {x: 280, y: 480, r: 10, color: 1},
-          {x: 300, y: 30 , r: 8 , color: 0},
-          {x: 550, y: 80 , r: 30, color: 4},
-          {x: 110, y: 290, r: 21, color: 3}
-        ],
-        links: [ // 'from' and 'to' are indices into the nodes array
-          {from: 0, to: 1},
-          {from: 1, to: 2},
-          {from: 2, to: 4},
-          {from: 3, to: 5},
-          {from: 1, to: 5},
-          {from: 1, to: 3, color: '#ff0000'}, // you can also specify colors for links
-          {from: 2, to: 3},
-          {from: 0, to: 4}
-        ]
-      };
+      // Generate some data
+      var network = {nodes: [], links: []},
+          width = window.innerWidth,
+          height = window.innerHeight,
+          numNodes = 10,
+          numLinks = 30,
+          i;
+
+      for (i = 0; i < numNodes; i++) {
+        network.nodes.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: Math.random() * 10 + 5,
+          color: Math.floor(Math.random() * palette.length) // index into palette
+        });
+      }
+
+      for (i = 0; i < numLinks; i++) {
+        network.links.push({
+          from: Math.floor(Math.random() * numNodes),
+          to: Math.floor(Math.random() * numNodes),
+          color: Math.random() < 0.1 ? '#ff0000' : undefined
+        });
+      }
 
       // For convenience
       var Grapher = Ayasdi.Grapher;
@@ -45,7 +55,7 @@
 
       // Create a grapher instance (width, height, options)
       // The options are the same as PIXI's renderer options.
-      var grapher = new Grapher(800, 600, {resolution: devicePixelRatio});
+      var grapher = new Grapher(width, height);
 
       // Set it to use the palette we created above + some default colors.
       grapher.palette('GnBu');

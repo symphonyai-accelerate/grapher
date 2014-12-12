@@ -100,14 +100,15 @@ Ayasdi.Grapher = Grapher; // create a global reference
 if (module && module.exports) module.exports = Grapher; // export with module
 
 // Helpers
-var NODES = 'nodes', LINKS = 'links',
-    PIXI = require('./vendor/pixi.js'),
+var PIXI = require('./vendor/pixi.js'),
     _ = require('jashkenas/underscore@1.6.0'),
     Color = require('./color.js'),
     pixelRes = typeof devicePixelRatio !== 'undefined' ? devicePixelRatio : 1,
     noop = function () {};
 
 // Static
+var NODES = Grapher.NODES = 'nodes';
+var LINKS = Grapher.LINKS = 'links';
 Grapher.palettes = {}; // store palettes and textures staticly
 Grapher.textures = {};
 Grapher.textures[NODES] = {};
@@ -273,8 +274,10 @@ Grapher.prototype = {
   //      grapher.update('links', [0, 1, 2, 6, 32]); // updates links indexed by the indices
   update: function (type, indices, end) {
     if (indices && end) indices = _.range(indices, end);
-    if (_.isArray(indices)) _.each(indices, this._update(type, true));
-    else {
+    if (_.isArray(indices)) {
+      _.each(indices, this._update(type, true));
+      if (type === NODES) _.each(this._findLinks(indices), this._update(LINKS));
+    } else {
       if (type !== NODES) _.each(this[LINKS], this._update(LINKS));
       if (type !== LINKS) _.each(this[NODES], this._update(NODES));
     }
@@ -311,7 +314,7 @@ Grapher.prototype = {
 
     this._transform = _.extend(this._transform ? this._transform : {}, transform);
     this.network.scale.set(this._transform.scale);
-    this.network.position.set.apply(this, this._transform.translate);
+    this.network.position.set.apply(this.network, this._transform.translate);
     return this;
   },
 
@@ -389,6 +392,16 @@ Grapher.prototype = {
   _updateNodeByIndex: function (i) { this._updateNode(this[NODES][i], i); },
 
   _updateLinkByIndex: function (i) { this._updateLink(this[LINKS][i], i); },
+
+  _findLinks: function (indices) {
+    var links = this.data()[LINKS];
+
+    var sprites = _.filter(this[LINKS], function (l, i) {
+      var link = links[i];
+      return _.indexOf(indices, link.from) > -1 || _.indexOf(indices, link.to) > -1;
+    });
+    return sprites;
+  },
 
   _findColor: function (c) {
     var color = NaN,
