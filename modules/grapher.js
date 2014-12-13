@@ -4,10 +4,6 @@ function Grapher () {
   return this;
 }
 
-if (typeof Ayasdi === 'undefined') Ayasdi = {}; // setup namespace if it doesn't exist
-Ayasdi.Grapher = Grapher; // create a global reference
-if (module && module.exports) module.exports = Grapher; // export with module
-
 // Helpers
 var PIXI = require('./vendor/pixi.js'),
     _ = require('jashkenas/underscore@1.6.0'),
@@ -353,3 +349,5 @@ Grapher.prototype = {
     }.bind(this);
   }
 };
+
+if (module && module.exports) module.exports = Grapher; // export with module

@@ -85,7 +85,11 @@
 1: [function(require, module, exports) {
 // Ayasdi Inc. Copyright 2014 - all rights reserved.
 
-require('./modules/grapher.js');
+var Grapher = require('./modules/grapher.js');
+
+if (module && module.exports) module.exports = Grapher;
+if (typeof Ayasdi === 'undefined') Ayasdi = {};
+Ayasdi.Grapher = Grapher;
 
 }, {"./modules/grapher.js":2}],
 2: [function(require, module, exports) {
@@ -94,10 +98,6 @@ function Grapher () {
   this.initialize.apply(this, arguments);
   return this;
 }
-
-if (typeof Ayasdi === 'undefined') Ayasdi = {}; // setup namespace if it doesn't exist
-Ayasdi.Grapher = Grapher; // create a global reference
-if (module && module.exports) module.exports = Grapher; // export with module
 
 // Helpers
 var PIXI = require('./vendor/pixi.js'),
@@ -444,6 +444,8 @@ Grapher.prototype = {
     }.bind(this);
   }
 };
+
+if (module && module.exports) module.exports = Grapher; // export with module
 
 }, {"./vendor/pixi.js":3,"jashkenas/underscore@1.6.0":4,"./color.js":5}],
 3: [function(require, module, exports) {
