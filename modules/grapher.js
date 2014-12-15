@@ -22,8 +22,8 @@ Grapher.textures[LINKS] = {};
 Grapher.getPalette = function (name) { return this.palettes[name]; };
 
 Grapher.setPalette = function (name, swatches) {
-  var swatches = _.map(swatches, Color.parse),
-      palette = this.palettes[name] = {};
+  var palette = this.palettes[name] = {};
+  swatches = _.map(swatches, Color.parse);
 
   _.each(swatches, function (swatch, i) {
     this.getTexture(LINKS, swatch);
@@ -300,6 +300,7 @@ Grapher.prototype = {
 
   _findLinks: function (indices) {
     var links = this.data()[LINKS];
+    indices = _.map(indices, function (n, i) { return Number(n); });
 
     var sprites = _.filter(this[LINKS], function (l, i) {
       var link = links[i];
