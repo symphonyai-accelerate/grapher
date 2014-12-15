@@ -117,6 +117,15 @@ describe('a grapher instance', function () {
     expect(getNodeCenter(grapher.nodes[1])).toEqual(network.nodes[1].x);
   });
 
+  it('updates links attached to updating nodes', function () {
+    grapher.data(network);
+
+    network.nodes[0].x = -100;
+    grapher.update('nodes', [0]);
+
+    expect(grapher.links[0].position.x).toEqual(network.nodes[0].x);
+  });
+
   it('can transform given a scale and tranlate', function () {
     var transform = {scale: 0.5, translate: [100, 200]};
 

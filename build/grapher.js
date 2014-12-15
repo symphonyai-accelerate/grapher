@@ -224,16 +224,9 @@ Grapher.prototype = {
   },
 
   // Accepts network data in the form:
-  // var data = {
-  //   nodes: [
-  //     {x: 0, y: 0, r: 20},
-  //     {x: 1, y: 1, r: 15},
-  //     {x: 1, y: 2, r: 25}
-  //   ],
-  //   links: [
-  //     {from: 0, to: 1},
-  //     {from: 1, to: 2s}
-  //   ]
+  // {
+  //   nodes: [{x: 0, y: 0, r: 20, color: (swatch or hex/rgb)}, ... ].
+  //   links: [{from: 0, to: 1, color: (swatch or hex/rgb)}, ... ]
   // }
   data: function (data) {
     if (_.isUndefined(data)) return this._data;
@@ -280,7 +273,7 @@ Grapher.prototype = {
     if (indices && end) indices = _.range(indices, end);
     if (_.isArray(indices)) {
       _.each(indices, this._update(type, true));
-      if (type === NODES) _.each(this._findLinks(indices), this._update(LINKS));
+      if (type === NODES) _.each(this._findLinks(indices), this._update(LINKS, true));
     } else {
       if (type !== NODES) _.each(this[LINKS], this._update(LINKS));
       if (type !== LINKS) _.each(this[NODES], this._update(NODES));
@@ -403,13 +396,25 @@ Grapher.prototype = {
   _updateLinkByIndex: function (i) { this._updateLink(this[LINKS][i], i); },
 
   _findLinks: function (indices) {
-    var links = this.data()[LINKS];
+    var isLinked = function (indices, l) {
+          var i, len = indices.length, flag = false;
+          for (i = 0; i < len; i++) {
+            if (l.to == indices[i] || l.from == indices[i]) { // loose equivalience is sufficient
+              flag = true;
+              break;
+            }
+          }
+          return flag;
+        },
+        links = this.data()[LINKS],
+        i, numLinks = links.length,
+        updatingLinks = [];
 
-    var sprites = _.filter(this[LINKS], function (l, i) {
-      var link = links[i];
-      return _.indexOf(indices, link.from) > -1 || _.indexOf(indices, link.to) > -1;
-    });
-    return sprites;
+    for (i = 0; i < numLinks; i++) {
+      if (isLinked(indices, links[i])) updatingLinks.push(i);
+    }
+
+    return updatingLinks;
   },
 
   _findColor: function (c) {
