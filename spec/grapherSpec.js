@@ -139,4 +139,11 @@ describe('a grapher instance', function () {
     expect(grapher.listeners['nodes']['mouseover']).toBe(handler);
     expect(grapher.listeners['nodes']['mouseout']).toBe(handler);
   });
+
+  it('can be resized', function () {
+    expect(grapher.resize).toBeDefined();
+    grapher.resize(800, 600);
+    expect(grapher.renderer.width).toBe(800);
+    expect(grapher.renderer.height).toBe(600);
+  });
 });

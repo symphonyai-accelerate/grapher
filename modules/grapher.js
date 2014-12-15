@@ -217,6 +217,11 @@ Grapher.prototype = {
     return this;
   },
 
+  resize: function (width, height) {
+    this.renderer.resize(width, height);
+    return this;
+  },
+
   transform: function (transform) {
     if (_.isUndefined(transform)) return this._transform;
 
@@ -303,7 +308,6 @@ Grapher.prototype = {
 
   _findLinks: function (indices) {
     var links = this.data()[LINKS];
-    indices = _.map(indices, Number);
 
     var sprites = _.filter(this[LINKS], function (l, i) {
       var link = links[i];
@@ -325,12 +329,11 @@ Grapher.prototype = {
   },
 
   _setColor: function (type, sprite, color) {
-    var texture = Grapher.getTexture(type, color),
-        batch = this._getBatch(type, color);
+    var texture = Grapher.getTexture(type, color);
 
     sprite.setTexture(texture);
     if (sprite.parent) this._exit(sprite);
-    batch.addChild(sprite);
+    this._getBatch(type, color).addChild(sprite);
   },
 
   _getBatch: function (type, color) {
