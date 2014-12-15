@@ -1,3 +1,6 @@
+// Ayasdi Inc. Copyright 2014
+// Color.js may be freely distributed under the Apache 2.0 license
+
 var Color = module.exports = {
   hexToRgb: hexToRgb,
   rgbToHex: rgbToHex,

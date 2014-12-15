@@ -1,4 +1,5 @@
-// Ayasdi Inc. Copyright 2014 - all rights reserved.
+// Ayasdi Inc. Copyright 2014
+// Grapher.js may be freely distributed under the Apache 2.0 license
 
 var Grapher = require('./modules/grapher.js');
 

@@ -1,3 +1,6 @@
+// Ayasdi Inc. Copyright 2014
+// Grapher.js may be freely distributed under the Apache 2.0 license
+
 // Grapher: WebGL network graph rendering with PIXI
 function Grapher () {
   this.initialize.apply(this, arguments);
@@ -300,7 +303,7 @@ Grapher.prototype = {
 
   _findLinks: function (indices) {
     var links = this.data()[LINKS];
-    indices = _.map(indices, function (n, i) { return Number(n); });
+    indices = _.map(indices, Number);
 
     var sprites = _.filter(this[LINKS], function (l, i) {
       var link = links[i];

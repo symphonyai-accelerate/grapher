@@ -14,3 +14,7 @@ This will construct grapher.js and grapher-min.js in the build folder.
 Run unit tests. This also rebuilds grapher.js.
 
     npm run test
+
+License
+--------
+Grapher.js may be freely distributed under the Apache 2.0 license.

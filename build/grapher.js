@@ -83,7 +83,8 @@
    return require;
 })({
 1: [function(require, module, exports) {
-// Ayasdi Inc. Copyright 2014 - all rights reserved.
+// Ayasdi Inc. Copyright 2014
+// Grapher.js may be freely distributed under the Apache 2.0 license
 
 var Grapher = require('./modules/grapher.js');
 
@@ -93,6 +94,9 @@ Ayasdi.Grapher = Grapher;
 
 }, {"./modules/grapher.js":2}],
 2: [function(require, module, exports) {
+// Ayasdi Inc. Copyright 2014
+// Grapher.js may be freely distributed under the Apache 2.0 license
+
 // Grapher: WebGL network graph rendering with PIXI
 function Grapher () {
   this.initialize.apply(this, arguments);
@@ -117,8 +121,8 @@ Grapher.textures[LINKS] = {};
 Grapher.getPalette = function (name) { return this.palettes[name]; };
 
 Grapher.setPalette = function (name, swatches) {
-  var swatches = _.map(swatches, Color.parse),
-      palette = this.palettes[name] = {};
+  var palette = this.palettes[name] = {};
+  swatches = _.map(swatches, Color.parse);
 
   _.each(swatches, function (swatch, i) {
     this.getTexture(LINKS, swatch);
@@ -395,6 +399,7 @@ Grapher.prototype = {
 
   _findLinks: function (indices) {
     var links = this.data()[LINKS];
+    indices = _.map(indices, Number);
 
     var sprites = _.filter(this[LINKS], function (l, i) {
       var link = links[i];
@@ -19979,6 +19984,9 @@ Object.defineProperty(PIXI.RGBSplitFilter.prototype, 'blue', {
 
 }, {}],
 5: [function(require, module, exports) {
+// Ayasdi Inc. Copyright 2014
+// Color.js may be freely distributed under the Apache 2.0 license
+
 var Color = module.exports = {
   hexToRgb: hexToRgb,
   rgbToHex: rgbToHex,
