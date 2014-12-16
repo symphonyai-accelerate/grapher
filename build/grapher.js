@@ -281,6 +281,19 @@ Grapher.prototype = {
     return this;
   },
 
+  // Update an individual node by index.
+  updateNode: function (index, willUpdateLinks) {
+    this._updateNodeByIndex(index);
+    if (willUpdateLinks) _.each(this._findLinks([index]), this._update(LINKS, true));
+    return this;
+  },
+
+  // Update an individual link by index.
+  updateLink: function (index) {
+    this._updateLinkByIndex(index);
+    return this;
+  },
+
   render: function () {
     this.renderer.render(this.stage);
     return this;
