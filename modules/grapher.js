@@ -111,7 +111,7 @@ Grapher.prototype = {
     this.listeners[LINKS] = {};
 
     // Set initial transform
-    this.transform({scale: 1, translate: [0, 0]});
+    this.center();
 
     // Bind some updaters
     this._updateLink = this._updateLink.bind(this);
@@ -176,7 +176,6 @@ Grapher.prototype = {
         exiting = exiting.concat(this[NODES].splice(data[NODES].length, this[NODES].length - data[NODES].length));
 
     _.each(exiting, this._exit.bind(this));
-
     return this;
   },
 
@@ -193,8 +192,8 @@ Grapher.prototype = {
       this._addToUpdateQueue(type, indices);
       if (type === NODES) this._addToUpdateQueue(LINKS, this._findLinks(indices));
     } else {
-      this.updateAll[LINKS] = type !== NODES;
-      this.updateAll[NODES] = type !== LINKS;
+      this.updateAll[LINKS] = this.updateAll[LINKS] || type !== NODES;
+      this.updateAll[NODES] = this.updateAll[NODES] || type !== LINKS;
     }
     return this;
   },
@@ -242,12 +241,43 @@ Grapher.prototype = {
     return this;
   },
 
+  center: function () {
+    var x = y = 0,
+        scale = 1,
+        nodes = this.data() ? this.data()[NODES] : null,
+        numNodes = nodes ? nodes.length : 0;
+
+    if (numNodes) { // get initial transform
+      var minX = Infinity, maxX = -Infinity,
+          minY = Infinity, maxY = -Infinity,
+          width = this.renderer.width / this.renderer.resolution,
+          height = this.renderer.height / this.renderer.resolution,
+          pad = 1.1,
+          i;
+
+      for (i = 0; i < numNodes; i++) {
+        if (nodes[i].x < minX) minX = nodes[i].x;
+        if (nodes[i].x > maxX) maxX = nodes[i].x;
+        if (nodes[i].y < minY) minY = nodes[i].y;
+        if (nodes[i].y > maxY) maxY = nodes[i].y;
+      }
+      
+      var dX = maxX - minX,
+          dY = maxY - minY;
+
+      scale = Math.min(width / dX, height / dY, 2) / pad;
+      x = (width - dX * scale) / 2 - minX * scale;
+      y = (height - dY * scale) / 2 - minY * scale;
+    }
+
+    return this.transform({scale: scale, translate: [x, y]});
+  },
+
   transform: function (transform) {
     if (_.isUndefined(transform)) return this._transform;
 
     this._transform = _.extend(this._transform ? this._transform : {}, transform);
-    this.network.scale.set(this._transform.scale);
-    this.network.position.set.apply(this.network, this._transform.translate);
+    this.updateTransform = true;
     return this;
   },
 
@@ -303,6 +333,7 @@ Grapher.prototype = {
     this.willUpdate[NODES] = [];
     this.updateAll[LINKS] = false;
     this.updateAll[NODES] = false;
+    this.updateTransform = false;
   },
 
   _update: function () {
@@ -324,6 +355,12 @@ Grapher.prototype = {
         i = updatingNodes.shift();
         this._updateNodeByIndex(i);
       }
+    }
+
+    if (this.updateTransform) {
+      var transform = this.transform();
+      this.network.scale.set(transform.scale);
+      this.network.position.set.apply(this.network, transform.translate);
     }
 
     this._clearUpdateQueue();

@@ -138,7 +138,7 @@ describe('a grapher instance', function () {
   it('transforms', function () {
     var transform = {scale: 0.5, translate: [100, 200]};
 
-    grapher.transform(transform);
+    grapher.transform(transform).render();
     expect(grapher.network.scale.x).toEqual(transform.scale);
     expect(grapher.network.scale.y).toEqual(transform.scale);
     expect(grapher.network.position.x).toEqual(transform.translate[0]);
