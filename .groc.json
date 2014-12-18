@@ -1,0 +1,3 @@
+{
+  "glob": ["README.md", "modules/grapher.js", "modules/color.js"]
+}
