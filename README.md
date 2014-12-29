@@ -8,17 +8,39 @@ Download
 --------
 Grapher comes bundled with PIXI.js and Underscore (v.1.6.0).
 
-* [bundled](https://rawgit.com/ayasdi/grapher/master/build/grapher.js)
-* [bundled-min](https://rawgit.com/ayasdi/grapher/master/build/grapher-min.js)
+* [bundled](http://ayasdi.github.io/grapher/build/grapher.js)
+* [bundled-min](http://ayasdi.github.io/grapher/build/grapher-min.js)
 
-An unbundled version can be found in
-[modules](https://github.com/ayasdi/grapher/tree/master/modules).
+An unbundled version can be found in the modules folder.
 This version is useful if you are already using some of the dependencies or
 are using a package management system.
 
 
-Building
+Examples
 --------
+
+Here are a few examples:
+
+1. [Simple](http://ayasdi.github.io/grapher/examples/1-simple.html)
+2. [Transforms](http://ayasdi.github.io/grapher/examples/2-transforms.html)
+3. [Colors](http://ayasdi.github.io/grapher/examples/3-colors.html)
+4. [Drag](http://ayasdi.github.io/grapher/examples/4-drag.html)
+
+These examples can be also found in the examples folder.
+
+Developing
+----------
+
+**Installing**
+
+Grapher uses [Node.js](http://nodejs.org/). Install Node.js then run the following command:
+
+    sudo npm install
+
+This will install the development dependencies that Grapher uses to run its various tasks.
+
+**Building**
+
 To build Grapher, run the following command:
 
     npm run build
@@ -26,14 +48,13 @@ To build Grapher, run the following command:
 This will bundle modules/grapher.js with its dependencies and outputs the result to
 grapher.js and grapher-min.js in the build folder.
 
+**Testing**
 
-Testing
--------
 Unit tests are run using Jasmine with this command:
 
     npm run test
 
-This also rebuilds grapher.js.
+This will also rebuilds grapher.js. Test specs can be found in the specs folder.
 
 
 License
