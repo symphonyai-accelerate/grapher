@@ -203,8 +203,6 @@ Grapher.prototype = {
 
     // Listeners
     this.listeners = {};
-    this.listeners[NODES] = {};
-    this.listeners[LINKS] = {};
 
     // Set initial transform
     this.center();
@@ -212,18 +210,23 @@ Grapher.prototype = {
     // Bind some updaters
     this._updateLink = this._updateLink.bind(this);
     this._updateNode = this._updateNode.bind(this);
+    this.animate = this.animate.bind(this);
+
+    // Interactions
+    this.stage.interactive = true;
+    this.stage.mousedown = this._onEvent('mousedown');
+    this.stage.mousemove = this._onEvent('mousemove');
+    this.stage.mouseup = this._onEvent('mouseup');
   },
 
-  // ex. grapher.on('mouseover', function () {...});
-  on: function (type, event, fn) {
-    if (_.isFunction(fn) && type in this.listeners)
-      this.listeners[type][event] = fn;
+  // ex. grapher.on('mousedown', function () {...});
+  on: function (event, fn) {
+    if (_.isFunction(fn)) this.listeners[event] = fn;
     return this;
   },
 
-  off: function (type, event) {
-    if (type in this.listeners && event in this.listeners[type])
-      this.listeners[type][event] = noop;
+  off: function (event) {
+    if (event in this.listeners) this.listeners[event] = noop;
     return this;
   },
 
@@ -314,16 +317,12 @@ Grapher.prototype = {
   },
 
   animate: function (time) {
-    if (!this.lastTime) this.lastTime = time;
-
     this.render();
-
-    this.lastTime = time;
     this._frame = requestAnimationFrame(this.animate);
   },
 
   play: function () {
-    requestAnimationFrame(this.animate.bind(this));
+    requestAnimationFrame(this.animate);
     return this;
   },
 
@@ -399,17 +398,24 @@ Grapher.prototype = {
     return this;
   },
 
+  getNodeIdAt: function (x, y) {
+    var node = -1;
+
+    this[NODES].every(function (n, i) { // we'll want to look for ways to optimize this
+      var inX = x <= n.position.x + n.width && x >= n.position.x,
+          inY = y <= n.position.y + n.height && y >= n.position.y,
+          found = inX && inY;
+      if (found) node = i;
+      return !found;
+    });
+
+    return node;
+  },
+
   _exit: function (sprite) { return sprite.parent.removeChild(sprite); },
   _enter: function (data) {
     var type = _.isUndefined(data.from) ? NODES : LINKS,
         sprite = new PIXI.Sprite(Grapher.getTexture(type, this.foregroundColor()));
-
-    if (type === NODES) {
-      sprite.interactive = true;
-      sprite.mouseover = this._onEvent(NODES, 'mouseover');
-      sprite.mouseout = this._onEvent(NODES, 'mouseout');
-      sprite.mousedown = this._onEvent(NODES, 'mousedown');
-    }
     this[type].push(sprite);
   },
 
@@ -542,18 +548,16 @@ Grapher.prototype = {
       var batch = new PIXI.SpriteBatch();
       if (type === LINKS) this.network.addChildAt(batch, 0);
       else this.network.addChild(batch);
-
       this.batches[type][color] = batch;
     }
     return this.batches[type][color];
   },
 
-  _onEvent: function (type, event) {
-    var callback = this.listeners[type][event] ? this.listeners[type][event] : noop;
-    return function (interaction) {
-      var sprite = interaction.target;
-      var i = sprite.parent.getChildIndex(sprite);
-      callback(sprite, i, interaction);
+  _onEvent: function (event) {
+    return function (e) {
+      var callback = this.listeners[event] ? this.listeners[event] : noop;
+      e.offset = e.getLocalPosition(this.stage);
+      callback(e);
     }.bind(this);
   }
 };

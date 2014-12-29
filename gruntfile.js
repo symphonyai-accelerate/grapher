@@ -3,10 +3,7 @@ module.exports = function (grunt) {
     jasmine: {
       base: {
         src: 'build/grapher.js',
-        options: {
-          specs: 'spec/*Spec.js',
-          helpers: 'spec/*Helper.js'
-        }
+        options: {specs: 'spec/*Spec.js'}
       }
     }
   });

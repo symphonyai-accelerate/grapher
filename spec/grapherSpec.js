@@ -148,20 +148,18 @@ describe('a grapher instance', function () {
   it('resizes', function () {
     expect(grapher.resize).toBeDefined();
     grapher.resize(800, 600);
-    expect(grapher.renderer.width).toBe(800);
-    expect(grapher.renderer.height).toBe(600);
+    expect(grapher.renderer.width).toBe(800 * devicePixelRatio);
+    expect(grapher.renderer.height).toBe(600 * devicePixelRatio);
   });
 
   it('assigns custom mouse event handlers', function () {
     var handler = function () { return true; };
-    grapher.on('nodes', 'mousedown', handler);
-    grapher.on('nodes', 'mouseover', handler);
-    grapher.on('nodes', 'mouseout', handler);
+    grapher.on('mousedown', handler);
+    grapher.on('mousemove', handler);
+    grapher.on('mouseup', handler);
 
-    // TODO: we may want to check that 'handler' is actually called on these events
-
-    expect(grapher.listeners['nodes']['mousedown']).toBe(handler);
-    expect(grapher.listeners['nodes']['mouseover']).toBe(handler);
-    expect(grapher.listeners['nodes']['mouseout']).toBe(handler);
+    expect(grapher.listeners.mousedown).toBe(handler);
+    expect(grapher.listeners.mousemove).toBe(handler);
+    expect(grapher.listeners.mouseup).toBe(handler);
   });
 });
