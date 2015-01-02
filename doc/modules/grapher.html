@@ -215,9 +215,23 @@ Grapher.getTexture = <span class="hljs-function"><span class="hljs-keyword">func
   },
 
   transform: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(transform)</span> </span>{
-    <span class="hljs-keyword">if</span> (_.isUndefined(transform)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._transform;
+    <span class="hljs-keyword">if</span> (_.isUndefined(transform)) <span class="hljs-keyword">return</span> {scale: <span class="hljs-keyword">this</span>._scale, translate: <span class="hljs-keyword">this</span>._translate};
 
-    <span class="hljs-keyword">this</span>._transform = _.extend(<span class="hljs-keyword">this</span>._transform ? <span class="hljs-keyword">this</span>._transform : {}, transform);
+    <span class="hljs-keyword">this</span>.scale(transform.scale);
+    <span class="hljs-keyword">this</span>.translate(transform.translate);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  },
+
+  scale: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(scale)</span> </span>{
+    <span class="hljs-keyword">if</span> (_.isUndefined(scale)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._scale;
+    <span class="hljs-keyword">if</span> (_.isNumber(scale)) <span class="hljs-keyword">this</span>._scale = scale;
+    <span class="hljs-keyword">this</span>.updateTransform = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  },
+
+  translate: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(translate)</span> </span>{
+    <span class="hljs-keyword">if</span> (_.isUndefined(translate)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._translate;
+    <span class="hljs-keyword">if</span> (_.isArray(translate)) <span class="hljs-keyword">this</span>._translate = translate;
     <span class="hljs-keyword">this</span>.updateTransform = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
   },
@@ -306,9 +320,8 @@ Grapher.getTexture = <span class="hljs-function"><span class="hljs-keyword">func
     }
 
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.updateTransform) {
-      <span class="hljs-keyword">var</span> transform = <span class="hljs-keyword">this</span>.transform();
-      <span class="hljs-keyword">this</span>.network.scale.set(transform.scale);
-      <span class="hljs-keyword">this</span>.network.position.set.apply(<span class="hljs-keyword">this</span>.network, transform.translate);
+      <span class="hljs-keyword">this</span>.network.scale.set(<span class="hljs-keyword">this</span>._scale);
+      <span class="hljs-keyword">this</span>.network.position.set.apply(<span class="hljs-keyword">this</span>.network, <span class="hljs-keyword">this</span>._translate);
     }
 
     <span class="hljs-keyword">this</span>._clearUpdateQueue();
