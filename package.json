@@ -5,10 +5,8 @@
   "version": "0.0.1",
   "license": "Apache 2.0",
   "scripts": {
-    "test": "npm run duo && npm run jasmine",
-    "build": "npm run duo && npm run uglify && groc",
+    "build": "npm run duo && npm run uglify",
     "duo": "duo index.js > build/grapher.js",
-    "jasmine": "grunt jasmine",
     "uglify": "uglifyjs build/grapher.js -o build/grapher-min.js --preamble='\/\/ Ayasdi Inc. Copyright 2014\n\/\/ Grapher.js may be freely distributed under the Apache 2.0 license.\n'"
   },
   "devDependencies": {

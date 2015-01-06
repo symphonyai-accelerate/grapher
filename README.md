@@ -41,21 +41,39 @@ This will install the development dependencies that Grapher uses to run its vari
 
 **Building**
 
-To build Grapher, run the following command:
+To build Grapher, run make:
 
-    npm run build
+    make
 
 This will bundle modules/grapher.js with its dependencies and outputs the result to
-grapher.js and grapher-min.js in the build folder.
+grapher.js and grapher-min.js in the build folder. This will also generate documentation
+files in the doc folder. If you want to avoid creating docs, run this instead:
+
+    make grapher.js
+
+This will only build grapher.js and grapher-min.js.
 
 **Testing**
 
 Unit tests are run using Jasmine with this command:
 
-    npm run test
+    make test
 
-This will also rebuilds grapher.js. Test specs can be found in the specs folder.
+This will also make grapher.js. Test specs can be found in the spec folder.
 
+**Documentation**
+
+Documentation is generated from the make command when building.
+
+    make
+
+If you need to generate docs into the gh-pages branch, you can use:
+
+    make gh-pages
+
+This will create a new branch off gh-pages named gh-pages-$(commit) which will
+contain the build and docs generated from the current HEAD.
+Please make sure to commit or stash any changes before running this command.
 
 License
 --------

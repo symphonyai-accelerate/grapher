@@ -1,42 +1,42 @@
 <!DOCTYPE html><html lang="en"><head><title>modules/color</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="modules/color"><meta name="groc-project-path" content="modules/color.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">modules/color.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>Ayasdi Inc. Copyright 2014
-Color.js may be freely distributed under the Apache 2.0 license</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> Color = <span class="hljs-built_in">module</span>.exports = {
-  hexToRgb: hexToRgb,
-  rgbToHex: rgbToHex,
-  interpolate: interpolate,
-  parse: parse
-};
+Color.js may be freely distributed under the Apache 2.0 license</p></div></div><div class="code"><div class="wrapper"><span class="kd">var</span> <span class="nx">Color</span> <span class="o">=</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">hexToRgb</span><span class="o">:</span> <span class="nx">hexToRgb</span><span class="p">,</span>
+  <span class="nx">rgbToHex</span><span class="o">:</span> <span class="nx">rgbToHex</span><span class="p">,</span>
+  <span class="nx">interpolate</span><span class="o">:</span> <span class="nx">interpolate</span><span class="p">,</span>
+  <span class="nx">parse</span><span class="o">:</span> <span class="nx">parse</span>
+<span class="p">};</span>
 
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hexToRgb</span> <span class="hljs-params">(hex)</span> </span>{
-  <span class="hljs-keyword">return</span> {r: (hex &gt;&gt; <span class="hljs-number">16</span>) &amp; <span class="hljs-number">0xff</span>, g: (hex &gt;&gt; <span class="hljs-number">8</span>) &amp; <span class="hljs-number">0xff</span>, b: hex &amp; <span class="hljs-number">0xff</span>};
-};
+<span class="kd">function</span> <span class="nx">hexToRgb</span> <span class="p">(</span><span class="nx">hex</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span><span class="nx">r</span><span class="o">:</span> <span class="p">(</span><span class="nx">hex</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">,</span> <span class="nx">g</span><span class="o">:</span> <span class="p">(</span><span class="nx">hex</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="nx">hex</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">};</span>
+<span class="p">};</span>
 
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">rgbToHex</span> <span class="hljs-params">(r, g, b)</span> </span>{
-  <span class="hljs-keyword">return</span> r &lt;&lt; <span class="hljs-number">16</span> | g &lt;&lt; <span class="hljs-number">8</span> | b;
-};
+<span class="kd">function</span> <span class="nx">rgbToHex</span> <span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">r</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span> <span class="o">|</span> <span class="nx">g</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span> <span class="o">|</span> <span class="nx">b</span><span class="p">;</span>
+<span class="p">};</span>
 
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">interpolate</span> <span class="hljs-params">(a, b, amt)</span> </span>{
-  amt = amt === <span class="hljs-literal">undefined</span> ? <span class="hljs-number">0.5</span> : amt;
-  <span class="hljs-keyword">var</span> colorA = hexToRgb(a),
-      colorB = hexToRgb(b),
-      interpolated = {
-        r: colorA.r + (colorB.r - colorA.r) * amt,
-        g: colorA.g + (colorB.g - colorA.g) * amt,
-        b: colorA.b + (colorB.b - colorA.b) * amt
-      };
-  <span class="hljs-keyword">return</span> rgbToHex(interpolated.r, interpolated.g, interpolated.b);
-};
+<span class="kd">function</span> <span class="nx">interpolate</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">amt</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">amt</span> <span class="o">=</span> <span class="nx">amt</span> <span class="o">===</span> <span class="kc">undefined</span> <span class="o">?</span> <span class="mf">0.5</span> <span class="o">:</span> <span class="nx">amt</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">colorA</span> <span class="o">=</span> <span class="nx">hexToRgb</span><span class="p">(</span><span class="nx">a</span><span class="p">),</span>
+      <span class="nx">colorB</span> <span class="o">=</span> <span class="nx">hexToRgb</span><span class="p">(</span><span class="nx">b</span><span class="p">),</span>
+      <span class="nx">interpolated</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">r</span><span class="o">:</span> <span class="nx">colorA</span><span class="p">.</span><span class="nx">r</span> <span class="o">+</span> <span class="p">(</span><span class="nx">colorB</span><span class="p">.</span><span class="nx">r</span> <span class="o">-</span> <span class="nx">colorA</span><span class="p">.</span><span class="nx">r</span><span class="p">)</span> <span class="o">*</span> <span class="nx">amt</span><span class="p">,</span>
+        <span class="nx">g</span><span class="o">:</span> <span class="nx">colorA</span><span class="p">.</span><span class="nx">g</span> <span class="o">+</span> <span class="p">(</span><span class="nx">colorB</span><span class="p">.</span><span class="nx">g</span> <span class="o">-</span> <span class="nx">colorA</span><span class="p">.</span><span class="nx">g</span><span class="p">)</span> <span class="o">*</span> <span class="nx">amt</span><span class="p">,</span>
+        <span class="nx">b</span><span class="o">:</span> <span class="nx">colorA</span><span class="p">.</span><span class="nx">b</span> <span class="o">+</span> <span class="p">(</span><span class="nx">colorB</span><span class="p">.</span><span class="nx">b</span> <span class="o">-</span> <span class="nx">colorA</span><span class="p">.</span><span class="nx">b</span><span class="p">)</span> <span class="o">*</span> <span class="nx">amt</span>
+      <span class="p">};</span>
+  <span class="k">return</span> <span class="nx">rgbToHex</span><span class="p">(</span><span class="nx">interpolated</span><span class="p">.</span><span class="nx">r</span><span class="p">,</span> <span class="nx">interpolated</span><span class="p">.</span><span class="nx">g</span><span class="p">,</span> <span class="nx">interpolated</span><span class="p">.</span><span class="nx">b</span><span class="p">);</span>
+<span class="p">};</span>
 
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">parse</span> <span class="hljs-params">(c)</span> </span>{
-  <span class="hljs-keyword">var</span> color = <span class="hljs-built_in">parseInt</span>(c);
-  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> c === <span class="hljs-string">'string'</span>) {
-    <span class="hljs-keyword">if</span> (c.split(<span class="hljs-string">'#'</span>).length &gt; <span class="hljs-number">1</span>) { <span class="hljs-comment">// hex format '#ffffff'</span>
-      color = <span class="hljs-built_in">parseInt</span>(c.replace(<span class="hljs-string">'#'</span>, <span class="hljs-string">''</span>), <span class="hljs-number">16</span>);
-    }
+<span class="kd">function</span> <span class="nx">parse</span> <span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">color</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">c</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">).</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// hex format &#39;#ffffff&#39;</span>
+      <span class="nx">color</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="mi">16</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (c.split(<span class="hljs-string">'rgb('</span>).length &gt; <span class="hljs-number">1</span>) { <span class="hljs-comment">// rgb format 'rgb(255, 255, 255)'</span>
-      <span class="hljs-keyword">var</span> rgb = c.substring(<span class="hljs-number">4</span>, c.length-<span class="hljs-number">1</span>).replace(<span class="hljs-regexp">/ /g</span>, <span class="hljs-string">''</span>).split(<span class="hljs-string">','</span>);
-      color = rgbToHex(rgb[<span class="hljs-number">0</span>], rgb[<span class="hljs-number">1</span>], rgb[<span class="hljs-number">2</span>]);
-    }
-  }
-  <span class="hljs-keyword">return</span> color;
-};</div></div></div></div></body></html>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;rgb(&#39;</span><span class="p">).</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// rgb format &#39;rgb(255, 255, 255)&#39;</span>
+      <span class="kd">var</span> <span class="nx">rgb</span> <span class="o">=</span> <span class="nx">c</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="nx">c</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mi">1</span><span class="p">).</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/ /g</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">).</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">);</span>
+      <span class="nx">color</span> <span class="o">=</span> <span class="nx">rgbToHex</span><span class="p">(</span><span class="nx">rgb</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">rgb</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">rgb</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">color</span><span class="p">;</span>
+<span class="p">};</span></div></div></div></div></body></html>
