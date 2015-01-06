@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><title>index</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="index"><meta name="groc-project-path" content="README.md"><meta name="groc-github-url" content="https://github.com/ayasdi/grapher"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/ayasdi/grapher/blob/master/README.md">README.md</a></div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h1 id="ayasdigrapher">Ayasdi.Grapher</h1>
+<!DOCTYPE html><html lang="en"><head><title>index</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="index"><meta name="groc-project-path" content="README.md"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path">README.md</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h1 id="ayasdigrapher">Ayasdi.Grapher</h1>
 
 <p>WebGL/Canvas Network Graphing using PIXI.js.</p>
 
@@ -41,22 +41,44 @@ are using a package management system.</p>
 
 <p><strong>Building</strong></p>
 
-<p>To build Grapher, run the following command:</p>
+<p>To build Grapher, run make:</p>
 
-<pre><code>npm run build
+<pre><code>make
 </code></pre>
 
 <p>This will bundle modules/grapher.js with its dependencies and outputs the result to
-grapher.js and grapher-min.js in the build folder.</p>
+grapher.js and grapher-min.js in the build folder. This will also generate documentation
+files in the doc folder. If you want to avoid creating docs, run this instead:</p>
+
+<pre><code>make grapher.js
+</code></pre>
+
+<p>This will only build grapher.js and grapher-min.js.</p>
 
 <p><strong>Testing</strong></p>
 
 <p>Unit tests are run using Jasmine with this command:</p>
 
-<pre><code>npm run test
+<pre><code>make test
 </code></pre>
 
-<p>This will also rebuilds grapher.js. Test specs can be found in the specs folder.</p>
+<p>This will also make grapher.js. Test specs can be found in the spec folder.</p>
+
+<p><strong>Documentation</strong></p>
+
+<p>Documentation is generated from the make command when building.</p>
+
+<pre><code>make
+</code></pre>
+
+<p>If you need to generate docs into the gh-pages branch, you can use:</p>
+
+<pre><code>make gh-pages
+</code></pre>
+
+<p>This will create a new branch off gh-pages named gh-pages-$(commit) which will
+contain the build and docs generated from the current HEAD.
+Please make sure to commit or stash any changes before running this command.</p>
 
 <h2 id="license">License</h2>
 

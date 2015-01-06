@@ -369,9 +369,23 @@ Grapher.prototype = {
   },
 
   transform: function (transform) {
-    if (_.isUndefined(transform)) return this._transform;
+    if (_.isUndefined(transform)) return {scale: this._scale, translate: this._translate};
 
-    this._transform = _.extend(this._transform ? this._transform : {}, transform);
+    this.scale(transform.scale);
+    this.translate(transform.translate);
+    return this;
+  },
+
+  scale: function (scale) {
+    if (_.isUndefined(scale)) return this._scale;
+    if (_.isNumber(scale)) this._scale = scale;
+    this.updateTransform = true;
+    return this;
+  },
+
+  translate: function (translate) {
+    if (_.isUndefined(translate)) return this._translate;
+    if (_.isArray(translate)) this._translate = translate;
     this.updateTransform = true;
     return this;
   },
@@ -460,9 +474,8 @@ Grapher.prototype = {
     }
 
     if (this.updateTransform) {
-      var transform = this.transform();
-      this.network.scale.set(transform.scale);
-      this.network.position.set.apply(this.network, transform.translate);
+      this.network.scale.set(this._scale);
+      this.network.position.set.apply(this.network, this._translate);
     }
 
     this._clearUpdateQueue();
