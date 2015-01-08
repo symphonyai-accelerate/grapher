@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Drag</title>
+    <title>Pan</title>
   </head>
   <body>
     <style type="text/css">
@@ -52,31 +52,39 @@
       // Give it the network data
       grapher.data(network);
 
-      // Variable to keep track of the node we're dragging
-      var dragging = null;
+      var startPoint;
 
-      // On mousedown, grab the node that was clicked.
-      // e.offsetData contains the coordinates within the data space
-      grapher.on('mousedown', function (e) {
-        var nodeId = grapher.getNodeIdAt(e.offsetData);
-        if (nodeId > -1) dragging = {node: network.nodes[nodeId], id: nodeId};
-        else dragging = null;
-      });
+      function onMouseDown (e) {
+        // Set the starting point
+        startPoint = {x: e.offset.x, y: e.offset.y};
 
-      // When the user moves the mouse, we update the node's position
-      grapher.on('mousemove', function (e) {
-        if (dragging) {
-          dragging.node.x = e.offsetData.x;
-          dragging.node.y = e.offsetData.y;
+        // Start listening to other mouse events.
+        grapher.on('mousemove', onMouseMove);
+        grapher.on('mouseup', onMouseUp);
+      };
 
-          // Call updateNode to update an individual node.
-          // Passing in true will also update the links attached.
-          grapher.updateNode(dragging.id, true);
+      function onMouseMove (e) {
+        // Adjust the translate based on the change in mouse location.
+        if (startPoint) {
+          var translate = grapher.translate();
+
+          translate[0] += (e.offset.x - startPoint.x);
+          translate[1] += (e.offset.y - startPoint.y);
+
+          startPoint.x = e.offset.x;
+          startPoint.y = e.offset.y;
+          grapher.translate(translate);
         }
-      });
+      };
 
-      // Finally when the user lets go of the mouse, we stop dragging
-      grapher.on('mouseup', function (e) { dragging = null; });
+      function onMouseUp (e) {
+        // Stop listening to mouse events, and cleanup startPoint
+        startPoint = undefined;
+        grapher.off('mousemove');
+        grapher.off('mouseup');
+      };
+
+      grapher.on('mousedown', onMouseDown);
 
       // Append the grapher's view onto the page
       document.body.appendChild(grapher.view);
