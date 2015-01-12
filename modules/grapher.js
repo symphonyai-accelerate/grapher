@@ -139,6 +139,7 @@ Grapher.prototype = {
     if (_.isUndefined(name)) return this._palette;
 
     this._palette = Grapher.getPalette(name);
+    this.update();
     return this;
   },
 

@@ -93,6 +93,7 @@ Grapher.js may be freely distributed under the Apache 2.0 license</p></div></div
     <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">name</span><span class="p">))</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_palette</span><span class="p">;</span>
 
     <span class="k">this</span><span class="p">.</span><span class="nx">_palette</span> <span class="o">=</span> <span class="nx">Grapher</span><span class="p">.</span><span class="nx">getPalette</span><span class="p">(</span><span class="nx">name</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">update</span><span class="p">();</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
   <span class="p">},</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Accepts network data in the form:
 {
