@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Force with D3</title>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    <style type="text/css">
+      html, body {
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+      }
+      canvas {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    <script type="text/javascript" src="../build/grapher.js"></script>
+    <script type="text/javascript" src="./vendor/d3.js"></script>
+    <script type="text/javascript">
+      // Generate some data
+      var network = {nodes: [], links: []},
+          width = window.innerWidth,
+          height = window.innerHeight,
+          numNodes = 10,
+          numLinks = 30,
+          i;
+
+      for (i = 0; i < numNodes; i++) {
+        network.nodes.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: Math.random() * 10 + 5,
+          weight: 1
+        });
+      }
+
+      for (i = 0; i < numLinks; i++) {
+        var from = Math.floor(Math.random() * numNodes),
+            to = Math.floor(Math.random() * numNodes);
+        network.links.push({
+          from: from,
+          to: to,
+          source: network.nodes[from],
+          target: network.nodes[to]
+        });
+      }
+
+      // For convenience
+      var Grapher = Ayasdi.Grapher;
+
+      // Create a grapher instance (width, height, options)
+      // The options are the same as PIXI's renderer options.
+      var grapher = new Grapher(width, height);
+
+      // Give it the network data
+      grapher.data(network);
+
+      // Variable to keep track of the node we're dragging
+      var dragging = null;
+
+      // Use D3's force layout
+      var force = d3.layout.force()
+          .nodes(network.nodes)
+          .links(network.links)
+          .size([width, height])
+          .on('tick', grapher.update.bind(grapher)) // on tick, update the grapher
+          .charge(-50)
+          .gravity(0.001)
+          .linkStrength(0.2) // spring constant
+          .linkDistance(150) // spring eq length
+          .friction(0.02)
+          .start();
+
+      // On mousedown, grab the node that was clicked.
+      // e.offsetData contains the coordinates within the data space
+      grapher.on('mousedown', function (e) {
+        force.start(); // restart the force graph
+        var nodeId = grapher.getNodeIdAt(e.offsetData);
+        if (nodeId > -1) dragging = {node: network.nodes[nodeId], id: nodeId};
+        else dragging = null;
+      });
+
+      // When the user moves the mouse, we update the node's position
+      grapher.on('mousemove', function (e) {
+        if (dragging) {
+          dragging.node.x = e.offsetData.x;
+          dragging.node.y = e.offsetData.y;
+
+          // Call updateNode to update an individual node.
+          // Passing in true will also update the links attached.
+          grapher.updateNode(dragging.id, true);
+        }
+      });
+
+      // Finally when the user lets go of the mouse, we stop dragging
+      grapher.on('mouseup', function (e) { dragging = null; });
+
+      // Append the grapher's view onto the page
+      document.body.appendChild(grapher.view);
+
+      // Render the graph using play. This will call render in a requestAnimationFrame loop.
+      grapher.play();
+    </script>
+  </body>
+</html>
