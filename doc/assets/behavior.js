@@ -13,7 +13,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "commentsOnly": true,
           "name": "Markdown"
         },
-        "sourcePath": "/Users/CZhang/Documents/ayasdi/grapher/README.md",
+        "sourcePath": "/Users/dannycochran/Documents/ayasdi/grapher/README.md",
         "projectPath": "README.md",
         "targetPath": "index",
         "pageTitle": "index",
@@ -120,7 +120,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/CZhang/Documents/ayasdi/grapher/modules/color.js",
+            "sourcePath": "/Users/dannycochran/Documents/ayasdi/grapher/modules/color.js",
             "projectPath": "modules/color.js",
             "targetPath": "modules/color",
             "pageTitle": "modules/color",
@@ -140,7 +140,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/CZhang/Documents/ayasdi/grapher/modules/grapher.js",
+            "sourcePath": "/Users/dannycochran/Documents/ayasdi/grapher/modules/grapher.js",
             "projectPath": "modules/grapher.js",
             "targetPath": "modules/grapher",
             "pageTitle": "modules/grapher",

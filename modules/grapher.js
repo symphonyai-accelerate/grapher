@@ -324,27 +324,17 @@ Grapher.prototype = {
 
   getNodeIdAt: function (point) {
     var node = -1,
-        x = point.x, y = point.y,
-        scale = this.scale();
+        x = point.x, y = point.y;
 
     this[NODES].every(function (n, i) { // we'll want to look for ways to optimize this
-      var width = n.width * scale,
-          height = n.height * scale,
-          inX = x <= n.position.x + width && x >= n.position.x,
-          inY = y <= n.position.y + height && y >= n.position.y,
+      var inX = x <= n.position.x + n.width && x >= n.position.x,
+          inY = y <= n.position.y + n.height && y >= n.position.y,
           found = inX && inY;
       if (found) node = i;
       return !found;
     });
 
     return node;
-  },
-
-  getDataPosition: function (point) {
-    var scale = this.scale(),
-        translate = this.translate();
-
-    return {x: point.x / scale - translate[0], y: point.y / scale - translate[1]};
   },
 
   _exit: function (sprite) { return sprite.parent.removeChild(sprite); },
@@ -491,7 +481,7 @@ Grapher.prototype = {
     return function (e) {
       var callback = this.listeners[event] ? this.listeners[event] : noop;
       e.offset = e.getLocalPosition(this.stage);
-      e.offsetData = this.getDataPosition(e.offset);
+      e.offsetData = e.getLocalPosition(this.network);
       callback(e);
     }.bind(this);
   }
