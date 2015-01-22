@@ -1,3 +1,3 @@
 {
-  "glob": ["README.md", "modules/grapher.js", "modules/color.js"]
+  "glob": ["README.md", "modules/*.js"]
 }

@@ -101,53 +101,177 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
         }
       ]
     }, {
-      "type": "folder",
+      "type": "file",
       "data": {
-        "path": "modules",
-        "title": "modules"
+        "language": {
+          "nameMatchers": [".js"],
+          "pygmentsLexer": "javascript",
+          "multiLineComment": ["/*", "*", "*/"],
+          "singleLineComment": ["//"],
+          "ignorePrefix": "}",
+          "foldPrefix": "^",
+          "name": "JavaScript"
+        },
+        "sourcePath": "/Users/CZhang/Documents/ayasdi/grapher/modules/color.js",
+        "projectPath": "modules/color.js",
+        "targetPath": "color",
+        "pageTitle": "color",
+        "title": "color"
       },
       "depth": 1,
-      "children": [
+      "outline": []
+    }, {
+      "type": "file",
+      "data": {
+        "language": {
+          "nameMatchers": [".js"],
+          "pygmentsLexer": "javascript",
+          "multiLineComment": ["/*", "*", "*/"],
+          "singleLineComment": ["//"],
+          "ignorePrefix": "}",
+          "foldPrefix": "^",
+          "name": "JavaScript"
+        },
+        "sourcePath": "/Users/CZhang/Documents/ayasdi/grapher/modules/grapher.js",
+        "projectPath": "modules/grapher.js",
+        "targetPath": "grapher",
+        "pageTitle": "grapher",
+        "title": "grapher"
+      },
+      "depth": 1,
+      "outline": []
+    }, {
+      "type": "file",
+      "data": {
+        "language": {
+          "nameMatchers": [".js"],
+          "pygmentsLexer": "javascript",
+          "multiLineComment": ["/*", "*", "*/"],
+          "singleLineComment": ["//"],
+          "ignorePrefix": "}",
+          "foldPrefix": "^",
+          "name": "JavaScript"
+        },
+        "sourcePath": "/Users/CZhang/Documents/ayasdi/grapher/modules/utilities.js",
+        "projectPath": "modules/utilities.js",
+        "targetPath": "utilities",
+        "pageTitle": "utilities",
+        "title": "utilities"
+      },
+      "depth": 1,
+      "outline": [
         {
-          "type": "file",
+          "type": "heading",
           "data": {
-            "language": {
-              "nameMatchers": [".js"],
-              "pygmentsLexer": "javascript",
-              "multiLineComment": ["/*", "*", "*/"],
-              "singleLineComment": ["//"],
-              "ignorePrefix": "}",
-              "foldPrefix": "^",
-              "name": "JavaScript"
-            },
-            "sourcePath": "/Users/CZhang/Documents/ayasdi/grapher/modules/color.js",
-            "projectPath": "modules/color.js",
-            "targetPath": "modules/color",
-            "pageTitle": "modules/color",
-            "title": "color"
+            "level": 2,
+            "title": "Utilities",
+            "slug": "utilities"
           },
-          "depth": 2,
-          "outline": []
+          "depth": 2
         }, {
-          "type": "file",
+          "type": "heading",
           "data": {
-            "language": {
-              "nameMatchers": [".js"],
-              "pygmentsLexer": "javascript",
-              "multiLineComment": ["/*", "*", "*/"],
-              "singleLineComment": ["//"],
-              "ignorePrefix": "}",
-              "foldPrefix": "^",
-              "name": "JavaScript"
-            },
-            "sourcePath": "/Users/CZhang/Documents/ayasdi/grapher/modules/grapher.js",
-            "projectPath": "modules/grapher.js",
-            "targetPath": "modules/grapher",
-            "pageTitle": "modules/grapher",
-            "title": "grapher"
+            "level": 2,
+            "title": "noop",
+            "slug": "noop"
           },
-          "depth": 2,
-          "outline": []
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "each",
+            "slug": "each"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "eachPop",
+            "slug": "eachpop"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "map",
+            "slug": "map"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "clean",
+            "slug": "clean"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "range",
+            "slug": "range"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "sortedIndex",
+            "slug": "sortedindex"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "extend",
+            "slug": "extend"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "isUndefined",
+            "slug": "isundefined"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "isFunction",
+            "slug": "isfunction"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "isObject",
+            "slug": "isobject"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "isNumber",
+            "slug": "isnumber"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "isNaN",
+            "slug": "isnan"
+          },
+          "depth": 2
         }
       ]
     }

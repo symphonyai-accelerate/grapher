@@ -6,7 +6,7 @@ WebGL/Canvas Network Graphing using PIXI.js.
 
 Download
 --------
-Grapher comes bundled with PIXI.js and Underscore (v.1.6.0).
+Grapher comes bundled with PIXI.js.
 
 * [bundled](http://ayasdi.github.io/grapher/build/grapher.js)
 * [bundled-min](http://ayasdi.github.io/grapher/build/grapher-min.js)
