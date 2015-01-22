@@ -206,6 +206,7 @@ Grapher.prototype = {
 
     // Set initial transform
     this.center();
+    this._hasModifiedTransform = false;
 
     // Bind some updaters
     this._updateLink = this._updateLink.bind(this);
@@ -234,6 +235,7 @@ Grapher.prototype = {
     if (_.isUndefined(name)) return this._palette;
 
     this._palette = Grapher.getPalette(name);
+    this.update();
     return this;
   },
 
@@ -249,6 +251,8 @@ Grapher.prototype = {
     this.exit();
     this.enter();
     this.update();
+
+    if (!this._hasModifiedTransform) this.center();
     return this;
   },
 
@@ -365,7 +369,7 @@ Grapher.prototype = {
       y = (height - dY * scale) / 2 - minY * scale;
     }
 
-    return this.transform({scale: scale, translate: [x, y]});
+    return this.scale(scale).translate([x, y]);
   },
 
   transform: function (transform) {
@@ -380,6 +384,7 @@ Grapher.prototype = {
     if (_.isUndefined(scale)) return this._scale;
     if (_.isNumber(scale)) this._scale = scale;
     this.updateTransform = true;
+    this._hasModifiedTransform = true;
     return this;
   },
 
@@ -387,6 +392,7 @@ Grapher.prototype = {
     if (_.isUndefined(translate)) return this._translate;
     if (_.isArray(translate)) this._translate = translate;
     this.updateTransform = true;
+    this._hasModifiedTransform = true;
     return this;
   },
 
@@ -412,8 +418,9 @@ Grapher.prototype = {
     return this;
   },
 
-  getNodeIdAt: function (x, y) {
-    var node = -1;
+  getNodeIdAt: function (point) {
+    var node = -1,
+        x = point.x, y = point.y;
 
     this[NODES].every(function (n, i) { // we'll want to look for ways to optimize this
       var inX = x <= n.position.x + n.width && x >= n.position.x,
@@ -570,6 +577,7 @@ Grapher.prototype = {
     return function (e) {
       var callback = this.listeners[event] ? this.listeners[event] : noop;
       e.offset = e.getLocalPosition(this.stage);
+      e.offsetData = e.getLocalPosition(this.network);
       callback(e);
     }.bind(this);
   }
