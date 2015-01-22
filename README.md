@@ -25,6 +25,8 @@ Here are a few examples:
 2. [Transforms](http://ayasdi.github.io/grapher/examples/2-transforms.html)
 3. [Colors](http://ayasdi.github.io/grapher/examples/3-colors.html)
 4. [Drag](http://ayasdi.github.io/grapher/examples/4-drag.html)
+5. [Pan](http://ayasdi.github.io/grapher/examples/5-pan.html)
+6. [Force (using d3's force layout)](http://ayasdi.github.io/grapher/examples/6-force.html)
 
 These examples can be also found in the examples folder.
 

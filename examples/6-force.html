@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Force with D3</title>
+    <title>Force with d3</title>
     <meta charset="UTF-8">
   </head>
   <body>
@@ -59,45 +59,55 @@
       // Give it the network data
       grapher.data(network);
 
-      // Variable to keep track of the node we're dragging
-      var dragging = null;
+      // Variable to keep track of the node we're dragging and the current offset
+      var dragging = null,
+          offset = null;
 
-      // Use D3's force layout
+
+      // onTick gets called on each tick of D3's force
+      var onTick = function () {
+        if (dragging && offset) {
+          // update the node's position here so it's sticky
+          dragging.node.x = offset.x;
+          dragging.node.y = offset.y;
+        }
+        grapher.update(); // update the grapher
+      };
+
+      // Setup D3's force layout
       var force = d3.layout.force()
           .nodes(network.nodes)
           .links(network.links)
           .size([width, height])
-          .on('tick', grapher.update.bind(grapher)) // on tick, update the grapher
-          .charge(-50)
-          .gravity(0.001)
-          .linkStrength(0.2) // spring constant
-          .linkDistance(150) // spring eq length
+          .on('tick', onTick)
+          .charge(-5000)
+          .gravity(0.005)
+          .linkStrength(0.2)
+          .linkDistance(100)
           .friction(0.02)
           .start();
 
       // On mousedown, grab the node that was clicked.
       // e.offsetData contains the coordinates within the data space
       grapher.on('mousedown', function (e) {
-        force.start(); // restart the force graph
         var nodeId = grapher.getNodeIdAt(e.offsetData);
-        if (nodeId > -1) dragging = {node: network.nodes[nodeId], id: nodeId};
-        else dragging = null;
+        if (nodeId > -1) {
+          dragging = {node: network.nodes[nodeId], id: nodeId};
+          offset = e.offsetData;
+        }
+        else dragging = offset = null;
       });
 
       // When the user moves the mouse, we update the node's position
       grapher.on('mousemove', function (e) {
         if (dragging) {
-          dragging.node.x = e.offsetData.x;
-          dragging.node.y = e.offsetData.y;
-
-          // Call updateNode to update an individual node.
-          // Passing in true will also update the links attached.
-          grapher.updateNode(dragging.id, true);
+          offset = e.offsetData;
+          force.alpha(1); // restart the force graph
         }
       });
 
       // Finally when the user lets go of the mouse, we stop dragging
-      grapher.on('mouseup', function (e) { dragging = null; });
+      grapher.on('mouseup', function (e) { dragging = offset = null; });
 
       // Append the grapher's view onto the page
       document.body.appendChild(grapher.view);
