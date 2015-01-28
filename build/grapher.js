@@ -173,7 +173,7 @@ Grapher.prototype = {
     // Extend default options
     var options = u.extend({
       antialias: true,
-      resolution: typeof devicePixelRatio !== 'undefined' ? devicePixelRatio : 1
+      resolution: typeof devicePixelRatio !== 'undefined' ? Math.max(devicePixelRatio, 1) : 1
     }, o);
 
     // Renderer and view
