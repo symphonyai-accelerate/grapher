@@ -139,7 +139,41 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
         "title": "grapher"
       },
       "depth": 1,
-      "outline": []
+      "outline": [
+        {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Dependencies",
+            "slug": "dependencies"
+          },
+          "depth": 1
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Grapher",
+            "slug": "grapher"
+          },
+          "depth": 1
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Grapher Static Properties",
+            "slug": "grapher-static-properties"
+          },
+          "depth": 1
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Grapher Static Methods",
+            "slug": "grapher-static-methods"
+          },
+          "depth": 1
+        }
+      ]
     }, {
       "type": "file",
       "data": {
@@ -156,19 +190,152 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
         "projectPath": "modules/utilities.js",
         "targetPath": "utilities",
         "pageTitle": "utilities",
-        "title": "utilities"
+        "firstHeader": {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Utilities",
+            "slug": "utilities",
+            "isFileHeader": true
+          },
+          "depth": 1,
+          "children": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "noop",
+                "slug": "noop"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "each",
+                "slug": "each"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "eachPop",
+                "slug": "eachpop"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "eachKey",
+                "slug": "eachkey"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "map",
+                "slug": "map"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "clean",
+                "slug": "clean"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "range",
+                "slug": "range"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "sortedIndex",
+                "slug": "sortedindex"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "indexOf",
+                "slug": "indexof"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "uniqueInsert",
+                "slug": "uniqueinsert"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "extend",
+                "slug": "extend"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "isUndefined",
+                "slug": "isundefined"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "isFunction",
+                "slug": "isfunction"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "isObject",
+                "slug": "isobject"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "isNumber",
+                "slug": "isnumber"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "isNaN",
+                "slug": "isnan"
+              },
+              "depth": 2
+            }
+          ]
+        },
+        "title": "Utilities"
       },
       "depth": 1,
       "outline": [
         {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "Utilities",
-            "slug": "utilities"
-          },
-          "depth": 2
-        }, {
           "type": "heading",
           "data": {
             "level": 2,
@@ -190,6 +357,14 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "level": 2,
             "title": "eachPop",
             "slug": "eachpop"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "eachKey",
+            "slug": "eachkey"
           },
           "depth": 2
         }, {
@@ -222,6 +397,22 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "level": 2,
             "title": "sortedIndex",
             "slug": "sortedindex"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "indexOf",
+            "slug": "indexof"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "uniqueInsert",
+            "slug": "uniqueinsert"
           },
           "depth": 2
         }, {

@@ -1,12 +1,17 @@
-<!DOCTYPE html><html lang="en"><head><title>utilities</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="utilities"><meta name="groc-project-path" content="modules/utilities.js"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path">modules/utilities.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h2 id="utilities">Utilities</h2>
+<!DOCTYPE html><html lang="en"><head><title>utilities</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="utilities"><meta name="groc-project-path" content="modules/utilities.js"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path">modules/utilities.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h1 id="utilities">Utilities</h1>
 
 <p>Various utility functions</p></div></div><div class="code"><div class="wrapper"><span class="kd">var</span> <span class="nx">Utilities</span> <span class="o">=</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
   <span class="nx">each</span><span class="o">:</span> <span class="nx">each</span><span class="p">,</span>
   <span class="nx">eachPop</span><span class="o">:</span> <span class="nx">eachPop</span><span class="p">,</span>
+  <span class="nx">eachKey</span><span class="o">:</span> <span class="nx">eachKey</span><span class="p">,</span>
+
   <span class="nx">map</span><span class="o">:</span> <span class="nx">map</span><span class="p">,</span>
   <span class="nx">clean</span><span class="o">:</span> <span class="nx">clean</span><span class="p">,</span>
+
   <span class="nx">range</span><span class="o">:</span> <span class="nx">range</span><span class="p">,</span>
   <span class="nx">sortedIndex</span><span class="o">:</span> <span class="nx">sortedIndex</span><span class="p">,</span>
+  <span class="nx">indexOf</span><span class="o">:</span> <span class="nx">indexOf</span><span class="p">,</span>
+  <span class="nx">uniqueInsert</span><span class="o">:</span> <span class="nx">uniqueInsert</span><span class="p">,</span>
 
   <span class="nx">extend</span><span class="o">:</span> <span class="nx">extend</span><span class="p">,</span>
 
@@ -44,6 +49,23 @@ array will be cleared.</p>
     <span class="nx">fn</span><span class="p">(</span><span class="nx">arr</span><span class="p">.</span><span class="nx">pop</span><span class="p">());</span>
   <span class="p">}</span>
   <span class="k">return</span> <span class="nx">arr</span><span class="p">;</span>
+<span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="eachkey">eachKey</h2>
+
+<p>Perform a function on each property in an object.</p>
+
+<pre><code>var obj = {foo: 0, bar: 0};
+u.eachKey(obj, fn);
+</code></pre></div></div><div class="code"><div class="wrapper"><span class="kd">function</span> <span class="nx">eachKey</span> <span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">fn</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">ctx</span><span class="p">)</span> <span class="nx">fn</span> <span class="o">=</span> <span class="nx">fn</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">ctx</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">obj</span><span class="p">))</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">keys</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">obj</span><span class="p">);</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="nx">keys</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">key</span> <span class="o">=</span> <span class="nx">keys</span><span class="p">.</span><span class="nx">pop</span><span class="p">();</span>
+      <span class="nx">fn</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">key</span><span class="p">],</span> <span class="nx">key</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">obj</span><span class="p">;</span>
 <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="map">map</h2>
 
 <p>Get a new array with values calculated from original array.</p>
@@ -96,6 +118,21 @@ u.clean(arr); // arr = []
   <span class="p">}</span>
 
   <span class="k">return</span> <span class="nx">min</span><span class="p">;</span>
+<span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="indexof">indexOf</h2>
+
+<p>Finds the index of a variable in an array.
+Returns -1 if not found.</p></div></div><div class="code"><div class="wrapper"><span class="kd">function</span> <span class="nx">indexOf</span> <span class="p">(</span><span class="nx">arr</span><span class="p">,</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">--</span><span class="nx">i</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">===</span> <span class="nx">n</span><span class="p">)</span> <span class="k">return</span> <span class="nx">i</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">i</span><span class="p">;</span>
+<span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="uniqueinsert">uniqueInsert</h2>
+
+<p>Inserts a value into an array only if it does not already exist
+in the array.</p></div></div><div class="code"><div class="wrapper"><span class="kd">function</span> <span class="nx">uniqueInsert</span> <span class="p">(</span><span class="nx">arr</span><span class="p">,</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">arr</span><span class="p">,</span> <span class="nx">n</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">n</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">arr</span><span class="p">;</span>
 <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="extend">extend</h2>
 
 <p>Extend an object with the properties of one other objects</p></div></div><div class="code"><div class="wrapper"><span class="kd">function</span> <span class="nx">extend</span> <span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">source</span><span class="p">)</span> <span class="p">{</span>

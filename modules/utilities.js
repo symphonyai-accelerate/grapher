@@ -1,15 +1,21 @@
 /**
  * Utilities
- * -----
+ * =========
+ *
  * Various utility functions
  */
 var Utilities = module.exports = {
   each: each,
   eachPop: eachPop,
+  eachKey: eachKey,
+
   map: map,
   clean: clean,
+
   range: range,
   sortedIndex: sortedIndex,
+  indexOf: indexOf,
+  uniqueInsert: uniqueInsert,
 
   extend: extend,
 
@@ -25,6 +31,7 @@ var Utilities = module.exports = {
 /**
  * noop
  * -----
+ *
  * A function that does nothing.
  */
 function noop () {};
@@ -32,6 +39,7 @@ function noop () {};
 /**
  * each
  * -----
+ *
  * Perform an operation on each element in an array.
  *
  *     var arr = [1, 2, 3];
@@ -49,6 +57,7 @@ function each (arr, fn, ctx) {
 /**
  * eachPop
  * -------
+ *
  * Perform a function on each element in an array. Faster than each, but won't pass index and the
  * array will be cleared.
  *
@@ -63,8 +72,31 @@ function eachPop (arr, fn, ctx) {
 };
 
 /**
+ * eachKey
+ * -------
+ *
+ * Perform a function on each property in an object.
+ *
+ *     var obj = {foo: 0, bar: 0};
+ *     u.eachKey(obj, fn);
+ */
+function eachKey (obj, fn, ctx) {
+  if (ctx) fn = fn.bind(ctx);
+  if (isObject(obj)) {
+    var keys = Object.keys(obj);
+
+    while (keys.length) {
+      var key = keys.pop();
+      fn(obj[key], key);
+    }
+  }
+  return obj;
+};
+
+/**
  * map
  * -----
+ *
  * Get a new array with values calculated from original array.
  *
  *     var arr = [1, 2, 3];
@@ -83,6 +115,7 @@ function map (arr, fn, ctx) {
 /**
  * clean
  * -----
+ *
  * Clean an array by reference.
  *
  *     var arr = [1, 2, 3];
@@ -96,6 +129,7 @@ function clean (arr) {
 /**
  * range
  * -----
+ *
  * Create an array of numbers from start to end, incremented by step.
  */
 function range (start, end, step) {
@@ -116,7 +150,8 @@ function range (start, end, step) {
 
 /**
  * sortedIndex
- * -----
+ * -----------
+ *
  * Finds the sorted position of a number in an Array of numbers.
  */
 function sortedIndex (arr, n) {
@@ -133,8 +168,36 @@ function sortedIndex (arr, n) {
 };
 
 /**
+ * indexOf
+ * -------
+ *
+ * Finds the index of a variable in an array.
+ * Returns -1 if not found.
+ */
+function indexOf (arr, n) {
+  var i = arr.length;
+  while (--i > -1) {
+    if (arr[i] === n) return i;
+  }
+  return i;
+};
+
+/**
+ * uniqueInsert
+ * ------------
+ *
+ * Inserts a value into an array only if it does not already exist
+ * in the array.
+ */
+function uniqueInsert (arr, n) {
+  if (indexOf(arr, n) === -1) arr.push(n);
+  return arr;
+};
+
+/**
  * extend
- * -----
+ * ------
+ *
  * Extend an object with the properties of one other objects
  */
 function extend (obj, source) {
@@ -151,7 +214,8 @@ function extend (obj, source) {
 
 /**
  * isUndefined
- * -----
+ * -----------
+ *
  * Checks if a variable is undefined.
  */
 function isUndefined (o) {
@@ -160,7 +224,8 @@ function isUndefined (o) {
 
 /**
  * isFunction
- * -----
+ * ----------
+ *
  * Checks if a variable is a function.
  */
 function isFunction (o) {
@@ -169,7 +234,8 @@ function isFunction (o) {
 
 /**
  * isObject
- * -----
+ * --------
+ *
  * Checks if a variable is an object.
  */
 function isObject (o) {
@@ -178,7 +244,8 @@ function isObject (o) {
 
 /**
  * isNumber
- * -----
+ * --------
+ *
  * Checks if a variable is a number.
  */
 function isNumber (o) {
@@ -188,6 +255,7 @@ function isNumber (o) {
 /**
  * isNaN
  * -----
+ *
  * Checks if a variable is NaN.
  */
 function isNaN (o) {
