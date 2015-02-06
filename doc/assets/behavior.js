@@ -155,7 +155,293 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "title": "Grapher",
             "slug": "grapher"
           },
-          "depth": 1
+          "depth": 1,
+          "children": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.initialize",
+                "slug": "grapherinitialize"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.set",
+                "slug": "grapherset"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.on",
+                "slug": "grapheron"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.off",
+                "slug": "grapheroff"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.palette",
+                "slug": "grapherpalette"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.data",
+                "slug": "grapherdata"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.enter",
+                "slug": "grapherenter"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.exit",
+                "slug": "grapherexit"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.update",
+                "slug": "grapherupdate"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.updateNode",
+                "slug": "grapherupdatenode"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.updateLink",
+                "slug": "grapherupdatelink"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.render",
+                "slug": "grapherrender"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.animate",
+                "slug": "grapheranimate"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.play",
+                "slug": "grapherplay"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.pause",
+                "slug": "grapherpause"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.resize",
+                "slug": "grapherresize"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.center",
+                "slug": "graphercenter"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.transform",
+                "slug": "graphertransform"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.scale",
+                "slug": "grapherscale"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.translate",
+                "slug": "graphertranslate"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.backgroundColor",
+                "slug": "grapherbackgroundcolor"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.foregroundColor",
+                "slug": "grapherforegroundcolor"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.lineWidth",
+                "slug": "grapherlinewidth"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.getNodeIdAt",
+                "slug": "graphergetnodeidat"
+              },
+              "depth": 2
+            }
+          ]
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Private Functions",
+            "slug": "private-functions"
+          },
+          "depth": 1,
+          "children": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._exit",
+                "slug": "grapher-exit"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._enter",
+                "slug": "grapher-enter"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._addToUpdateQueue",
+                "slug": "grapher-addtoupdatequeue"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._clearUpdateQueue",
+                "slug": "grapher-clearupdatequeue"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._update",
+                "slug": "grapher-update"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._findLinks",
+                "slug": "grapher-findlinks"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._findColor",
+                "slug": "grapher-findcolor"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._setColor",
+                "slug": "grapher-setcolor"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._getBatch",
+                "slug": "grapher-getbatch"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._onEvent",
+                "slug": "grapher-onevent"
+              },
+              "depth": 2
+            }
+          ]
         }, {
           "type": "heading",
           "data": {
@@ -171,7 +457,34 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "title": "Grapher Static Methods",
             "slug": "grapher-static-methods"
           },
-          "depth": 1
+          "depth": 1,
+          "children": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Grapher.getPalette",
+                "slug": "graphergetpalette"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Grapher.setPalette",
+                "slug": "graphersetpalette"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Grapher.getTexture",
+                "slug": "graphergettexture"
+              },
+              "depth": 2
+            }
+          ]
         }
       ]
     }, {

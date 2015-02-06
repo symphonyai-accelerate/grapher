@@ -1,18 +1,23 @@
 <!DOCTYPE html><html lang="en"><head><title>grapher</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="grapher"><meta name="groc-project-path" content="modules/grapher.js"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path">modules/grapher.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>Ayasdi Inc. Copyright 2014
-Grapher.js may be freely distributed under the Apache 2.0 license</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="dependencies">Dependencies</h1>
+Grapher.js may be freely distributed under the Apache 2.0 license</p></div></div><div class="code"><div class="wrapper"><span class="p">;(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="dependencies">Dependencies</h1>
 
-<p>Grapher has PIXI.js as a dependency.
-Color and u are utility libraries.</p></div></div><div class="code"><div class="wrapper"><span class="kd">var</span> <span class="nx">PIXI</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./vendor/pixi.js&#39;</span><span class="p">),</span>
-    <span class="nx">Color</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./color.js&#39;</span><span class="p">),</span>
-    <span class="nx">u</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./utilities.js&#39;</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>We suppress PIXI's initial console log.</p></div></div><div class="code"><div class="wrapper"><span class="nx">PIXI</span><span class="p">.</span><span class="nx">dontSayHello</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="grapher">Grapher</h1>
+<p>Grapher uses PIXI.js as a dependency and uses Color and Utilities found in
+modules.</p></div></div><div class="code"><div class="wrapper">  <span class="kd">var</span> <span class="nx">PIXI</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./vendor/pixi.js&#39;</span><span class="p">),</span>
+      <span class="nx">Color</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./color.js&#39;</span><span class="p">),</span>
+      <span class="nx">u</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./utilities.js&#39;</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>We suppress PIXI's initial console log.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">PIXI</span><span class="p">.</span><span class="nx">dontSayHello</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="grapher">Grapher</h1>
 
-<p>WebGL network grapher rendering with PIXI</p></div></div><div class="code"><div class="wrapper"><span class="kd">function</span> <span class="nx">Grapher</span> <span class="p">()</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">initialize</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
-  <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-<span class="p">}</span>
+<p>WebGL network grapher rendering with PIXI</p></div></div><div class="code"><div class="wrapper">  <span class="kd">function</span> <span class="nx">Grapher</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">initialize</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
 
-<span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">width</span><span class="p">,</span> <span class="nx">height</span><span class="p">,</span> <span class="nx">o</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Extend default properties with options</p></div></div><div class="code"><div class="wrapper">    <span class="k">this</span><span class="p">.</span><span class="nx">props</span> <span class="o">=</span> <span class="nx">u</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">module</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">Grapher</span><span class="p">;</span>
+  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherinitialize">grapher.initialize</h2>
+
+<p>Initialize is called when a grapher instance is created:</p>
+
+<pre><code>var grapher = new Grapher(width, height, options);
+</code></pre></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">initialize</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">width</span><span class="p">,</span> <span class="nx">height</span><span class="p">,</span> <span class="nx">o</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Extend default properties with options</p></div></div><div class="code"><div class="wrapper">    <span class="k">this</span><span class="p">.</span><span class="nx">props</span> <span class="o">=</span> <span class="nx">u</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
       <span class="nx">lineWidth</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
       <span class="nx">foregroundColor</span><span class="o">:</span> <span class="mh">0x222222</span><span class="p">,</span>
       <span class="nx">backgroundColor</span><span class="o">:</span> <span class="mh">0xffffff</span><span class="p">,</span>
@@ -35,33 +40,50 @@ Color and u are utility libraries.</p></div></div><div class="code"><div class="
     <span class="k">this</span><span class="p">.</span><span class="nx">stage</span><span class="p">.</span><span class="nx">mousedown</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_onEvent</span><span class="p">(</span><span class="s1">&#39;mousedown&#39;</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">stage</span><span class="p">.</span><span class="nx">mousemove</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_onEvent</span><span class="p">(</span><span class="s1">&#39;mousemove&#39;</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">stage</span><span class="p">.</span><span class="nx">mouseup</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_onEvent</span><span class="p">(</span><span class="s1">&#39;mouseup&#39;</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Do any additional setup</p></div></div><div class="code"><div class="wrapper">    <span class="nx">u</span><span class="p">.</span><span class="nx">eachKey</span><span class="p">(</span><span class="nx">o</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherset">grapher.set</h2>
 
-  <span class="nx">set</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+<p>General setter for a grapher's properties.</p>
+
+<pre><code>grapher.set(1, 'scale');
+</code></pre></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">set</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">setter</span> <span class="o">=</span> <span class="k">this</span><span class="p">[</span><span class="nx">key</span><span class="p">];</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">setter</span> <span class="o">&amp;&amp;</span> <span class="nx">u</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">setter</span><span class="p">))</span>
       <span class="k">return</span> <span class="nx">setter</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">val</span><span class="p">);</span>
-  <span class="p">},</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>ex. grapher.on('mousedown', function () {...});</p></div></div><div class="code"><div class="wrapper">  <span class="nx">on</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">fn</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapheron">grapher.on</h2>
+
+<p>Add a listener to a grapher event. Only one listener can be bound to an
+event at this time. Available events:</p>
+
+<ul>
+<li>mousedown</li>
+<li>mouseover</li>
+<li>mouseup</li>
+</ul></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">on</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">fn</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">u</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">fn</span><span class="p">))</span> <span class="k">this</span><span class="p">.</span><span class="nx">listeners</span><span class="p">[</span><span class="nx">event</span><span class="p">]</span> <span class="o">=</span> <span class="nx">fn</span><span class="p">;</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapheroff">grapher.off</h2>
 
-  <span class="nx">off</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+<p>Remove a listener from an event.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">off</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">event</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="nx">listeners</span><span class="p">)</span> <span class="k">this</span><span class="p">.</span><span class="nx">listeners</span><span class="p">[</span><span class="nx">event</span><span class="p">]</span> <span class="o">=</span> <span class="nx">u</span><span class="p">.</span><span class="nx">noop</span><span class="p">;</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherpalette">grapher.palette</h2>
 
-  <span class="nx">palette</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+<p>Set a grapher to use a pre-defined palette. Palettes can be pre-defined
+with the static function Grapher.setPalette.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">palette</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">u</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">name</span><span class="p">))</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">palette</span><span class="p">;</span>
 
     <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">palette</span> <span class="o">=</span> <span class="nx">Grapher</span><span class="p">.</span><span class="nx">getPalette</span><span class="p">(</span><span class="nx">name</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">update</span><span class="p">();</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-  <span class="p">},</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Accepts network data in the form:
-{
-  nodes: [{x: 0, y: 0, r: 20, color: (swatch or hex/rgb)}, ... ].
-  links: [{from: 0, to: 1, color: (swatch or hex/rgb)}, ... ]</p></div></div><div class="code"><div class="wrapper">  <span class="c1">// </span>
-  <span class="nx">data</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherdata">grapher.data</h2>
+
+<p>Accepts network data in the form:</p>
+
+<pre><code>{
+  nodes: [{x: 0, y: 0, r: 20, color: (swatch or hex/rgb)}, ... ],
+  links: [{from: 0, to: 1, color: (swatch or hex/rgb)}, ... ]
+}
+</code></pre></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">u</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">data</span><span class="p">))</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
 
     <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
@@ -71,9 +93,10 @@ Color and u are utility libraries.</p></div></div><div class="code"><div class="
 
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">hasModifiedTransform</span><span class="p">)</span> <span class="k">this</span><span class="p">.</span><span class="nx">center</span><span class="p">();</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherenter">grapher.enter</h2>
 
-  <span class="nx">enter</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+<p>Creates node and link sprites to match the number of nodes and links in the
+data.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">enter</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">data</span><span class="p">(),</span>
         <span class="nx">entering</span> <span class="o">=</span> <span class="p">[];</span>
 
@@ -82,11 +105,12 @@ Color and u are utility libraries.</p></div></div><div class="code"><div class="
     <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">[</span><span class="nx">NODES</span><span class="p">].</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="nx">data</span><span class="p">[</span><span class="nx">NODES</span><span class="p">].</span><span class="nx">length</span><span class="p">)</span>
         <span class="nx">entering</span> <span class="o">=</span> <span class="nx">entering</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="nx">NODES</span><span class="p">].</span><span class="nx">slice</span><span class="p">(</span><span class="k">this</span><span class="p">[</span><span class="nx">NODES</span><span class="p">].</span><span class="nx">length</span><span class="p">,</span> <span class="nx">data</span><span class="p">[</span><span class="nx">NODES</span><span class="p">].</span><span class="nx">length</span> <span class="o">-</span> <span class="k">this</span><span class="p">[</span><span class="nx">NODES</span><span class="p">].</span><span class="nx">length</span><span class="p">));</span>
 
-    <span class="nx">u</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">entering</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_enter</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+    <span class="nx">u</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">entering</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_enter</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherexit">grapher.exit</h2>
 
-  <span class="nx">exit</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+<p>Removes node and link sprites to match the number of nodes and links in the
+data.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">exit</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">data</span><span class="p">(),</span>
         <span class="nx">exiting</span> <span class="o">=</span> <span class="p">[];</span>
 
@@ -95,12 +119,19 @@ Color and u are utility libraries.</p></div></div><div class="code"><div class="
     <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="nx">NODES</span><span class="p">].</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">[</span><span class="nx">NODES</span><span class="p">].</span><span class="nx">length</span><span class="p">)</span>
         <span class="nx">exiting</span> <span class="o">=</span> <span class="nx">exiting</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="k">this</span><span class="p">[</span><span class="nx">NODES</span><span class="p">].</span><span class="nx">splice</span><span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="nx">NODES</span><span class="p">].</span><span class="nx">length</span><span class="p">,</span> <span class="k">this</span><span class="p">[</span><span class="nx">NODES</span><span class="p">].</span><span class="nx">length</span> <span class="o">-</span> <span class="nx">data</span><span class="p">[</span><span class="nx">NODES</span><span class="p">].</span><span class="nx">length</span><span class="p">));</span>
 
-    <span class="nx">u</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">exiting</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_exit</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+    <span class="nx">u</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">exiting</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_exit</span><span class="p">);</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-  <span class="p">},</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>ex.  grapher.update(); // updates all nodes and links
-     grapher.update('links'); // updates only links
-     grapher.update('nodes', 0, 4); // updates nodes indices 0 to 3 (4 is not inclusive)
-     grapher.update('links', [0, 1, 2, 6, 32]); // updates links indexed by the indices</p></div></div><div class="code"><div class="wrapper">  <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherupdate">grapher.update</h2>
+
+<p>Add nodes and/or links to the update queue by index. Passing in no arguments will 
+add all nodes and links to the update queue. Node and link sprites in the update
+queue are updated at the time of rendering.</p>
+
+<pre><code>grapher.update(); // updates all nodes and links
+grapher.update('links'); // updates only links
+grapher.update('nodes', 0, 4); // updates nodes indices 0 to 3 (4 is not inclusive)
+grapher.update('links', [0, 1, 2, 6, 32]); // updates links indexed by the indices
+</code></pre></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">update</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">indices</span><span class="p">;</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">u</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">start</span><span class="p">))</span> <span class="nx">indices</span> <span class="o">=</span> <span class="nx">start</span><span class="p">;</span>
     <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">u</span><span class="p">.</span><span class="nx">isNumber</span><span class="p">(</span><span class="nx">start</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">u</span><span class="p">.</span><span class="nx">isNumber</span><span class="p">(</span><span class="nx">end</span><span class="p">))</span> <span class="nx">indices</span> <span class="o">=</span> <span class="nx">u</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">);</span>
@@ -113,45 +144,50 @@ Color and u are utility libraries.</p></div></div><div class="code"><div class="
       <span class="k">if</span> <span class="p">(</span><span class="nx">type</span> <span class="o">!==</span> <span class="nx">LINKS</span><span class="p">)</span> <span class="k">this</span><span class="p">.</span><span class="nx">updateAll</span><span class="p">[</span><span class="nx">NODES</span><span class="p">]</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-  <span class="p">},</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Update an individual node by index.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">updateNode</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">willUpdateLinks</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherupdatenode">grapher.updateNode</h2>
+
+<p>Add an individual node to the update queue. Optionally pass in a boolean to
+specify whether or not to also add links connected with the node to the update queue.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">updateNode</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">willUpdateLinks</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">_addToUpdateQueue</span><span class="p">(</span><span class="nx">NODES</span><span class="p">,</span> <span class="p">[</span><span class="nx">index</span><span class="p">]);</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">willUpdateLinks</span><span class="p">)</span> <span class="k">this</span><span class="p">.</span><span class="nx">_addToUpdateQueue</span><span class="p">(</span><span class="nx">LINKS</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_findLinks</span><span class="p">([</span><span class="nx">index</span><span class="p">]));</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-  <span class="p">},</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Update an individual link by index.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">updateLink</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">index</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherupdatelink">grapher.updateLink</h2>
+
+<p>Add an individual link to the update queue.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">updateLink</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">index</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">_addToUpdateQueue</span><span class="p">(</span><span class="nx">LINKS</span><span class="p">,</span> <span class="p">[</span><span class="nx">index</span><span class="p">]);</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherrender">grapher.render</h2>
 
-  <span class="nx">render</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+<p>Updates each sprite and renders the network.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">render</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">_update</span><span class="p">();</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">renderer</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">stage</span><span class="p">);</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapheranimate">grapher.animate</h2>
 
-  <span class="nx">animate</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">time</span><span class="p">)</span> <span class="p">{</span>
+<p>Calls render in a requestAnimationFrame loop.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">animate</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">time</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">currentFrame</span> <span class="o">=</span> <span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">animate</span><span class="p">);</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherplay">grapher.play</h2>
 
-  <span class="nx">play</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+<p>Starts the animate loop.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">play</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">currentFrame</span> <span class="o">=</span> <span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">animate</span><span class="p">);</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherpause">grapher.pause</h2>
 
-  <span class="nx">pause</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+<p>Stops the animate loop.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">pause</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">currentFrame</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">cancelAnimationFrame</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">currentFrame</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">currentFrame</span> <span class="o">=</span> <span class="kc">undefined</span><span class="p">;</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherresize">grapher.resize</h2>
 
-  <span class="nx">resize</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">width</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span> <span class="p">{</span>
+<p>Resize the grapher view.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">resize</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">width</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">renderer</span><span class="p">.</span><span class="nx">resize</span><span class="p">(</span><span class="nx">width</span><span class="p">,</span> <span class="nx">height</span><span class="p">);</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="graphercenter">grapher.center</h2>
 
-  <span class="nx">center</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+<p>Center the network in the view. This function modifies the scale and translate.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">center</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="nx">scale</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="nx">nodes</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">data</span><span class="p">()</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">data</span><span class="p">()[</span><span class="nx">NODES</span><span class="p">]</span> <span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
@@ -181,53 +217,65 @@ Color and u are utility libraries.</p></div></div><div class="code"><div class="
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">scale</span><span class="p">(</span><span class="nx">scale</span><span class="p">).</span><span class="nx">translate</span><span class="p">([</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">]);</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="graphertransform">grapher.transform</h2>
 
-  <span class="nx">transform</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">transform</span><span class="p">)</span> <span class="p">{</span>
+<p>Set the scale and translate as an object.
+If no arguments are passed in, returns the current transform object.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">transform</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">transform</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">u</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">transform</span><span class="p">))</span>
       <span class="k">return</span> <span class="p">{</span><span class="nx">scale</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">scale</span><span class="p">,</span> <span class="nx">translate</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">translate</span><span class="p">};</span>
 
     <span class="k">this</span><span class="p">.</span><span class="nx">scale</span><span class="p">(</span><span class="nx">transform</span><span class="p">.</span><span class="nx">scale</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">translate</span><span class="p">(</span><span class="nx">transform</span><span class="p">.</span><span class="nx">translate</span><span class="p">);</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherscale">grapher.scale</h2>
 
-  <span class="nx">scale</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">scale</span><span class="p">)</span> <span class="p">{</span>
+<p>Set the scale.
+If no arguments are passed in, returns the current scale.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">scale</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">scale</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">u</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">scale</span><span class="p">))</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">scale</span><span class="p">;</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">u</span><span class="p">.</span><span class="nx">isNumber</span><span class="p">(</span><span class="nx">scale</span><span class="p">))</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">scale</span> <span class="o">=</span> <span class="nx">scale</span><span class="p">;</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">updateTransform</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">hasModifiedTransform</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="graphertranslate">grapher.translate</h2>
 
-  <span class="nx">translate</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">translate</span><span class="p">)</span> <span class="p">{</span>
+<p>Set the translate.
+If no arguments are passed in, returns the current translate.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">translate</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">translate</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">u</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">translate</span><span class="p">))</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">translate</span><span class="p">;</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">u</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">translate</span><span class="p">))</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">translate</span> <span class="o">=</span> <span class="nx">translate</span><span class="p">;</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">updateTransform</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">hasModifiedTransform</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherbackgroundcolor">grapher.backgroundColor</h2>
 
-  <span class="nx">backgroundColor</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">color</span><span class="p">)</span> <span class="p">{</span>
+<p>Set the backgroundColor. This is the color of the background.
+If no arguments are passed in, returns the current backgroundColor.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">backgroundColor</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">color</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">u</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">color</span><span class="p">))</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">backgroundColor</span><span class="p">;</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">backgroundColor</span> <span class="o">=</span> <span class="nx">Color</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">color</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">stage</span><span class="p">.</span><span class="nx">setBackgroundColor</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">backgroundColor</span><span class="p">);</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherforegroundcolor">grapher.foregroundColor</h2>
 
-  <span class="nx">foregroundColor</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">color</span><span class="p">)</span> <span class="p">{</span>
+<p>Set the foregroundColor. This is the default color of nodes and links.
+If no arguments are passed in, returns the current foregroundColor.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">foregroundColor</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">color</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">u</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">color</span><span class="p">))</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">foregroundColor</span><span class="p">;</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">foregroundColor</span> <span class="o">=</span> <span class="nx">Color</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">color</span><span class="p">);</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherlinewidth">grapher.lineWidth</h2>
 
-  <span class="nx">lineWidth</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">size</span><span class="p">)</span> <span class="p">{</span>
+<p>Set the lineWidth. This is the line width of the links.
+If no arguments are passed in, returns the current lineWidth.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">size</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">u</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">size</span><span class="p">))</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">lineWidth</span><span class="p">;</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="nx">size</span><span class="p">;</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="graphergetnodeidat">grapher.getNodeIdAt</h2>
 
-  <span class="nx">getNodeIdAt</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">point</span><span class="p">)</span> <span class="p">{</span>
+<p>Search for a node index at a certain point.</p>
+
+<pre><code>var point = {x: 10, y: 10};
+var foundNode = grapher.getNodeIdAt(point);
+</code></pre>
+
+<p>Returns -1 if no node is found.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getNodeIdAt</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">point</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">node</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
         <span class="nx">x</span> <span class="o">=</span> <span class="nx">point</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">point</span><span class="p">.</span><span class="nx">y</span><span class="p">;</span>
 
@@ -240,30 +288,31 @@ Color and u are utility libraries.</p></div></div><div class="code"><div class="
     <span class="p">});</span>
 
     <span class="k">return</span> <span class="nx">node</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="private-functions">Private Functions</h1></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-exit">grapher._exit</h2>
 
-  <span class="nx">_exit</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">sprite</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">sprite</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nx">removeChild</span><span class="p">(</span><span class="nx">sprite</span><span class="p">);</span> <span class="p">},</span>
-  <span class="nx">_enter</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+<p>Remove a sprite from it's parent.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_exit</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">sprite</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">sprite</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nx">removeChild</span><span class="p">(</span><span class="nx">sprite</span><span class="p">);</span> <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-enter">grapher._enter</h2>
+
+<p>Create a new sprite from the node or link data provided.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_enter</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">type</span> <span class="o">=</span> <span class="nx">u</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">from</span><span class="p">)</span> <span class="o">?</span> <span class="nx">NODES</span> <span class="o">:</span> <span class="nx">LINKS</span><span class="p">,</span>
         <span class="nx">sprite</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PIXI</span><span class="p">.</span><span class="nx">Sprite</span><span class="p">(</span><span class="nx">Grapher</span><span class="p">.</span><span class="nx">getTexture</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">foregroundColor</span><span class="p">()));</span>
     <span class="k">this</span><span class="p">[</span><span class="nx">type</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">sprite</span><span class="p">);</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-addtoupdatequeue">grapher._addToUpdateQueue</h2>
 
-  <span class="nx">_addToUpdateQueue</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">indices</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">insert</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span> <span class="nx">u</span><span class="p">.</span><span class="nx">uniqueInsert</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">willUpdate</span><span class="p">[</span><span class="nx">type</span><span class="p">],</span> <span class="nx">n</span><span class="p">);</span> <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">updateAll</span><span class="p">[</span><span class="nx">type</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">u</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">indices</span><span class="p">))</span> <span class="nx">u</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">indices</span><span class="p">,</span> <span class="nx">insert</span><span class="p">);</span>
+<p>Add indices to the nodes or links update queue.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_addToUpdateQueue</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">indices</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">insert</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span> <span class="nx">u</span><span class="p">.</span><span class="nx">uniqueInsert</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">willUpdate</span><span class="p">[</span><span class="nx">type</span><span class="p">],</span> <span class="nx">n</span><span class="p">);</span> <span class="p">};</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">updateAll</span><span class="p">[</span><span class="nx">type</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">u</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">indices</span><span class="p">))</span> <span class="nx">u</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">indices</span><span class="p">,</span> <span class="nx">insert</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">updateAll</span><span class="p">[</span><span class="nx">type</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">updateAll</span><span class="p">[</span><span class="nx">type</span><span class="p">]</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">willUpdate</span><span class="p">[</span><span class="nx">type</span><span class="p">].</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="k">this</span><span class="p">[</span><span class="nx">type</span><span class="p">].</span><span class="nx">length</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-clearupdatequeue">grapher._clearUpdateQueue</h2>
 
-  <span class="nx">_clearUpdateQueue</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+<p>Clear the update queue.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_clearUpdateQueue</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">willUpdate</span><span class="p">[</span><span class="nx">LINKS</span><span class="p">]</span> <span class="o">=</span> <span class="p">[];</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">willUpdate</span><span class="p">[</span><span class="nx">NODES</span><span class="p">]</span> <span class="o">=</span> <span class="p">[];</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">updateAll</span><span class="p">[</span><span class="nx">LINKS</span><span class="p">]</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">updateAll</span><span class="p">[</span><span class="nx">NODES</span><span class="p">]</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">updateTransform</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-update">grapher._update</h2>
 
-  <span class="nx">_update</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+<p>Update nodes and links in the update queue.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_update</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">updatingLinks</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">willUpdate</span><span class="p">[</span><span class="nx">LINKS</span><span class="p">],</span>
         <span class="nx">updatingNodes</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">willUpdate</span><span class="p">[</span><span class="nx">NODES</span><span class="p">],</span>
         <span class="nx">i</span><span class="p">;</span>
@@ -280,9 +329,9 @@ Color and u are utility libraries.</p></div></div><div class="code"><div class="
     <span class="p">}</span>
 
     <span class="k">this</span><span class="p">.</span><span class="nx">_clearUpdateQueue</span><span class="p">();</span>
-  <span class="p">},</span>
+  <span class="p">};</span>
 
-  <span class="nx">_updateLink</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">link</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_updateLink</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">link</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">data</span><span class="p">(),</span>
         <span class="nx">lw</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">lineWidth</span><span class="p">(),</span>
         <span class="nx">l</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="nx">LINKS</span><span class="p">][</span><span class="nx">i</span><span class="p">],</span>
@@ -300,33 +349,37 @@ Color and u are utility libraries.</p></div></div><div class="code"><div class="
         <span class="nx">Color</span><span class="p">.</span><span class="nx">interpolate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_findColor</span><span class="p">(</span><span class="nx">from</span><span class="p">.</span><span class="nx">color</span><span class="p">),</span> <span class="k">this</span><span class="p">.</span><span class="nx">_findColor</span><span class="p">(</span><span class="nx">to</span><span class="p">.</span><span class="nx">color</span><span class="p">));</span>
 
     <span class="k">this</span><span class="p">.</span><span class="nx">_setColor</span><span class="p">(</span><span class="nx">LINKS</span><span class="p">,</span> <span class="nx">link</span><span class="p">,</span> <span class="nx">color</span><span class="p">);</span>
-  <span class="p">},</span>
+  <span class="p">};</span>
 
-  <span class="nx">_updateNode</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_updateNode</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">data</span><span class="p">()[</span><span class="nx">NODES</span><span class="p">][</span><span class="nx">i</span><span class="p">];</span>
     <span class="nx">node</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="nx">n</span><span class="p">.</span><span class="nx">r</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
     <span class="nx">node</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="nx">n</span><span class="p">.</span><span class="nx">r</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
     <span class="nx">node</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">n</span><span class="p">.</span><span class="nx">r</span><span class="p">,</span> <span class="nx">n</span><span class="p">.</span><span class="nx">y</span> <span class="o">-</span> <span class="nx">n</span><span class="p">.</span><span class="nx">r</span><span class="p">);</span>
 
     <span class="k">this</span><span class="p">.</span><span class="nx">_setColor</span><span class="p">(</span><span class="nx">NODES</span><span class="p">,</span> <span class="nx">node</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_findColor</span><span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">color</span><span class="p">));</span>
-  <span class="p">},</span>
+  <span class="p">};</span>
 
-  <span class="nx">_updateNodeByIndex</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">_updateNode</span><span class="p">(</span><span class="k">this</span><span class="p">[</span><span class="nx">NODES</span><span class="p">][</span><span class="nx">i</span><span class="p">],</span> <span class="nx">i</span><span class="p">);</span> <span class="p">},</span>
+  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_updateNodeByIndex</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">_updateNode</span><span class="p">(</span><span class="k">this</span><span class="p">[</span><span class="nx">NODES</span><span class="p">][</span><span class="nx">i</span><span class="p">],</span> <span class="nx">i</span><span class="p">);</span> <span class="p">};</span>
 
-  <span class="nx">_updateLinkByIndex</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">_updateLink</span><span class="p">(</span><span class="k">this</span><span class="p">[</span><span class="nx">LINKS</span><span class="p">][</span><span class="nx">i</span><span class="p">],</span> <span class="nx">i</span><span class="p">);</span> <span class="p">},</span>
+  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_updateLinkByIndex</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">_updateLink</span><span class="p">(</span><span class="k">this</span><span class="p">[</span><span class="nx">LINKS</span><span class="p">][</span><span class="nx">i</span><span class="p">],</span> <span class="nx">i</span><span class="p">);</span> <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-findlinks">grapher._findLinks</h2>
 
-  <span class="nx">_findLinks</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">indices</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">isLinked</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">indices</span><span class="p">,</span> <span class="nx">l</span><span class="p">)</span> <span class="p">{</span>
-          <span class="kd">var</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">indices</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="nx">flag</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
-          <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nx">l</span><span class="p">.</span><span class="nx">to</span> <span class="o">==</span> <span class="nx">indices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">||</span> <span class="nx">l</span><span class="p">.</span><span class="nx">from</span> <span class="o">==</span> <span class="nx">indices</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="p">{</span> <span class="c1">// loose equivalience is sufficient</span>
-              <span class="nx">flag</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-              <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-          <span class="p">}</span>
-          <span class="k">return</span> <span class="nx">flag</span><span class="p">;</span>
-        <span class="p">},</span>
-        <span class="nx">links</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">data</span><span class="p">()[</span><span class="nx">LINKS</span><span class="p">],</span>
+<p>Search for links connected to the node indices provided.</p>
+
+<p>isLinked is a helper function that returns true if a link is
+connected to a node in indices.</p></div></div><div class="code"><div class="wrapper">  <span class="kd">var</span> <span class="nx">isLinked</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">indices</span><span class="p">,</span> <span class="nx">l</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">indices</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="nx">flag</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">l</span><span class="p">.</span><span class="nx">to</span> <span class="o">==</span> <span class="nx">indices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">||</span> <span class="nx">l</span><span class="p">.</span><span class="nx">from</span> <span class="o">==</span> <span class="nx">indices</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="p">{</span>
+        <span class="nx">flag</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">flag</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_findLinks</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">indices</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">links</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">data</span><span class="p">()[</span><span class="nx">LINKS</span><span class="p">],</span>
         <span class="nx">i</span><span class="p">,</span> <span class="nx">numLinks</span> <span class="o">=</span> <span class="nx">links</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
         <span class="nx">updatingLinks</span> <span class="o">=</span> <span class="p">[];</span>
 
@@ -335,26 +388,28 @@ Color and u are utility libraries.</p></div></div><div class="code"><div class="
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="nx">updatingLinks</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-findcolor">grapher._findColor</h2>
 
-  <span class="nx">_findColor</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="p">{</span>
+<p>Search for a color whether it's defined by palette index, string,
+integer.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_findColor</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">color</span> <span class="o">=</span> <span class="kc">NaN</span><span class="p">,</span>
         <span class="nx">palette</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">palette</span><span class="p">();</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="nx">palette</span> <span class="o">&amp;&amp;</span> <span class="nx">palette</span><span class="p">[</span><span class="nx">c</span><span class="p">])</span> <span class="nx">color</span> <span class="o">=</span> <span class="nx">palette</span><span class="p">[</span><span class="nx">c</span><span class="p">];</span>
     <span class="k">else</span> <span class="nx">color</span> <span class="o">=</span> <span class="nx">Color</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if color is still not set, use the default</p></div></div><div class="code"><div class="wrapper">    <span class="k">if</span> <span class="p">(</span><span class="nx">u</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">(</span><span class="nx">color</span><span class="p">))</span> <span class="nx">color</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">foregroundColor</span><span class="p">();</span>
     <span class="k">return</span> <span class="nx">color</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-setcolor">grapher._setColor</h2>
 
-  <span class="nx">_setColor</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">sprite</span><span class="p">,</span> <span class="nx">color</span><span class="p">)</span> <span class="p">{</span>
+<p>Set color on a sprite. This function moves the sprite into the appropriate
+sprite batch.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_setColor</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">sprite</span><span class="p">,</span> <span class="nx">color</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">texture</span> <span class="o">=</span> <span class="nx">Grapher</span><span class="p">.</span><span class="nx">getTexture</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">color</span><span class="p">);</span>
 
     <span class="nx">sprite</span><span class="p">.</span><span class="nx">setTexture</span><span class="p">(</span><span class="nx">texture</span><span class="p">);</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">sprite</span><span class="p">.</span><span class="nx">parent</span><span class="p">)</span> <span class="k">this</span><span class="p">.</span><span class="nx">_exit</span><span class="p">(</span><span class="nx">sprite</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">_getBatch</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">color</span><span class="p">).</span><span class="nx">addChild</span><span class="p">(</span><span class="nx">sprite</span><span class="p">);</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-getbatch">grapher._getBatch</h2>
 
-  <span class="nx">_getBatch</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">color</span><span class="p">)</span> <span class="p">{</span>
+<p>Get the sprite batch for the sprite type and color.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_getBatch</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">color</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">batches</span><span class="p">[</span><span class="nx">type</span><span class="p">][</span><span class="nx">color</span><span class="p">])</span> <span class="p">{</span>
       <span class="kd">var</span> <span class="nx">batch</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PIXI</span><span class="p">.</span><span class="nx">SpriteBatch</span><span class="p">();</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">type</span> <span class="o">===</span> <span class="nx">LINKS</span><span class="p">)</span> <span class="k">this</span><span class="p">.</span><span class="nx">network</span><span class="p">.</span><span class="nx">addChildAt</span><span class="p">(</span><span class="nx">batch</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
@@ -362,62 +417,62 @@ Color and u are utility libraries.</p></div></div><div class="code"><div class="
       <span class="k">this</span><span class="p">.</span><span class="nx">batches</span><span class="p">[</span><span class="nx">type</span><span class="p">][</span><span class="nx">color</span><span class="p">]</span> <span class="o">=</span> <span class="nx">batch</span><span class="p">;</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">batches</span><span class="p">[</span><span class="nx">type</span><span class="p">][</span><span class="nx">color</span><span class="p">];</span>
-  <span class="p">},</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-onevent">grapher._onEvent</h2>
 
-  <span class="nx">_onEvent</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+<p>Wraps listeners.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_onEvent</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
       <span class="kd">var</span> <span class="nx">callback</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">listeners</span><span class="p">[</span><span class="nx">event</span><span class="p">]</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">listeners</span><span class="p">[</span><span class="nx">event</span><span class="p">]</span> <span class="o">:</span> <span class="nx">u</span><span class="p">.</span><span class="nx">noop</span><span class="p">;</span>
       <span class="nx">e</span><span class="p">.</span><span class="nx">offset</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">getLocalPosition</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">stage</span><span class="p">);</span>
       <span class="nx">e</span><span class="p">.</span><span class="nx">offsetData</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">getLocalPosition</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">network</span><span class="p">);</span>
       <span class="nx">callback</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
     <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="grapher-static-properties">Grapher Static Properties</h1></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="kd">var</span> <span class="nx">NODES</span> <span class="o">=</span> <span class="nx">Grapher</span><span class="p">.</span><span class="nx">NODES</span> <span class="o">=</span> <span class="s1">&#39;nodes&#39;</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">LINKS</span> <span class="o">=</span> <span class="nx">Grapher</span><span class="p">.</span><span class="nx">LINKS</span> <span class="o">=</span> <span class="s1">&#39;links&#39;</span><span class="p">;</span>
-<span class="nx">Grapher</span><span class="p">.</span><span class="nx">palettes</span> <span class="o">=</span> <span class="p">{};</span> <span class="c1">// store palettes and textures staticly</span>
-<span class="nx">Grapher</span><span class="p">.</span><span class="nx">textures</span> <span class="o">=</span> <span class="p">{};</span>
-<span class="nx">Grapher</span><span class="p">.</span><span class="nx">textures</span><span class="p">[</span><span class="nx">NODES</span><span class="p">]</span> <span class="o">=</span> <span class="p">{};</span>
-<span class="nx">Grapher</span><span class="p">.</span><span class="nx">textures</span><span class="p">[</span><span class="nx">LINKS</span><span class="p">]</span> <span class="o">=</span> <span class="p">{};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="grapher-static-methods">Grapher Static Methods</h1></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nx">Grapher</span><span class="p">.</span><span class="nx">getPalette</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">palettes</span><span class="p">[</span><span class="nx">name</span><span class="p">];</span> <span class="p">};</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="grapher-static-properties">Grapher Static Properties</h1></div></div></div><div class="segment"><div class="code"><div class="wrapper">  <span class="kd">var</span> <span class="nx">NODES</span> <span class="o">=</span> <span class="nx">Grapher</span><span class="p">.</span><span class="nx">NODES</span> <span class="o">=</span> <span class="s1">&#39;nodes&#39;</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">LINKS</span> <span class="o">=</span> <span class="nx">Grapher</span><span class="p">.</span><span class="nx">LINKS</span> <span class="o">=</span> <span class="s1">&#39;links&#39;</span><span class="p">;</span>
+  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">palettes</span> <span class="o">=</span> <span class="p">{};</span> <span class="c1">// store palettes and textures staticly</span>
+  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">textures</span> <span class="o">=</span> <span class="p">{};</span>
+  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">textures</span><span class="p">[</span><span class="nx">NODES</span><span class="p">]</span> <span class="o">=</span> <span class="p">{};</span>
+  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">textures</span><span class="p">[</span><span class="nx">LINKS</span><span class="p">]</span> <span class="o">=</span> <span class="p">{};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="grapher-static-methods">Grapher Static Methods</h1></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="graphergetpalette">Grapher.getPalette</h2>
 
-<span class="nx">Grapher</span><span class="p">.</span><span class="nx">setPalette</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">swatches</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">palette</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">palettes</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{};</span>
-  <span class="nx">swatches</span> <span class="o">=</span> <span class="nx">u</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">swatches</span><span class="p">,</span> <span class="nx">Color</span><span class="p">.</span><span class="nx">parse</span><span class="p">);</span>
+<p>Get a palette that has been defined.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">getPalette</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">palettes</span><span class="p">[</span><span class="nx">name</span><span class="p">];</span> <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="graphersetpalette">Grapher.setPalette</h2>
 
-  <span class="nx">u</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">swatches</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">swatch</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">getTexture</span><span class="p">(</span><span class="nx">LINKS</span><span class="p">,</span> <span class="nx">swatch</span><span class="p">);</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">getTexture</span><span class="p">(</span><span class="nx">NODES</span><span class="p">,</span> <span class="nx">swatch</span><span class="p">);</span>
-    <span class="nx">palette</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">swatch</span><span class="p">;</span>
+<p>Define a palette with a name and an array of color swatches.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">setPalette</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">swatches</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">palette</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">palettes</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="nx">swatches</span> <span class="o">=</span> <span class="nx">u</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">swatches</span><span class="p">,</span> <span class="nx">Color</span><span class="p">.</span><span class="nx">parse</span><span class="p">);</span>
 
-    <span class="kd">var</span> <span class="nx">j</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">i</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// interpolate &#39;in-between&#39; link colors 50% between node colors</span>
-      <span class="kd">var</span> <span class="nx">color</span> <span class="o">=</span> <span class="nx">Color</span><span class="p">.</span><span class="nx">interpolate</span><span class="p">(</span><span class="nx">swatches</span><span class="p">[</span><span class="nx">j</span><span class="p">],</span> <span class="nx">swatch</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">);</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">getTexture</span><span class="p">(</span><span class="nx">LINKS</span><span class="p">,</span> <span class="nx">color</span><span class="p">);</span>
-      <span class="nx">palette</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">color</span><span class="p">;</span>
+    <span class="nx">u</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">swatches</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">swatch</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">getTexture</span><span class="p">(</span><span class="nx">LINKS</span><span class="p">,</span> <span class="nx">swatch</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">getTexture</span><span class="p">(</span><span class="nx">NODES</span><span class="p">,</span> <span class="nx">swatch</span><span class="p">);</span>
+      <span class="nx">palette</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">swatch</span><span class="p">;</span>
+
+      <span class="kd">var</span> <span class="nx">j</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">i</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// interpolate &#39;in-between&#39; link colors 50% between node colors</span>
+        <span class="kd">var</span> <span class="nx">color</span> <span class="o">=</span> <span class="nx">Color</span><span class="p">.</span><span class="nx">interpolate</span><span class="p">(</span><span class="nx">swatches</span><span class="p">[</span><span class="nx">j</span><span class="p">],</span> <span class="nx">swatch</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">getTexture</span><span class="p">(</span><span class="nx">LINKS</span><span class="p">,</span> <span class="nx">color</span><span class="p">);</span>
+        <span class="nx">palette</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">color</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">},</span> <span class="k">this</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="graphergettexture">Grapher.getTexture</h2>
+
+<p>Get a texture by 'nodes' or 'links' and a color.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Grapher</span><span class="p">.</span><span class="nx">getTexture</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">color</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">textures</span><span class="p">[</span><span class="nx">type</span><span class="p">][</span><span class="nx">color</span><span class="p">])</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>generate the textures from Canvas</p></div></div><div class="code"><div class="wrapper">      <span class="kd">var</span> <span class="nx">isNode</span> <span class="o">=</span> <span class="nx">type</span> <span class="o">===</span> <span class="nx">NODES</span><span class="p">,</span>
+          <span class="nx">size</span> <span class="o">=</span> <span class="nx">isNode</span> <span class="o">?</span> <span class="mi">100</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+          <span class="nx">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PIXI</span><span class="p">.</span><span class="nx">CanvasRenderer</span><span class="p">(</span><span class="nx">size</span><span class="p">,</span> <span class="nx">size</span><span class="p">,</span> <span class="p">{</span><span class="nx">transparent</span><span class="o">:</span> <span class="nx">isNode</span><span class="p">,</span> <span class="nx">resolution</span><span class="o">:</span> <span class="mi">1</span><span class="p">}),</span>
+          <span class="nx">stage</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PIXI</span><span class="p">.</span><span class="nx">Stage</span><span class="p">(</span><span class="nx">color</span><span class="p">);</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">isNode</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">graphics</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PIXI</span><span class="p">.</span><span class="nx">Graphics</span><span class="p">();</span>
+        <span class="nx">graphics</span><span class="p">.</span><span class="nx">beginFill</span><span class="p">(</span><span class="nx">color</span><span class="p">);</span>
+        <span class="nx">graphics</span><span class="p">.</span><span class="nx">drawCircle</span><span class="p">(</span><span class="nx">size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">);</span>
+        <span class="nx">graphics</span><span class="p">.</span><span class="nx">endFill</span><span class="p">();</span>
+
+        <span class="nx">stage</span><span class="p">.</span><span class="nx">addChild</span><span class="p">(</span><span class="nx">graphics</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="nx">renderer</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">stage</span><span class="p">);</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">textures</span><span class="p">[</span><span class="nx">type</span><span class="p">][</span><span class="nx">color</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PIXI</span><span class="p">.</span><span class="nx">Texture</span><span class="p">.</span><span class="nx">fromCanvas</span><span class="p">(</span><span class="nx">renderer</span><span class="p">.</span><span class="nx">view</span><span class="p">);</span>
     <span class="p">}</span>
-  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
-  <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="nx">Grapher</span><span class="p">.</span><span class="nx">getTexture</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">color</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">textures</span><span class="p">[</span><span class="nx">type</span><span class="p">][</span><span class="nx">color</span><span class="p">])</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>generate the textures from Canvas</p></div></div><div class="code"><div class="wrapper">    <span class="kd">var</span> <span class="nx">isNode</span> <span class="o">=</span> <span class="nx">type</span> <span class="o">===</span> <span class="nx">NODES</span><span class="p">,</span>
-        <span class="nx">size</span> <span class="o">=</span> <span class="nx">isNode</span> <span class="o">?</span> <span class="mi">100</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="nx">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PIXI</span><span class="p">.</span><span class="nx">CanvasRenderer</span><span class="p">(</span><span class="nx">size</span><span class="p">,</span> <span class="nx">size</span><span class="p">,</span> <span class="p">{</span><span class="nx">transparent</span><span class="o">:</span> <span class="nx">isNode</span><span class="p">,</span> <span class="nx">resolution</span><span class="o">:</span> <span class="mi">1</span><span class="p">}),</span>
-        <span class="nx">stage</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PIXI</span><span class="p">.</span><span class="nx">Stage</span><span class="p">(</span><span class="nx">color</span><span class="p">);</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="nx">isNode</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">graphics</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PIXI</span><span class="p">.</span><span class="nx">Graphics</span><span class="p">();</span>
-      <span class="nx">graphics</span><span class="p">.</span><span class="nx">beginFill</span><span class="p">(</span><span class="nx">color</span><span class="p">);</span>
-      <span class="nx">graphics</span><span class="p">.</span><span class="nx">drawCircle</span><span class="p">(</span><span class="nx">size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">);</span>
-      <span class="nx">graphics</span><span class="p">.</span><span class="nx">endFill</span><span class="p">();</span>
-
-      <span class="nx">stage</span><span class="p">.</span><span class="nx">addChild</span><span class="p">(</span><span class="nx">graphics</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="nx">renderer</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">stage</span><span class="p">);</span>
-
-    <span class="k">this</span><span class="p">.</span><span class="nx">textures</span><span class="p">[</span><span class="nx">type</span><span class="p">][</span><span class="nx">color</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PIXI</span><span class="p">.</span><span class="nx">Texture</span><span class="p">.</span><span class="nx">fromCanvas</span><span class="p">(</span><span class="nx">renderer</span><span class="p">.</span><span class="nx">view</span><span class="p">);</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">textures</span><span class="p">[</span><span class="nx">type</span><span class="p">][</span><span class="nx">color</span><span class="p">];</span>
-<span class="p">};</span>
-
-<span class="k">if</span> <span class="p">(</span><span class="nx">module</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">Grapher</span><span class="p">;</span></div></div></div></div></body></html>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">textures</span><span class="p">[</span><span class="nx">type</span><span class="p">][</span><span class="nx">color</span><span class="p">];</span>
+  <span class="p">};</span>
+<span class="p">})();</span></div></div></div></div></body></html>
