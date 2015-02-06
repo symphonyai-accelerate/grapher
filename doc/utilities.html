@@ -4,17 +4,14 @@
   <span class="nx">each</span><span class="o">:</span> <span class="nx">each</span><span class="p">,</span>
   <span class="nx">eachPop</span><span class="o">:</span> <span class="nx">eachPop</span><span class="p">,</span>
   <span class="nx">eachKey</span><span class="o">:</span> <span class="nx">eachKey</span><span class="p">,</span>
-
   <span class="nx">map</span><span class="o">:</span> <span class="nx">map</span><span class="p">,</span>
   <span class="nx">clean</span><span class="o">:</span> <span class="nx">clean</span><span class="p">,</span>
-
   <span class="nx">range</span><span class="o">:</span> <span class="nx">range</span><span class="p">,</span>
   <span class="nx">sortedIndex</span><span class="o">:</span> <span class="nx">sortedIndex</span><span class="p">,</span>
   <span class="nx">indexOf</span><span class="o">:</span> <span class="nx">indexOf</span><span class="p">,</span>
   <span class="nx">uniqueInsert</span><span class="o">:</span> <span class="nx">uniqueInsert</span><span class="p">,</span>
-
   <span class="nx">extend</span><span class="o">:</span> <span class="nx">extend</span><span class="p">,</span>
-
+  <span class="nx">bind</span><span class="o">:</span> <span class="nx">bind</span><span class="p">,</span>
   <span class="nx">noop</span><span class="o">:</span> <span class="nx">noop</span><span class="p">,</span>
   <span class="nx">isUndefined</span><span class="o">:</span> <span class="nx">isUndefined</span><span class="p">,</span>
   <span class="nx">isFunction</span><span class="o">:</span> <span class="nx">isFunction</span><span class="p">,</span>
@@ -31,7 +28,7 @@
 <pre><code>var arr = [1, 2, 3];
 u.each(arr, fn);
 </code></pre></div></div><div class="code"><div class="wrapper"><span class="kd">function</span> <span class="nx">each</span> <span class="p">(</span><span class="nx">arr</span><span class="p">,</span> <span class="nx">fn</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">ctx</span><span class="p">)</span> <span class="nx">fn</span> <span class="o">=</span> <span class="nx">fn</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">ctx</span><span class="p">);</span>
+  <span class="nx">fn</span> <span class="o">=</span> <span class="nx">bind</span><span class="p">(</span><span class="nx">fn</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">);</span>
   <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
   <span class="k">while</span> <span class="p">(</span><span class="o">--</span><span class="nx">i</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">fn</span><span class="p">(</span><span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">i</span><span class="p">);</span>
@@ -44,7 +41,7 @@ array will be cleared.</p>
 
 <pre><code>u.eachPop([1, 2, 3], fn);
 </code></pre></div></div><div class="code"><div class="wrapper"><span class="kd">function</span> <span class="nx">eachPop</span> <span class="p">(</span><span class="nx">arr</span><span class="p">,</span> <span class="nx">fn</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">ctx</span><span class="p">)</span> <span class="nx">fn</span> <span class="o">=</span> <span class="nx">fn</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">ctx</span><span class="p">);</span>
+  <span class="nx">fn</span> <span class="o">=</span> <span class="nx">bind</span><span class="p">(</span><span class="nx">fn</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">);</span>
   <span class="k">while</span> <span class="p">(</span><span class="nx">arr</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">fn</span><span class="p">(</span><span class="nx">arr</span><span class="p">.</span><span class="nx">pop</span><span class="p">());</span>
   <span class="p">}</span>
@@ -56,7 +53,7 @@ array will be cleared.</p>
 <pre><code>var obj = {foo: 0, bar: 0};
 u.eachKey(obj, fn);
 </code></pre></div></div><div class="code"><div class="wrapper"><span class="kd">function</span> <span class="nx">eachKey</span> <span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">fn</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">ctx</span><span class="p">)</span> <span class="nx">fn</span> <span class="o">=</span> <span class="nx">fn</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">ctx</span><span class="p">);</span>
+  <span class="nx">fn</span> <span class="o">=</span> <span class="nx">bind</span><span class="p">(</span><span class="nx">fn</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">);</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">obj</span><span class="p">))</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">keys</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">obj</span><span class="p">);</span>
 
@@ -73,7 +70,7 @@ u.eachKey(obj, fn);
 <pre><code>var arr = [1, 2, 3];
 var newArr = u.map(arr, fn);
 </code></pre></div></div><div class="code"><div class="wrapper"><span class="kd">function</span> <span class="nx">map</span> <span class="p">(</span><span class="nx">arr</span><span class="p">,</span> <span class="nx">fn</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">ctx</span><span class="p">)</span> <span class="nx">fn</span> <span class="o">=</span> <span class="nx">fn</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">ctx</span><span class="p">);</span>
+  <span class="nx">fn</span> <span class="o">=</span> <span class="nx">bind</span><span class="p">(</span><span class="nx">fn</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">);</span>
   <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
       <span class="nx">mapped</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
   <span class="k">while</span> <span class="p">(</span><span class="o">--</span><span class="nx">i</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
@@ -145,6 +142,12 @@ in the array.</p></div></div><div class="code"><div class="wrapper"><span class=
     <span class="p">}</span>
   <span class="p">}</span>
   <span class="k">return</span> <span class="nx">obj</span><span class="p">;</span>
+<span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="bind">bind</h2>
+
+<p>Bind a function to a context. Optionally pass in the number of arguments
+which will use the faster fn.call if the number of arguments is 0, 1, or 2.</p></div></div><div class="code"><div class="wrapper"><span class="kd">function</span> <span class="nx">bind</span> <span class="p">(</span><span class="nx">fn</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">ctx</span><span class="p">)</span> <span class="k">return</span> <span class="nx">fn</span><span class="p">;</span>
+  <span class="k">return</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">fn</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span> <span class="p">};</span>
 <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="isundefined">isUndefined</h2>
 
 <p>Checks if a variable is undefined.</p></div></div><div class="code"><div class="wrapper"><span class="kd">function</span> <span class="nx">isUndefined</span> <span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="p">{</span>

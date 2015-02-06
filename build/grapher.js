@@ -19111,17 +19111,14 @@ var Utilities = module.exports = {
   each: each,
   eachPop: eachPop,
   eachKey: eachKey,
-
   map: map,
   clean: clean,
-
   range: range,
   sortedIndex: sortedIndex,
   indexOf: indexOf,
   uniqueInsert: uniqueInsert,
-
   extend: extend,
-
+  bind: bind,
   noop: noop,
   isUndefined: isUndefined,
   isFunction: isFunction,
@@ -19149,7 +19146,7 @@ function noop () {};
  *     u.each(arr, fn);
  */
 function each (arr, fn, ctx) {
-  if (ctx) fn = fn.bind(ctx);
+  fn = bind(fn, ctx);
   var i = arr.length;
   while (--i > -1) {
     fn(arr[i], i);
@@ -19167,7 +19164,7 @@ function each (arr, fn, ctx) {
  *     u.eachPop([1, 2, 3], fn);
  */
 function eachPop (arr, fn, ctx) {
-  if (ctx) fn = fn.bind(ctx);
+  fn = bind(fn, ctx);
   while (arr.length) {
     fn(arr.pop());
   }
@@ -19184,7 +19181,7 @@ function eachPop (arr, fn, ctx) {
  *     u.eachKey(obj, fn);
  */
 function eachKey (obj, fn, ctx) {
-  if (ctx) fn = fn.bind(ctx);
+  fn = bind(fn, ctx);
   if (isObject(obj)) {
     var keys = Object.keys(obj);
 
@@ -19206,7 +19203,7 @@ function eachKey (obj, fn, ctx) {
  *     var newArr = u.map(arr, fn);
  */
 function map (arr, fn, ctx) {
-  if (ctx) fn = fn.bind(ctx);
+  fn = bind(fn, ctx);
   var i = arr.length,
       mapped = new Array(i);
   while (--i > -1) {
@@ -19313,6 +19310,18 @@ function extend (obj, source) {
     }
   }
   return obj;
+};
+
+/**
+   * bind
+   * ----
+   *
+   * Bind a function to a context. Optionally pass in the number of arguments
+   * which will use the faster fn.call if the number of arguments is 0, 1, or 2.
+   */
+function bind (fn, ctx) {
+  if (!ctx) return fn;
+  return function () { return fn.apply(ctx, arguments); };
 };
 
 /**
