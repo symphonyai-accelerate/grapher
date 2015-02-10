@@ -22,6 +22,7 @@ gh-pages: grapher.js doc
 
 # create a temporary branch and commit any changes
 	@git checkout -b temp-$(commit)
+	-git add .
 	-git commit -a -m "make"
 
 # update gh-pages with the new build, examples, and docs
@@ -37,6 +38,7 @@ gh-pages: grapher.js doc
 # create a new gh-pages branch and commit these changes
 # this should be easy to arc diff or merge into gh-pages
 	@git checkout -b gh-pages-$(commit)
+	-git add .
 	-git commit -a -q -m "make gh-pages from $(commit)"
 
 # soft reset the changes from temp, and delete the temp branch
