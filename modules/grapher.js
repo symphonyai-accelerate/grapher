@@ -58,12 +58,12 @@
 
     // SpriteBatch containers
     this.batches = {};
-    this.batches[NODES] = {};
-    this.batches[LINKS] = {};
+    this.batches.nodes = {};
+    this.batches.links = {};
 
     // Sprite array
-    this[LINKS] = [];
-    this[NODES] = [];
+    this.links = [];
+    this.nodes = [];
 
     // indices that will update
     this.willUpdate = {};
@@ -75,11 +75,11 @@
     this.hasModifiedTransform = false;
 
     // Bind some updaters
-    this._updateLink = this._updateLink.bind(this);
-    this._updateNode = this._updateNode.bind(this);
-    this._updateLinkByIndex = this._updateLinkByIndex.bind(this);
-    this._updateNodeByIndex = this._updateNodeByIndex.bind(this);
-    this.animate = this.animate.bind(this);
+    this._updateLink = u.bind(this._updateLink, this);
+    this._updateNode = u.bind(this._updateNode, this);
+    this._updateLinkByIndex = u.bind(this._updateLinkByIndex, this);
+    this._updateNodeByIndex = u.bind(this._updateNodeByIndex, this);
+    this.animate = u.bind(this.animate, this);
 
     // Listeners
     this.listeners = {};
@@ -184,10 +184,10 @@
     var data = this.data(),
         entering = [];
 
-    if (this[LINKS].length < data[LINKS].length)
-        entering = entering.concat(data[LINKS].slice(this[LINKS].length, data[LINKS].length - this[LINKS].length));
-    if (this[NODES].length < data[NODES].length)
-        entering = entering.concat(data[NODES].slice(this[NODES].length, data[NODES].length - this[NODES].length));
+    if (this.links.length < data.links.length)
+        entering = entering.concat(data.links.slice(this.links.length, data.links.length - this.links.length));
+    if (this.nodes.length < data.nodes.length)
+        entering = entering.concat(data.nodes.slice(this.nodes.length, data.nodes.length - this.nodes.length));
 
     u.each(entering, this._enter, this);
     return this;
@@ -204,10 +204,10 @@
     var data = this.data(),
         exiting = [];
 
-    if (data[LINKS].length < this[LINKS].length)
-        exiting = exiting.concat(this[LINKS].splice(data[LINKS].length, this[LINKS].length - data[LINKS].length));
-    if (data[NODES].length < this[NODES].length)
-        exiting = exiting.concat(this[NODES].splice(data[NODES].length, this[NODES].length - data[NODES].length));
+    if (data.links.length < this.links.length)
+        exiting = exiting.concat(this.links.splice(data.links.length, this.links.length - data.links.length));
+    if (data.nodes.length < this.nodes.length)
+        exiting = exiting.concat(this.nodes.splice(data.nodes.length, this.nodes.length - data.nodes.length));
 
     u.each(exiting, this._exit);
     return this;
@@ -235,8 +235,8 @@
       this._addToUpdateQueue(type, indices);
       if (type === NODES) this._addToUpdateQueue(LINKS, this._findLinks(indices));
     } else {
-      if (type !== NODES) this.updateAll[LINKS] = true;
-      if (type !== LINKS) this.updateAll[NODES] = true;
+      if (type !== NODES) this.updateAll.links = true;
+      if (type !== LINKS) this.updateAll.nodes = true;
     }
     return this;
   };
@@ -333,7 +333,7 @@
   Grapher.prototype.center = function () {
     var x = y = 0,
         scale = 1,
-        nodes = this.data() ? this.data()[NODES] : null,
+        nodes = this.data() ? this.data().nodes : null,
         numNodes = nodes ? nodes.length : 0;
 
     if (numNodes) { // get initial transform
@@ -463,7 +463,7 @@
     var node = -1,
         x = point.x, y = point.y;
 
-    this[NODES].every(function (n, i) { // we'll want to look for ways to optimize this
+    this.nodes.every(function (n, i) { // we'll want to look for ways to optimize this
       var inX = x <= n.position.x + n.width && x >= n.position.x,
           inY = y <= n.position.y + n.height && y >= n.position.y,
           found = inX && inY;
@@ -498,8 +498,9 @@
     */
   Grapher.prototype._enter = function (data) {
     var type = u.isUndefined(data.from) ? NODES : LINKS,
+        spriteSet = type === NODES ? this.nodes : this.links;
         sprite = new PIXI.Sprite(Grapher.getTexture(type, this.foregroundColor()));
-    this[type].push(sprite);
+    spriteSet.push(sprite);
   };
 
   /**
@@ -510,9 +511,17 @@
     *
     */
   Grapher.prototype._addToUpdateQueue = function (type, indices) {
-    var insert = function (n) { u.uniqueInsert(this.willUpdate[type], n); };
-    if (!this.updateAll[type] && u.isArray(indices)) u.each(indices, insert, this);
-    this.updateAll[type] = this.updateAll[type] || this.willUpdate[type].length >= this[type].length;
+    var willUpdate = type === NODES ? this.willUpdate.nodes : this.willUpdate.links,
+        updateAll = type === NODES ? this.updateAll.nodes : this.updateAll.links,
+        spriteSet = type === NODES ? this.nodes : this.links;
+
+    var insert = function (n) { u.uniqueInsert(willUpdate, n); };
+    if (!updateAll && u.isArray(indices)) u.each(indices, insert, this);
+
+    updateAll = updateAll || willUpdate.length >= spriteSet.length;
+
+    if (type === NODES) this.updateAll.nodes = updateAll;
+    else this.updateAll.links = updateAll;
   };
 
   /**
@@ -523,10 +532,10 @@
     *
     */
   Grapher.prototype._clearUpdateQueue = function () {
-    this.willUpdate[LINKS] = [];
-    this.willUpdate[NODES] = [];
-    this.updateAll[LINKS] = false;
-    this.updateAll[NODES] = false;
+    this.willUpdate.links = [];
+    this.willUpdate.nodes = [];
+    this.updateAll.links = false;
+    this.updateAll.nodes = false;
     this.updateTransform = false;
   };
 
@@ -538,14 +547,14 @@
     *
     */
   Grapher.prototype._update = function () {
-    var updatingLinks = this.willUpdate[LINKS],
-        updatingNodes = this.willUpdate[NODES],
+    var updatingLinks = this.willUpdate.links,
+        updatingNodes = this.willUpdate.nodes,
         i;
 
-    if (this.updateAll[LINKS]) u.each(this[LINKS], this._updateLink);
+    if (this.updateAll.links) u.each(this.links, this._updateLink);
     else if (updatingLinks && updatingLinks.length) u.eachPop(updatingLinks, this._updateLinkByIndex);
 
-    if (this.updateAll[NODES]) u.each(this[NODES], this._updateNode);
+    if (this.updateAll.nodes) u.each(this.nodes, this._updateNode);
     else if (updatingNodes && updatingNodes.length) u.eachPop(updatingNodes, this._updateNodeByIndex);
 
     if (this.updateTransform) {
@@ -559,9 +568,9 @@
   Grapher.prototype._updateLink = function (link, i) {
     var data = this.data(),
         lw = this.lineWidth(),
-        l = data[LINKS][i],
-        from = data[NODES][l.from],
-        to = data[NODES][l.to],
+        l = data.links[i],
+        from = data.nodes[l.from],
+        to = data.nodes[l.to],
         leftMost = from.x <= to.x ? from : to;
 
     link.width = Math.sqrt(Math.pow(to.x - from.x, 2) + Math.pow(to.y - from.y, 2));
@@ -577,7 +586,7 @@
   };
 
   Grapher.prototype._updateNode = function (node, i) {
-    var n = this.data()[NODES][i];
+    var n = this.data().nodes[i];
     node.width = n.r * 2;
     node.height = n.r * 2;
     node.position.set(n.x - n.r, n.y - n.r);
@@ -585,9 +594,9 @@
     this._setColor(NODES, node, this._findColor(n.color));
   };
 
-  Grapher.prototype._updateNodeByIndex = function (i) { this._updateNode(this[NODES][i], i); };
+  Grapher.prototype._updateNodeByIndex = function (i) { this._updateNode(this.nodes[i], i); };
 
-  Grapher.prototype._updateLinkByIndex = function (i) { this._updateLink(this[LINKS][i], i); };
+  Grapher.prototype._updateLinkByIndex = function (i) { this._updateLink(this.links[i], i); };
 
   /**
     * grapher._findLinks
@@ -610,7 +619,7 @@
   };
 
   Grapher.prototype._findLinks = function (indices) {
-    var links = this.data()[LINKS],
+    var links = this.data().links,
         i, numLinks = links.length,
         updatingLinks = [];
 
@@ -664,13 +673,14 @@
     *
     */
   Grapher.prototype._getBatch = function (type, color) {
-    if (!this.batches[type][color]) {
+    var batchSet = type === NODES ? this.batches.nodes : this.batches.links;
+    if (!batchSet[color]) {
       var batch = new PIXI.SpriteBatch();
       if (type === LINKS) this.network.addChildAt(batch, 0);
       else this.network.addChild(batch);
-      this.batches[type][color] = batch;
+      batchSet[color] = batch;
     }
-    return this.batches[type][color];
+    return batchSet[color];
   };
 
   /**
@@ -697,8 +707,8 @@
   var LINKS = Grapher.LINKS = 'links';
   Grapher.palettes = {}; // store palettes and textures staticly
   Grapher.textures = {};
-  Grapher.textures[NODES] = {};
-  Grapher.textures[LINKS] = {};
+  Grapher.textures.nodes = {};
+  Grapher.textures.links = {};
 
 /**
   * Grapher Static Methods
@@ -748,7 +758,8 @@
     *
     */
   Grapher.getTexture = function (type, color) {
-    if (!this.textures[type][color]) {
+    var textureSet = type === NODES ? this.textures.nodes : this.textures.links;
+    if (!textureSet[color]) {
       // generate the textures from Canvas
       var isNode = type === NODES,
           size = isNode ? 100 : 1,
@@ -766,8 +777,8 @@
 
       renderer.render(stage);
 
-      this.textures[type][color] = new PIXI.Texture.fromCanvas(renderer.view);
+      textureSet[color] = new PIXI.Texture.fromCanvas(renderer.view);
     }
-    return this.textures[type][color];
+    return textureSet[color];
   };
 })();
