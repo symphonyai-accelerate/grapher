@@ -101,53 +101,697 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
         }
       ]
     }, {
-      "type": "folder",
+      "type": "file",
       "data": {
-        "path": "modules",
-        "title": "modules"
+        "language": {
+          "nameMatchers": [".js"],
+          "pygmentsLexer": "javascript",
+          "multiLineComment": ["/*", "*", "*/"],
+          "singleLineComment": ["//"],
+          "ignorePrefix": "}",
+          "foldPrefix": "^",
+          "name": "JavaScript"
+        },
+        "sourcePath": "/Users/CZhang/Documents/ayasdi/grapher/modules/color.js",
+        "projectPath": "modules/color.js",
+        "targetPath": "color",
+        "pageTitle": "color",
+        "title": "color"
       },
       "depth": 1,
-      "children": [
+      "outline": []
+    }, {
+      "type": "file",
+      "data": {
+        "language": {
+          "nameMatchers": [".js"],
+          "pygmentsLexer": "javascript",
+          "multiLineComment": ["/*", "*", "*/"],
+          "singleLineComment": ["//"],
+          "ignorePrefix": "}",
+          "foldPrefix": "^",
+          "name": "JavaScript"
+        },
+        "sourcePath": "/Users/CZhang/Documents/ayasdi/grapher/modules/grapher.js",
+        "projectPath": "modules/grapher.js",
+        "targetPath": "grapher",
+        "pageTitle": "grapher",
+        "title": "grapher"
+      },
+      "depth": 1,
+      "outline": [
         {
-          "type": "file",
+          "type": "heading",
           "data": {
-            "language": {
-              "nameMatchers": [".js"],
-              "pygmentsLexer": "javascript",
-              "multiLineComment": ["/*", "*", "*/"],
-              "singleLineComment": ["//"],
-              "ignorePrefix": "}",
-              "foldPrefix": "^",
-              "name": "JavaScript"
-            },
-            "sourcePath": "/Users/CZhang/Documents/ayasdi/grapher/modules/color.js",
-            "projectPath": "modules/color.js",
-            "targetPath": "modules/color",
-            "pageTitle": "modules/color",
-            "title": "color"
+            "level": 1,
+            "title": "Dependencies",
+            "slug": "dependencies"
           },
-          "depth": 2,
-          "outline": []
+          "depth": 1
         }, {
-          "type": "file",
+          "type": "heading",
           "data": {
-            "language": {
-              "nameMatchers": [".js"],
-              "pygmentsLexer": "javascript",
-              "multiLineComment": ["/*", "*", "*/"],
-              "singleLineComment": ["//"],
-              "ignorePrefix": "}",
-              "foldPrefix": "^",
-              "name": "JavaScript"
-            },
-            "sourcePath": "/Users/CZhang/Documents/ayasdi/grapher/modules/grapher.js",
-            "projectPath": "modules/grapher.js",
-            "targetPath": "modules/grapher",
-            "pageTitle": "modules/grapher",
-            "title": "grapher"
+            "level": 1,
+            "title": "Grapher",
+            "slug": "grapher"
           },
-          "depth": 2,
-          "outline": []
+          "depth": 1,
+          "children": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.initialize",
+                "slug": "grapherinitialize"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.set",
+                "slug": "grapherset"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.on",
+                "slug": "grapheron"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.off",
+                "slug": "grapheroff"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.palette",
+                "slug": "grapherpalette"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.data",
+                "slug": "grapherdata"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.enter",
+                "slug": "grapherenter"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.exit",
+                "slug": "grapherexit"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.update",
+                "slug": "grapherupdate"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.updateNode",
+                "slug": "grapherupdatenode"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.updateLink",
+                "slug": "grapherupdatelink"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.render",
+                "slug": "grapherrender"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.animate",
+                "slug": "grapheranimate"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.play",
+                "slug": "grapherplay"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.pause",
+                "slug": "grapherpause"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.resize",
+                "slug": "grapherresize"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.center",
+                "slug": "graphercenter"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.transform",
+                "slug": "graphertransform"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.scale",
+                "slug": "grapherscale"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.translate",
+                "slug": "graphertranslate"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.backgroundColor",
+                "slug": "grapherbackgroundcolor"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.foregroundColor",
+                "slug": "grapherforegroundcolor"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.lineWidth",
+                "slug": "grapherlinewidth"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.getNodeIdAt",
+                "slug": "graphergetnodeidat"
+              },
+              "depth": 2
+            }
+          ]
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Private Functions",
+            "slug": "private-functions"
+          },
+          "depth": 1,
+          "children": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._exit",
+                "slug": "grapher-exit"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._enter",
+                "slug": "grapher-enter"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._addToUpdateQueue",
+                "slug": "grapher-addtoupdatequeue"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._clearUpdateQueue",
+                "slug": "grapher-clearupdatequeue"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._update",
+                "slug": "grapher-update"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._findLinks",
+                "slug": "grapher-findlinks"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._findColor",
+                "slug": "grapher-findcolor"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._setColor",
+                "slug": "grapher-setcolor"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._getBatch",
+                "slug": "grapher-getbatch"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher._onEvent",
+                "slug": "grapher-onevent"
+              },
+              "depth": 2
+            }
+          ]
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Grapher Static Properties",
+            "slug": "grapher-static-properties"
+          },
+          "depth": 1
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Grapher Static Methods",
+            "slug": "grapher-static-methods"
+          },
+          "depth": 1,
+          "children": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Grapher.getPalette",
+                "slug": "graphergetpalette"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Grapher.setPalette",
+                "slug": "graphersetpalette"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Grapher.getTexture",
+                "slug": "graphergettexture"
+              },
+              "depth": 2
+            }
+          ]
+        }
+      ]
+    }, {
+      "type": "file",
+      "data": {
+        "language": {
+          "nameMatchers": [".js"],
+          "pygmentsLexer": "javascript",
+          "multiLineComment": ["/*", "*", "*/"],
+          "singleLineComment": ["//"],
+          "ignorePrefix": "}",
+          "foldPrefix": "^",
+          "name": "JavaScript"
+        },
+        "sourcePath": "/Users/CZhang/Documents/ayasdi/grapher/modules/utilities.js",
+        "projectPath": "modules/utilities.js",
+        "targetPath": "utilities",
+        "pageTitle": "utilities",
+        "firstHeader": {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Utilities",
+            "slug": "utilities",
+            "isFileHeader": true
+          },
+          "depth": 1,
+          "children": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "noop",
+                "slug": "noop"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "each",
+                "slug": "each"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "eachPop",
+                "slug": "eachpop"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "eachKey",
+                "slug": "eachkey"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "map",
+                "slug": "map"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "clean",
+                "slug": "clean"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "range",
+                "slug": "range"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "sortedIndex",
+                "slug": "sortedindex"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "indexOf",
+                "slug": "indexof"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "uniqueInsert",
+                "slug": "uniqueinsert"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "extend",
+                "slug": "extend"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "bind",
+                "slug": "bind"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "isUndefined",
+                "slug": "isundefined"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "isFunction",
+                "slug": "isfunction"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "isObject",
+                "slug": "isobject"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "isNumber",
+                "slug": "isnumber"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "isNaN",
+                "slug": "isnan"
+              },
+              "depth": 2
+            }
+          ]
+        },
+        "title": "Utilities"
+      },
+      "depth": 1,
+      "outline": [
+        {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "noop",
+            "slug": "noop"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "each",
+            "slug": "each"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "eachPop",
+            "slug": "eachpop"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "eachKey",
+            "slug": "eachkey"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "map",
+            "slug": "map"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "clean",
+            "slug": "clean"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "range",
+            "slug": "range"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "sortedIndex",
+            "slug": "sortedindex"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "indexOf",
+            "slug": "indexof"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "uniqueInsert",
+            "slug": "uniqueinsert"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "extend",
+            "slug": "extend"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "bind",
+            "slug": "bind"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "isUndefined",
+            "slug": "isundefined"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "isFunction",
+            "slug": "isfunction"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "isObject",
+            "slug": "isobject"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "isNumber",
+            "slug": "isnumber"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "isNaN",
+            "slug": "isnan"
+          },
+          "depth": 2
         }
       ]
     }
