@@ -36,7 +36,7 @@ describe('a grapher instance', function () {
 
   function getNodeCenter (node) {
     return node.position.x + node.width / 2;
-  };
+  }
 
   beforeEach(function () {
     network = {

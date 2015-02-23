@@ -47,6 +47,9 @@
       resolution: typeof devicePixelRatio !== 'undefined' ? Math.max(devicePixelRatio, 1) : 1
     }, o);
 
+    this.width = width;
+    this.height = height;
+
     // Renderer and view
     this.renderer = PIXI.autoDetectRenderer(width, height, this.props);
     this.view = this.renderer.view;
@@ -89,6 +92,10 @@
     this.stage.mousedown = this._onEvent('mousedown');
     this.stage.mousemove = this._onEvent('mousemove');
     this.stage.mouseup = this._onEvent('mouseup');
+
+    // Add lost context listeners
+    this.view.addEventListener('webglcontextlost', u.bind(this._onContextLost, this));
+    this.view.addEventListener('webglcontextrestored', u.bind(this._onContextRestored, this));
 
     // Do any additional setup
     u.eachKey(o, this.set, this);
@@ -303,15 +310,25 @@
     * grapher.pause
     * ------------------
     * 
-    * Stops the animate loop.
+    * Pauses the animate loop.
     */
   Grapher.prototype.pause = function () {
-    if (this.currentFrame) {
-      cancelAnimationFrame(this.currentFrame);
-      this.currentFrame = undefined;
-    }
+    if (this.currentFrame) cancelAnimationFrame(this.currentFrame);
     return this;
   };
+
+  /**
+    * grapher.stop
+    * ------------------
+    * 
+    * Stops the animate loop. Same as pause, but also removes currentFrame.
+    */
+  Grapher.prototype.stop = function () {
+    this.pause();
+    this.currentFrame = undefined;
+    return this;
+  };
+
 
   /**
     * grapher.resize
@@ -320,6 +337,9 @@
     * Resize the grapher view.
     */
   Grapher.prototype.resize = function (width, height) {
+    this.width = width;
+    this.height = height;
+
     this.renderer.resize(width, height);
     return this;
   };
@@ -331,7 +351,8 @@
     * Center the network in the view. This function modifies the scale and translate.
     */
   Grapher.prototype.center = function () {
-    var x = y = 0,
+    var x = 0,
+        y = 0,
         scale = 1,
         nodes = this.data() ? this.data().nodes : null,
         numNodes = nodes ? nodes.length : 0;
@@ -699,13 +720,61 @@
     }.bind(this);
   };
 
+  /**
+    * grapher._onContextLost
+    * ----------------------
+    * 
+    * Handle context lost.
+    *
+    */
+  Grapher.prototype._onContextLost = function (e) {
+    e.preventDefault();
+    if (this.currentFrame) this.pause(); // stop animating
+  };
+
+  /**
+    * grapher._onContextRestored
+    * --------------------------
+    * 
+    * Handle context restored.
+    *
+    */
+  Grapher.prototype._onContextRestored = function (e) {
+    if (this.renderer.contextLost) this.renderer.initContext();
+    var gl = this.renderer.gl;
+
+    var restoreBatch = function (batch) {
+      if (batch.fastSpriteBatch) batch.fastSpriteBatch.setContext(gl);
+    };
+
+    if (gl) {
+      // Restore each spriteBatch manually.
+      u.eachKey(this.batches.nodes, restoreBatch);
+      u.eachKey(this.batches.links, restoreBatch);
+
+      // Re-enable vertex attrib array indices.
+      // PIXI remembers to re-enable 4 and 5, but not 0-3.
+      gl.enableVertexAttribArray(0);
+      gl.enableVertexAttribArray(1);
+      gl.enableVertexAttribArray(2);
+      gl.enableVertexAttribArray(3);
+
+      // Reset the blend mode (to PIXI.blendModesWebGL[PIXI.blendModes.NORMAL]).
+      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    }
+
+    this.resize(this.width, this.height);
+
+    if (this.currentFrame) this.play(); // Play the graph if it was running.
+  };
+
 /**
   * Grapher Static Properties
   * =========================
   */
   var NODES = Grapher.NODES = 'nodes';
   var LINKS = Grapher.LINKS = 'links';
-  Grapher.palettes = {}; // store palettes and textures staticly
+  Grapher.palettes = {}; // Store palettes and textures staticly.
   Grapher.textures = {};
   Grapher.textures.nodes = {};
   Grapher.textures.links = {};
@@ -741,7 +810,7 @@
       palette[i] = swatch;
 
       var j;
-      for (j = 0; j < i; j++) { // interpolate 'in-between' link colors 50% between node colors
+      for (j = 0; j < i; j++) { // Interpolate 'in-between' link colors 50% between node colors.
         var color = Color.interpolate(swatches[j], swatch, 0.5);
         this.getTexture(LINKS, color);
         palette[j + '-' + i] = color;
@@ -760,11 +829,13 @@
   Grapher.getTexture = function (type, color) {
     var textureSet = type === NODES ? this.textures.nodes : this.textures.links;
     if (!textureSet[color]) {
-      // generate the textures from Canvas
+      // Generate the textures from Canvas
       var isNode = type === NODES,
           size = isNode ? 100 : 1,
           renderer = new PIXI.CanvasRenderer(size, size, {transparent: isNode, resolution: 1}),
-          stage = new PIXI.Stage(color);
+          stage = new PIXI.Stage(color),
+          graphics = null,
+          img = '';
 
       if (isNode) {
         graphics = new PIXI.Graphics();
@@ -777,7 +848,8 @@
 
       renderer.render(stage);
 
-      textureSet[color] = new PIXI.Texture.fromCanvas(renderer.view);
+      img = renderer.view.toDataURL();
+      textureSet[color] = PIXI.Texture.fromImage(img);
     }
     return textureSet[color];
   };
