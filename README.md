@@ -1,19 +1,14 @@
 Ayasdi.Grapher
 ==============
 
-WebGL/Canvas Network Graphing using PIXI.js.
-
+Create network graphs using WebGL (with canvas backup) that integrates well
+with d3.
 
 Download
 --------
-Grapher comes bundled with PIXI.js.
 
-* [bundled](http://ayasdi.github.io/grapher/build/grapher.js)
-* [bundled-min](http://ayasdi.github.io/grapher/build/grapher-min.js)
-
-An unbundled version can be found in the modules folder.
-This version is useful if you are already using some of the dependencies or
-are using a package management system.
+* [grapher](http://ayasdi.github.io/grapher/build/grapher.js)
+* [grapher-min](http://ayasdi.github.io/grapher/build/grapher-min.js)
 
 
 Examples
