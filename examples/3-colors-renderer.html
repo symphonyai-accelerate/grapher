@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>3-Colors-Renderer</title>
+  </head>
+  <body>
+    <script type="text/javascript" src="../build/renderer.js"></script>
+    <script type="text/javascript">
+    function draw () {
+      var nodes = [];
+      var links = [];
+      var numOfNodes = 10;
+      var numOfLinks = numOfNodes * 2;
+      for (var i = 0; i < numOfNodes; i++) {
+        node = { 
+          color: randomInt(0, 256) * 256 * 256 + randomInt(0, 256) * 256 + randomInt(0, 256),
+          x: randomInt(30,470),
+          y: randomInt(30,470),
+          r: randomInt(10,30)
+        }
+        nodes.push(node);
+      }
+
+      for (var i = 0; i < numOfLinks; i++ ) {
+        var firstNode = randomInt(0, numOfNodes - 1);
+        var secondNode = randomInt(0, numOfNodes - 1);
+        var link = {
+          x1: nodes[firstNode].x, 
+          y1: nodes[firstNode].y,
+          x2: nodes[secondNode].x, 
+          y2: nodes[secondNode].y,
+          color : nodes[firstNode].color
+        }
+        links.push(link);
+      }
+
+      var renderer = new Renderer({
+        canvas: document.getElementById("canvas"),
+        width: 500,
+        height: 500,
+        linkWidth: 2
+      });
+
+      renderer.setNodes(nodes);
+      renderer.setLinks(links);
+      renderer.render();
+    }
+
+      function randomInt (min,max) { return Math.floor(Math.random() * (max - min + 1) + min); }
+    </script>
+  <body onload="draw();">
+    <canvas id="canvas" style="border: none;" width="500" height="500"></canvas>
+  </body>
+</html>
