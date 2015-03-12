@@ -110,8 +110,11 @@ Renderer.prototype.initialize = function (o) {
   this.nodes = [];
   this.links = [];
 
+  this.gl = null;
+
   //initial transform position 
-  this.scale = 1;
+  this.pixelScale = window.devicePixelRatio || 1;
+  this.scale = this.pixelScale;
   this.translate = [0, 0];
 
   this.NODE_ATTRIBUTES = 6;
@@ -130,13 +133,14 @@ Renderer.prototype.setLinks = function (links) { this.linkObjects = links; };
 
 Renderer.prototype.render = function () {
   this.initGL();
+  this.resize();
   this.updateNodesBuffer();
   this.updateLinksBuffer();
   this.renderLinks(); // links have to be rendered first because of blending;
   this.renderNodes();
 };
 
-Renderer.prototype.setScale = function (scale) { this.scale = scale; };
+Renderer.prototype.setScale = function (scale) { this.scale = scale * this.pixelScale ; };
 
 Renderer.prototype.setTranslate = function (translate) { this.translate = translate; };
 
@@ -146,7 +150,7 @@ Renderer.prototype.updateNodesBuffer = function () {
   for (var i = 0; i < this.nodeObjects.length; i++) {
     var cx = this.nodeObjects[i].x * this.scale + this.translate[0] ;
     var cy = this.nodeObjects[i].y * this.scale + this.translate[1];
-    var r = this.nodeObjects[i].r * this.scale;
+    var r = this.nodeObjects[i].r * Math.abs(this.scale);
     var color = this.nodeObjects[i].color;
 
 
@@ -197,83 +201,97 @@ Renderer.prototype.getTransformedPosition = function (position) {
  return [position.x / this.scale - this.translate[0], position.y / this.scale - this.translate[1]];
 };
 
+Renderer.prototype.resize = function () {
+  this.pixelScale = window.devicePixelRatio || 1;
+
+  var displayWidth  = Math.floor(this.gl.canvas.clientWidth  * this.pixelScale);
+  var displayHeight = Math.floor(this.gl.canvas.clientHeight * this.pixelScale);
+
+  if (this.gl.canvas.width != displayWidth || this.gl.canvas.height != displayHeight) {
+    this.gl.canvas.width  = displayWidth;
+    this.gl.canvas.height = displayHeight;
+    this.gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+};
+
 Renderer.prototype.initGL = function () {
-   if (typeof gl === 'undefined') gl = this.props.canvas.getContext('experimental-webgl', {antialias: true});
-  gl.viewport(0, 0, canvas.width, canvas.height); // this may be default...
+  if (!this.gl) this.gl = this.props.canvas.getContext('experimental-webgl', {antialias: true});
+  this.gl.viewport(0, 0, canvas.width, canvas.height);
+
 };
 
 Renderer.prototype.initShaders = function (vertexShaderSource, fragmentShaderSource) {
-  var vertexShader = this.getShaders.apply(this, [gl.VERTEX_SHADER, vertexShaderSource]);
-  var fragmentShader = this.getShaders.apply(this, [gl.FRAGMENT_SHADER, fragmentShaderSource]);
-  var shaderProgram = gl.createProgram();
-  gl.attachShader(shaderProgram, vertexShader);
-  gl.attachShader(shaderProgram, fragmentShader);
-  gl.linkProgram(shaderProgram);
-  gl.useProgram(shaderProgram);
-  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-  gl.enable(gl.BLEND);
-  gl.lineWidth(this.props.linkWidth * this.scale); // this is only for links
+  var vertexShader = this.getShaders.apply(this, [this.gl.VERTEX_SHADER, vertexShaderSource]);
+  var fragmentShader = this.getShaders.apply(this, [this.gl.FRAGMENT_SHADER, fragmentShaderSource]);
+  var shaderProgram = this.gl.createProgram();
+  this.gl.attachShader(shaderProgram, vertexShader);
+  this.gl.attachShader(shaderProgram, fragmentShader);
+  this.gl.linkProgram(shaderProgram);
+  this.gl.useProgram(shaderProgram);
+  this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+  this.gl.enable(this.gl.BLEND);
+  this.gl.lineWidth(this.props.linkWidth * Math.abs(this.scale)); // this is only for links
   return shaderProgram;
 };
 
 Renderer.prototype.getShaders = function (type, source) {
-  var shader = gl.createShader(type);
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
+  var shader = this.gl.createShader(type);
+  this.gl.shaderSource(shader, source);
+  this.gl.compileShader(shader);
   return shader;
 };
 
 Renderer.prototype.renderLinks = function () {
   var program = this.initShaders.apply(this, [this.linkVertexShaderSource, this.linkFragmentShaderSource]);
   var linksBuffer = new Float32Array(this.links);
-  var buffer = gl.createBuffer();
+  var buffer = this.gl.createBuffer();
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, linksBuffer, gl.STATIC_DRAW);
+  this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
+  this.gl.bufferData(this.gl.ARRAY_BUFFER, linksBuffer, this.gl.STATIC_DRAW);
 
-  var resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
-  gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+  var resolutionLocation = this.gl.getUniformLocation(program, 'u_resolution');
+  this.gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
 
-  var positionLocation = gl.getAttribLocation(program, 'a_position');
-  var colorLocation = gl.getAttribLocation(program, 'a_color');
+  var positionLocation = this.gl.getAttribLocation(program, 'a_position');
+  var colorLocation = this.gl.getAttribLocation(program, 'a_color');
   
-  gl.enableVertexAttribArray(positionLocation);
-  gl.enableVertexAttribArray(colorLocation);
+  this.gl.enableVertexAttribArray(positionLocation);
+  this.gl.enableVertexAttribArray(colorLocation);
 
-  gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, this.LINKS_ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT, 0);
-  gl.vertexAttribPointer(colorLocation, 1, gl.FLOAT, false, this.LINKS_ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT, 8);
+  this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, this.LINKS_ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT, 0);
+  this.gl.vertexAttribPointer(colorLocation, 1, this.gl.FLOAT, false, this.LINKS_ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT, 8);
 
-  gl.drawArrays(gl.LINES, 0, this.links.length/this.LINKS_ATTRIBUTES);
+  this.gl.drawArrays(this.gl.LINES, 0, this.links.length/this.LINKS_ATTRIBUTES);
 };
 
 Renderer.prototype.renderNodes = function () {
   var program = this.initShaders.apply(this, [this.nodeVertexShaderSource, this.nodeFragmentShaderSource]);
   var nodesBuffer = new Float32Array(this.nodes);
-  var buffer = gl.createBuffer();
+  var buffer = this.gl.createBuffer();
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, nodesBuffer, gl.STATIC_DRAW);
+  this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
+  this.gl.bufferData(this.gl.ARRAY_BUFFER, nodesBuffer, this.gl.STATIC_DRAW);
 
-  var resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
-  gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+  var resolutionLocation = this.gl.getUniformLocation(program, 'u_resolution');
+  this.gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
 
-  var positionLocation = gl.getAttribLocation(program, 'a_position');
-  var colorLocation = gl.getAttribLocation(program, 'a_color');
-  var centerLocation = gl.getAttribLocation(program, 'a_center');
-  var radiusLocation = gl.getAttribLocation(program, 'a_radius');
+  var positionLocation = this.gl.getAttribLocation(program, 'a_position');
+  var colorLocation = this.gl.getAttribLocation(program, 'a_color');
+  var centerLocation = this.gl.getAttribLocation(program, 'a_center');
+  var radiusLocation = this.gl.getAttribLocation(program, 'a_radius');
 
   
-  gl.enableVertexAttribArray(positionLocation);
-  gl.enableVertexAttribArray(colorLocation);
-  gl.enableVertexAttribArray(centerLocation);
-  gl.enableVertexAttribArray(radiusLocation);
+  this.gl.enableVertexAttribArray(positionLocation);
+  this.gl.enableVertexAttribArray(colorLocation);
+  this.gl.enableVertexAttribArray(centerLocation);
+  this.gl.enableVertexAttribArray(radiusLocation);
 
-  gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, this.NODE_ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT, 0);
-  gl.vertexAttribPointer(colorLocation, 1, gl.FLOAT, false, this.NODE_ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT, 8);
-  gl.vertexAttribPointer(centerLocation, 2, gl.FLOAT, false, this.NODE_ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT, 12);
-  gl.vertexAttribPointer(radiusLocation, 1, gl.FLOAT, false, this.NODE_ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT, 20);
+  this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, this.NODE_ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT, 0);
+  this.gl.vertexAttribPointer(colorLocation, 1, this.gl.FLOAT, false, this.NODE_ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT, 8);
+  this.gl.vertexAttribPointer(centerLocation, 2, this.gl.FLOAT, false, this.NODE_ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT, 12);
+  this.gl.vertexAttribPointer(radiusLocation, 1, this.gl.FLOAT, false, this.NODE_ATTRIBUTES * Float32Array.BYTES_PER_ELEMENT, 20);
 
-  gl.drawArrays(gl.TRIANGLES, 0, this.nodes.length/this.NODE_ATTRIBUTES);
+  this.gl.drawArrays(this.gl.TRIANGLES, 0, this.nodes.length/this.NODE_ATTRIBUTES);
 };
 
 }, {"./shaders/link.vert":2,"./shaders/link.frag":3,"./shaders/node.vert":4,"./shaders/node.frag":5}],
