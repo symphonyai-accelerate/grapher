@@ -329,32 +329,8 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "type": "heading",
               "data": {
                 "level": 2,
-                "title": "grapher.backgroundColor",
-                "slug": "grapherbackgroundcolor"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "grapher.foregroundColor",
-                "slug": "grapherforegroundcolor"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "grapher.lineWidth",
-                "slug": "grapherlinewidth"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "grapher.getNodeIdAt",
-                "slug": "graphergetnodeidat"
+                "title": "grapher.color",
+                "slug": "graphercolor"
               },
               "depth": 2
             }
@@ -369,22 +345,6 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "depth": 1,
           "children": [
             {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "grapher._exit",
-                "slug": "grapher-exit"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "grapher._enter",
-                "slug": "grapher-enter"
-              },
-              "depth": 2
-            }, {
               "type": "heading",
               "data": {
                 "level": 2,
@@ -424,46 +384,6 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 "slug": "grapher-findcolor"
               },
               "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "grapher._setColor",
-                "slug": "grapher-setcolor"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "grapher._getBatch",
-                "slug": "grapher-getbatch"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "grapher._onEvent",
-                "slug": "grapher-onevent"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "grapher._onContextLost",
-                "slug": "grapher-oncontextlost"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "grapher._onContextRestored",
-                "slug": "grapher-oncontextrestored"
-              },
-              "depth": 2
             }
           ]
         }, {
@@ -499,18 +419,50 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 "slug": "graphersetpalette"
               },
               "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "Grapher.getTexture",
-                "slug": "graphergettexture"
-              },
-              "depth": 2
             }
           ]
         }
       ]
+    }, {
+      "type": "file",
+      "data": {
+        "language": {
+          "nameMatchers": [".js"],
+          "pygmentsLexer": "javascript",
+          "multiLineComment": ["/*", "*", "*/"],
+          "singleLineComment": ["//"],
+          "ignorePrefix": "}",
+          "foldPrefix": "^",
+          "name": "JavaScript"
+        },
+        "sourcePath": "/Users/CZhang/Documents/ayasdi/grapher/modules/link.js",
+        "projectPath": "modules/link.js",
+        "targetPath": "link",
+        "pageTitle": "link",
+        "title": "link"
+      },
+      "depth": 1,
+      "outline": []
+    }, {
+      "type": "file",
+      "data": {
+        "language": {
+          "nameMatchers": [".js"],
+          "pygmentsLexer": "javascript",
+          "multiLineComment": ["/*", "*", "*/"],
+          "singleLineComment": ["//"],
+          "ignorePrefix": "}",
+          "foldPrefix": "^",
+          "name": "JavaScript"
+        },
+        "sourcePath": "/Users/CZhang/Documents/ayasdi/grapher/modules/node.js",
+        "projectPath": "modules/node.js",
+        "targetPath": "node",
+        "pageTitle": "node",
+        "title": "node"
+      },
+      "depth": 1,
+      "outline": []
     }, {
       "type": "file",
       "data": {

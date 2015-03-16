@@ -17,6 +17,7 @@
         height: 100%;
       }
     </style>
+    <canvas id="graph"></canvas>
     <script type="text/javascript" src="../build/grapher.js"></script>
     <script type="text/javascript">
       // Generate some data
@@ -47,13 +48,14 @@
 
       // Create a grapher instance (width, height, options)
       // The options are the same as PIXI's renderer options.
-      var grapher = new Grapher(width, height);
+      var grapher = new Grapher({
+        canvas: document.getElementById('graph'),
+        width: width,
+        height: height
+      });
 
       // Give it the network data
       grapher.data(network);
-
-      // Append the grapher's view onto the page
-      document.body.appendChild(grapher.view);
 
       // Render the graph
       grapher.render();

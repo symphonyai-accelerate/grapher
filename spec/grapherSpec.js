@@ -2,26 +2,18 @@ describe('grapher', function () {
   var Grapher = Ayasdi.Grapher;
   var palette = [0x666666, 0x999999, 0xcccccc];
 
-  it('contains palettes and textures', function () {
+  it('contains palettes', function () {
     expect(Grapher.palettes).toBeDefined();
-    expect(Grapher.textures).toBeDefined();
-  });
-
-  xit('loads its textures', function (done) {
-    expect(Grapher.load).toBeDefined();
-    Grapher.load().then(done);
   });
 
   it('defines new palettes', function () {
     Grapher.setPalette('greyscale', palette);
     expect(Grapher.getPalette('greyscale')).toBeDefined();
-    expect(Grapher.getTexture('nodes', 0xcccccc)).toBeDefined();
   });
 
   it('generates interpolated textures and swatches for links', function () {
     var swatch = Grapher.getPalette('greyscale')['0-1'];
     expect(swatch).toBeDefined();
-    expect(Grapher.getTexture('links', swatch)).toBeDefined();
   });
 });
 
@@ -35,7 +27,7 @@ describe('a grapher instance', function () {
   var network, grapher;
 
   function getNodeCenter (node) {
-    return node.position.x + node.width / 2;
+    return node.x;
   }
 
   beforeEach(function () {
@@ -57,18 +49,11 @@ describe('a grapher instance', function () {
     grapher = undefined;
   });
 
-  it('has a renderer, view, stage, links, and nodes', function () {
+  it('has a renderer, canvas, links, and nodes', function () {
     expect(grapher.renderer).toBeDefined();
-    expect(grapher.view).toBeDefined();
-    expect(grapher.stage).toBeDefined();
+    expect(grapher.canvas).toBeDefined();
     expect(grapher.links).toBeDefined();
     expect(grapher.nodes).toBeDefined();
-  });
-
-  it('has sprite batches', function () {
-    expect(grapher.batches).toBeDefined();
-    expect(grapher.batches.links).toBeDefined();
-    expect(grapher.batches.nodes).toBeDefined();
   });
 
   it('sets and retrieves data', function () {
@@ -117,49 +102,45 @@ describe('a grapher instance', function () {
   it('updates nodes or links individually by index', function () {
     expect(grapher.updateNode).toBeDefined();
     expect(grapher.updateLink).toBeDefined();
-    grapher.data(network).render();
+    grapher.data(network);
 
     var n = 0;
     network.nodes[n].x = -100;
 
-    grapher.updateNode(n).render();
+    grapher.updateNode(n);
+    grapher.render();
     expect(getNodeCenter(grapher.nodes[n])).toEqual(network.nodes[n].x);
   });
 
   it('updates links attached to updating nodes', function () {
-    grapher.data(network).render();
+    grapher.data(network);
 
     network.nodes[0].x = -100;
     grapher.update('nodes', [0]).render();
 
-    expect(grapher.links[0].position.x).toEqual(network.nodes[0].x);
+    expect(grapher.links[0].x1).toEqual(network.nodes[0].x);
   });
 
   it('transforms', function () {
     var transform = {scale: 0.5, translate: [100, 200]};
 
-    grapher.transform(transform).render();
-    expect(grapher.network.scale.x).toEqual(transform.scale);
-    expect(grapher.network.scale.y).toEqual(transform.scale);
-    expect(grapher.network.position.x).toEqual(transform.translate[0]);
-    expect(grapher.network.position.y).toEqual(transform.translate[1]);
+    grapher.transform(transform);
+    expect(grapher.scale()).toEqual(transform.scale);
+    expect(grapher.translate()[0]).toEqual(transform.translate[0]);
+    expect(grapher.translate()[1]).toEqual(transform.translate[1]);
   });
 
   it('resizes', function () {
     expect(grapher.resize).toBeDefined();
     grapher.resize(800, 600);
-    expect(grapher.renderer.width).toBe(800 * devicePixelRatio);
-    expect(grapher.renderer.height).toBe(600 * devicePixelRatio);
+    expect(grapher.canvas.width).toBe(800 * devicePixelRatio);
+    expect(grapher.canvas.height).toBe(600 * devicePixelRatio);
   });
 
-  it('assigns custom mouse event handlers', function () {
-    var handler = function () { return true; };
-    grapher.on('mousedown', handler);
-    grapher.on('mousemove', handler);
-    grapher.on('mouseup', handler);
-
-    expect(grapher.listeners.mousedown).toBe(handler);
-    expect(grapher.listeners.mousemove).toBe(handler);
-    expect(grapher.listeners.mouseup).toBe(handler);
+  it('can set custom event handlers', function () {
+    var handler = function () { return true; },
+        e = 'someEvent';
+    grapher.on(e, handler);
+    expect(grapher.handlers[e][0]).toBe(handler);
   });
 });

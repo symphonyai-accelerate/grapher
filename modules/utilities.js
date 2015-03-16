@@ -31,7 +31,7 @@ var Utilities = module.exports = {
  *
  * A function that does nothing.
  */
-function noop () {};
+function noop () {}
 
 /**
  * each
@@ -49,7 +49,7 @@ function each (arr, fn, ctx) {
     fn(arr[i], i);
   }
   return arr;
-};
+}
 
 /**
  * eachPop
@@ -66,7 +66,7 @@ function eachPop (arr, fn, ctx) {
     fn(arr.pop());
   }
   return arr;
-};
+}
 
 /**
  * eachKey
@@ -88,7 +88,7 @@ function eachKey (obj, fn, ctx) {
     }
   }
   return obj;
-};
+}
 
 /**
  * map
@@ -107,7 +107,7 @@ function map (arr, fn, ctx) {
     mapped[i] = fn(arr[i], i);
   }
   return mapped;
-};
+}
 
 /**
  * clean
@@ -121,7 +121,7 @@ function map (arr, fn, ctx) {
 function clean (arr) {
   eachPop(arr, noop);
   return arr;
-};
+}
 
 /**
  * range
@@ -143,7 +143,7 @@ function range (start, end, step) {
     result[i] = start + (step * i);
   }
   return result;
-};
+}
 
 /**
  * sortedIndex
@@ -162,7 +162,7 @@ function sortedIndex (arr, n) {
   }
 
   return min;
-};
+}
 
 /**
  * indexOf
@@ -177,7 +177,7 @@ function indexOf (arr, n) {
     if (arr[i] === n) return i;
   }
   return i;
-};
+}
 
 /**
  * uniqueInsert
@@ -189,7 +189,7 @@ function indexOf (arr, n) {
 function uniqueInsert (arr, n) {
   if (indexOf(arr, n) === -1) arr.push(n);
   return arr;
-};
+}
 
 /**
  * extend
@@ -207,7 +207,7 @@ function extend (obj, source) {
     }
   }
   return obj;
-};
+}
 
 /**
    * bind
@@ -219,7 +219,7 @@ function extend (obj, source) {
 function bind (fn, ctx) {
   if (!ctx) return fn;
   return function () { return fn.apply(ctx, arguments); };
-};
+}
 
 /**
  * isUndefined
@@ -229,7 +229,7 @@ function bind (fn, ctx) {
  */
 function isUndefined (o) {
   return typeof o === 'undefined';
-};
+}
 
 /**
  * isFunction
@@ -239,7 +239,7 @@ function isUndefined (o) {
  */
 function isFunction (o) {
   return typeof o === 'function';
-};
+}
 
 /**
  * isObject
@@ -249,7 +249,7 @@ function isFunction (o) {
  */
 function isObject (o) {
   return typeof o === 'object' && !!o;
-};
+}
 
 /**
  * isNumber
@@ -259,7 +259,7 @@ function isObject (o) {
  */
 function isNumber (o) {
   return typeof o === 'number';
-};
+}
 
 /**
  * isNaN
@@ -269,4 +269,4 @@ function isNumber (o) {
  */
 function isNaN (o) {
   return isNumber(o) && o !== +o;
-};
+}

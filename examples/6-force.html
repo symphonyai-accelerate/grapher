@@ -49,12 +49,30 @@
         });
       }
 
+      // We create a function that determines whether a click event falls on a node.
+      var getNodeIdAt = function (point) {
+        var node = -1,
+            x = point.x, y = point.y;
+
+        network.nodes.every(function (n, i) {
+          var inX = x <= n.x + n.r && x >= n.x - n.r,
+              inY = y <= n.y + n.r && y >= n.y - n.r,
+              found = inX && inY;
+          if (found) node = i;
+          return !found;
+        });
+
+        return node;
+      };
+
       // For convenience
       var Grapher = Ayasdi.Grapher;
 
       // Create a grapher instance (width, height, options)
-      // The options are the same as PIXI's renderer options.
-      var grapher = new Grapher(width, height);
+      var grapher = new Grapher({
+        width: width,
+        height: height
+      });
 
       // Give it the network data
       grapher.data(network);
@@ -88,20 +106,21 @@
           .start();
 
       // On mousedown, grab the node that was clicked.
-      // e.offsetData contains the coordinates within the data space
       grapher.on('mousedown', function (e) {
-        var nodeId = grapher.getNodeIdAt(e.offsetData);
+        var point = grapher.getDataPosition(e.offsetX, e.offsetY);
+        var nodeId = getNodeIdAt(point);
         if (nodeId > -1) {
           dragging = {node: network.nodes[nodeId], id: nodeId};
-          offset = e.offsetData;
+          offset = point;
         }
         else dragging = offset = null;
       });
 
       // When the user moves the mouse, we update the node's position
       grapher.on('mousemove', function (e) {
+        var point = grapher.getDataPosition(e.offsetX, e.offsetY);
         if (dragging) {
-          offset = e.offsetData;
+          offset = point;
           force.alpha(1); // restart the force graph
         }
       });
@@ -110,7 +129,7 @@
       grapher.on('mouseup', function (e) { dragging = offset = null; });
 
       // Append the grapher's view onto the page
-      document.body.appendChild(grapher.view);
+      document.body.appendChild(grapher.canvas);
 
       // Render the graph using play. This will call render in a requestAnimationFrame loop.
       grapher.play();
