@@ -147,6 +147,7 @@ Ayasdi.Grapher = Grapher;
     this.height = height;
 
     // Renderer and view
+    this.rendered = false;
     this.renderer = PIXI.autoDetectRenderer(width, height, this.props);
     this.view = this.renderer.view;
 
@@ -375,6 +376,7 @@ Ayasdi.Grapher = Grapher;
     * Updates each sprite and renders the network.
     */
   Grapher.prototype.render = function () {
+    this.rendered = true;
     this._update();
     this.renderer.render(this.stage);
     return this;
@@ -410,18 +412,7 @@ Ayasdi.Grapher = Grapher;
     */
   Grapher.prototype.pause = function () {
     if (this.currentFrame) cancelAnimationFrame(this.currentFrame);
-    return this;
-  };
-
-  /**
-    * grapher.stop
-    * ------------------
-    * 
-    * Stops the animate loop. Same as pause, but also removes currentFrame.
-    */
-  Grapher.prototype.stop = function () {
-    this.pause();
-    this.currentFrame = undefined;
+    this.currentFrame = null;
     return this;
   };
 
@@ -825,7 +816,7 @@ Ayasdi.Grapher = Grapher;
     */
   Grapher.prototype._onContextLost = function (e) {
     e.preventDefault();
-    if (this.currentFrame) this.pause(); // stop animating
+    if (this.currentFrame) cancelAnimationFrame(this.currentFrame);
   };
 
   /**
@@ -862,6 +853,7 @@ Ayasdi.Grapher = Grapher;
     this.resize(this.width, this.height);
 
     if (this.currentFrame) this.play(); // Play the graph if it was running.
+    else if (this.rendered) this.render();
   };
 
 /**
