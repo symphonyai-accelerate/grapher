@@ -8,15 +8,14 @@
   var WebGLRenderer = Renderer.extend({
     init: function (o) {
       this._super(o);
-      this.gl = o.webGL;
+      this.initGL(o.webGL);
 
       this.NODE_ATTRIBUTES = 6;
       this.LINKS_ATTRIBUTES = 3;
-
-      this.initGL();
     },
 
-    initGL: function () {
+    initGL: function (gl) {
+      this.gl = gl;
       this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 
       this.linksProgram = this.initShaders(LinkVertexShaderSource, LinkFragmentShaderSource);

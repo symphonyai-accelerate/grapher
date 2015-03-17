@@ -147,10 +147,15 @@ Ayasdi.Grapher = Grapher;
     this.canvas = this.props.canvas;
 
     var webGL = this._getWebGL();
-    if (webGL) this.props.webGL = webGL;
+    if (webGL) {
+      this.props.webGL = webGL;
+      this.props.canvas.addEventListener('webglcontextlost', function (e) { this._onContextLost(e); }.bind(this));
+      this.props.canvas.addEventListener('webglcontextrestored', function (e) { this._onContextRestored(e); }.bind(this));
+    }
 
     // Renderer and view
     this.renderer =  webGL ? new WebGLRenderer(this.props) : new CanvasRenderer(this.props);
+    this.rendered = false;
 
     // Initialize sizes
     this.resize(this.props.width, this.props.height);
@@ -369,6 +374,7 @@ Ayasdi.Grapher = Grapher;
     * Updates each sprite and renders the network.
     */
   Grapher.prototype.render = function () {
+    this.rendered = true;
     this._update();
     this.renderer.render();
     return this;
@@ -404,19 +410,7 @@ Ayasdi.Grapher = Grapher;
     */
   Grapher.prototype.pause = function () {
     if (this.currentFrame) cancelAnimationFrame(this.currentFrame);
-    return this;
-  };
-
-  /**
-    * grapher.stop
-    * ------------------
-    * 
-    * Stops the animate loop. Same as pause, but also removes currentFrame.
-    */
-  Grapher.prototype.stop = function () {
-    this.pause();
-    this.currentFrame = undefined;
-    return this;
+    this.currentFrame = null;
   };
 
   /**
@@ -697,6 +691,33 @@ Ayasdi.Grapher = Grapher;
     return gl;
   };
 
+ /**
+    * grapher._onContextLost
+    * ----------------------
+    * 
+    * Handle context lost.
+    *
+    */
+  Grapher.prototype._onContextLost = function (e) {
+    e.preventDefault();
+    if (this.currentFrame) cancelAnimationFrame(this.currentFrame);
+  };
+
+  /**
+    * grapher._onContextRestored
+    * --------------------------
+    * 
+    * Handle context restored.
+    *
+    */
+  Grapher.prototype._onContextRestored = function (e) {
+    var webGL = this._getWebGL();
+    this.renderer.initGL(webGL);
+    this.renderer.resize(width, height);
+    if (this.currentFrame) this.play(); // Play the graph if it was running.
+    else if (this.rendered) this.render();
+  };
+
 
 /**
   * Grapher Static Properties
@@ -756,15 +777,14 @@ Ayasdi.Grapher = Grapher;
   var WebGLRenderer = Renderer.extend({
     init: function (o) {
       this._super(o);
-      this.gl = o.webGL;
+      this.initGL(o.webGL);
 
       this.NODE_ATTRIBUTES = 6;
       this.LINKS_ATTRIBUTES = 3;
-
-      this.initGL();
     },
 
-    initGL: function () {
+    initGL: function (gl) {
+      this.gl = gl;
       this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 
       this.linksProgram = this.initShaders(LinkVertexShaderSource, LinkFragmentShaderSource);
