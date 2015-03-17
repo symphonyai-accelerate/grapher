@@ -20,9 +20,7 @@ describe('grapher', function () {
 describe('a grapher instance', function () {
   var Grapher = Ayasdi.Grapher;
 
-  var width = 100,
-      height = 100,
-      options = {};
+  var options = {width: 100, height: 100};
 
   var network, grapher;
 
@@ -42,7 +40,7 @@ describe('a grapher instance', function () {
         {from: 1, to: 2}
       ]
     };
-    grapher = new Grapher(width, height, options);
+    grapher = new Grapher(options);
   });
 
   afterEach(function () {

@@ -959,7 +959,7 @@ module.exports = 'precision mediump float;\nvarying vec4 color;\nvarying vec2 ce
     transformY: function (y) { return y * this.scale + this.translate[1]; },
     untransformX: function (x) { return (x - this.translate[0]) / this.scale; },
     untransformY: function (y) { return (y - this.translate[1]) / this.scale; },
-    resize: function (width, heght) {
+    resize: function (width, height) {
       var displayWidth  = width * this.resolution;
       var displayHeight = height * this.resolution;
 
