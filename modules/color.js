@@ -4,6 +4,7 @@
 var Color = module.exports = {
   hexToRgb: hexToRgb,
   rgbToHex: rgbToHex,
+  toRgb: toRgb,
   interpolate: interpolate,
   parse: parse
 };
@@ -41,4 +42,12 @@ function parse (c) {
     }
   }
   return color;
+};
+
+function toRgb (intColor) {
+  var r = (intColor >> 16) & 255;
+  var g = (intColor >> 8) & 255;
+  var b = intColor & 255;
+
+  return 'rgb(' + r + ', ' + g + ', ' + b + ')';
 };

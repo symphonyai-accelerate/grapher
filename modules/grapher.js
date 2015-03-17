@@ -8,7 +8,8 @@
   * Grapher uses PIXI.js as a dependency and uses Color and Utilities found in
   * modules.
   */
-  var Renderer = require('./gl/renderer.js'),
+  var WebGLRenderer = require('./gl/renderer.js'),
+      CanvasRenderer = require('./canvas/renderer.js'),
       Color = require('./color.js'),
       Link = require('./link.js'),
       Node = require('./node.js'),
@@ -47,10 +48,13 @@
     if (!o.canvas) this.props.canvas = document.createElement('canvas');
     if (!o.width) this.props.width = this.props.canvas.clientWidth;
     if (!o.height) this.props.height = this.props.canvas.clientHeight;
+    this.canvas = this.props.canvas;
+
+    var webGL = this._getWebGL();
+    if (webGL) this.props.webGL = webGL;
 
     // Renderer and view
-    this.renderer = new Renderer(this.props);
-    this.canvas = this.props.canvas;
+    this.renderer =  webGL ? new WebGLRenderer(this.props) : new CanvasRenderer(this.props);
 
     // Initialize sizes
     this.resize(this.props.width, this.props.height);
@@ -582,6 +586,21 @@
     if (u.isNaN(color)) color = this.color();
     return color;
   };
+
+  /**
+    * grapher._getWebGL
+    * -------------------
+    * 
+    *get webGL context if available
+    *
+    */
+  Grapher.prototype._getWebGL = function () {
+    var gl = null;
+    try { gl = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl"); }
+    catch (x) { gl = null; }
+    return gl;
+  };
+
 
 /**
   * Grapher Static Properties
