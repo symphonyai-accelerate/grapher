@@ -1,5 +1,4 @@
 describe('grapher', function () {
-  var Grapher = Ayasdi.Grapher;
   var palette = [0x666666, 0x999999, 0xcccccc];
 
   it('contains palettes', function () {
@@ -18,8 +17,6 @@ describe('grapher', function () {
 });
 
 describe('a grapher instance', function () {
-  var Grapher = Ayasdi.Grapher;
-
   var options = {width: 100, height: 100};
 
   var network, grapher;

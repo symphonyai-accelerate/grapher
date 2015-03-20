@@ -3,17 +3,16 @@
 
 ;(function () {
 /**
-  * Dependencies
-  * ==============
-  * Grapher uses PIXI.js as a dependency and uses Color and Utilities found in
-  * modules.
+  * Helpers and Renderers
+  * =====================
+  * Load helpers and renderers.
   */
-  var WebGLRenderer = require('./gl/renderer.js'),
-      CanvasRenderer = require('./canvas/renderer.js'),
-      Color = require('./color.js'),
-      Link = require('./link.js'),
-      Node = require('./node.js'),
-      u = require('./utilities.js');
+  var WebGLRenderer = require('./renderers/gl/renderer.js'),
+      CanvasRenderer = require('./renderers/canvas/renderer.js'),
+      Color = require('./helpers/color.js'),
+      Link = require('./helpers/link.js'),
+      Node = require('./helpers/node.js'),
+      u = require('./helpers/utilities.js');
 
 /**
   * Grapher
@@ -328,6 +327,30 @@
     this.props.height = height;
 
     this.renderer.resize(width, height);
+    return this;
+  };
+
+  /**
+    * grapher.width
+    * ------------------
+    * 
+    * Specify or retrieve the width.
+    */
+  Grapher.prototype.width = function (width) {
+    if (u.isUndefined(width)) return this.props.width;
+    this.resize(width, this.props.height);
+    return this;
+  };
+
+   /**
+    * grapher.height
+    * ------------------
+    * 
+    * Specify or retrieve the height.
+    */
+  Grapher.prototype.height = function (height) {
+    if (u.isUndefined(height)) return this.props.height;
+    this.resize(this.props.width, height);
     return this;
   };
 

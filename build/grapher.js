@@ -83,14 +83,11 @@
    return require;
 })({
 1: [function(require, module, exports) {
-// Ayasdi Inc. Copyright 2014
-// Grapher.js may be freely distributed under the Apache 2.0 license
+;(function () {
+  Grapher = require('./modules/grapher.js');
 
-var Grapher = require('./modules/grapher.js');
-
-if (module && module.exports) module.exports = Grapher;
-if (typeof Ayasdi === 'undefined') Ayasdi = {};
-Ayasdi.Grapher = Grapher;
+  if (module && module.exports) module.exports = Grapher;
+})();
 
 }, {"./modules/grapher.js":2}],
 2: [function(require, module, exports) {
@@ -99,17 +96,16 @@ Ayasdi.Grapher = Grapher;
 
 ;(function () {
 /**
-  * Dependencies
-  * ==============
-  * Grapher uses PIXI.js as a dependency and uses Color and Utilities found in
-  * modules.
+  * Helpers and Renderers
+  * =====================
+  * Load helpers and renderers.
   */
-  var WebGLRenderer = require('./gl/renderer.js'),
-      CanvasRenderer = require('./canvas/renderer.js'),
-      Color = require('./color.js'),
-      Link = require('./link.js'),
-      Node = require('./node.js'),
-      u = require('./utilities.js');
+  var WebGLRenderer = require('./renderers/gl/renderer.js'),
+      CanvasRenderer = require('./renderers/canvas/renderer.js'),
+      Color = require('./helpers/color.js'),
+      Link = require('./helpers/link.js'),
+      Node = require('./helpers/node.js'),
+      u = require('./helpers/utilities.js');
 
 /**
   * Grapher
@@ -424,6 +420,30 @@ Ayasdi.Grapher = Grapher;
     this.props.height = height;
 
     this.renderer.resize(width, height);
+    return this;
+  };
+
+  /**
+    * grapher.width
+    * ------------------
+    * 
+    * Specify or retrieve the width.
+    */
+  Grapher.prototype.width = function (width) {
+    if (u.isUndefined(width)) return this.props.width;
+    this.resize(width, this.props.height);
+    return this;
+  };
+
+   /**
+    * grapher.height
+    * ------------------
+    * 
+    * Specify or retrieve the height.
+    */
+  Grapher.prototype.height = function (height) {
+    if (u.isUndefined(height)) return this.props.height;
+    this.resize(this.props.width, height);
     return this;
   };
 
@@ -765,14 +785,14 @@ Ayasdi.Grapher = Grapher;
   if (module && module.exports) module.exports = Grapher;
 })();
 
-}, {"./gl/renderer.js":3,"./canvas/renderer.js":4,"./color.js":5,"./link.js":6,"./node.js":7,"./utilities.js":8}],
+}, {"./renderers/gl/renderer.js":3,"./renderers/canvas/renderer.js":4,"./helpers/color.js":5,"./helpers/link.js":6,"./helpers/node.js":7,"./helpers/utilities.js":8}],
 3: [function(require, module, exports) {
 ;(function () {
   var LinkVertexShaderSource = require('./shaders/link.vert'),
       LinkFragmentShaderSource = require('./shaders/link.frag'),
       NodeVertexShaderSource = require('./shaders/node.vert'),
       NodeFragmentShaderSource = require('./shaders/node.frag'),
-      Renderer = require('./../renderer.js');
+      Renderer = require('../renderer.js');
 
   var WebGLRenderer = Renderer.extend({
     init: function (o) {
@@ -941,7 +961,7 @@ Ayasdi.Grapher = Grapher;
   if (module && module.exports) module.exports = WebGLRenderer;
 })();
 
-}, {"./shaders/link.vert":9,"./shaders/link.frag":10,"./shaders/node.vert":11,"./shaders/node.frag":12,"./../renderer.js":13}],
+}, {"./shaders/link.vert":9,"./shaders/link.frag":10,"./shaders/node.vert":11,"./shaders/node.frag":12,"../renderer.js":13}],
 9: [function(require, module, exports) {
 module.exports = 'uniform vec2 u_resolution;\nattribute vec2 a_position;\nattribute float a_color;\nvarying vec4 color;\nvarying vec2 position;\nvarying vec2 resolution;\nvoid main() {\n  vec2 clipspace = a_position / u_resolution * 2.0 - 1.0;\n  gl_Position = vec4(clipspace * vec2(1, -1), 0, 1);\n  float c = a_color;\n  color.b = mod(c, 256.0); c = floor(c / 256.0);\n  color.g = mod(c, 256.0); c = floor(c / 256.0);\n  color.r = mod(c, 256.0); c = floor(c / 256.0); color /= 255.0;\n  color.a = 1.0;\n}\n';
 }, {}],
@@ -1046,8 +1066,8 @@ module.exports = 'precision mediump float;\nvarying vec4 color;\nvarying vec2 ce
 4: [function(require, module, exports) {
 ;(function () {
 
-  var Renderer = require('./../renderer.js');
-  var Color = require('./../color.js');
+  var Renderer = require('../renderer.js');
+  var Color = require('../../helpers/color.js');
   
   var CanvasRenderer = Renderer.extend({
     init: function (o) {
@@ -1098,7 +1118,7 @@ module.exports = 'precision mediump float;\nvarying vec4 color;\nvarying vec2 ce
   if (module && module.exports) module.exports = CanvasRenderer;
 })();
 
-}, {"./../renderer.js":13,"./../color.js":5}],
+}, {"../renderer.js":13,"../../helpers/color.js":5}],
 5: [function(require, module, exports) {
 // Ayasdi Inc. Copyright 2014
 // Color.js may be freely distributed under the Apache 2.0 license

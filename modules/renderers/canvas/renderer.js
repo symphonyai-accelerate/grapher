@@ -1,7 +1,7 @@
 ;(function () {
 
-  var Renderer = require('./../renderer.js');
-  var Color = require('./../color.js');
+  var Renderer = require('../renderer.js');
+  var Color = require('../../helpers/color.js');
   
   var CanvasRenderer = Renderer.extend({
     init: function (o) {

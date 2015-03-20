@@ -3,7 +3,7 @@
       LinkFragmentShaderSource = require('./shaders/link.frag'),
       NodeVertexShaderSource = require('./shaders/node.vert'),
       NodeFragmentShaderSource = require('./shaders/node.frag'),
-      Renderer = require('./../renderer.js');
+      Renderer = require('../renderer.js');
 
   var WebGLRenderer = Renderer.extend({
     init: function (o) {

@@ -1,9 +1,9 @@
 {
   "name": "grapher",
   "repository": "ayasdi/grapher",
-  "description": "WebGL/Canvas Network Graphing using PIXI",
-  "version": "0.0.1",
+  "description": "WebGL/Canvas Network Graphs",
+  "version": "1.0.0",
   "dependencies": {},
   "scripts": ["index.js"],
-  "license": "not sure yet"
+  "license": "Apache 2.0"
 }
