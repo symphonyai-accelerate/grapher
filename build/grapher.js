@@ -545,15 +545,33 @@
     return this;
   };
 
+  /**
+    * grapher.getDataPosition
+    * ------------------
+    * 
+    * Returns data space coordinates given display coordinates.
+    * If a single argument passed in, function considers first argument an object with x and y props.
+    */
   Grapher.prototype.getDataPosition = function (x, y) {
-    x = this.renderer.untransformX(x);
-    y = this.renderer.untransformY(y);
+    var xCoord = u.isUndefined(y) ? x.x : x;
+    var yCoord = u.isUndefined(y) ? x.y : y;
+    x = this.renderer.untransformX(xCoord);
+    y = this.renderer.untransformY(yCoord);
     return {x: x, y: y};
   };
 
+  /**
+  * grapher.getDisplayPosition
+  * ------------------
+  * 
+  * Returns display space coordinates given data coordinates.
+  * If a single argument passed in, function considers first argument an object with x and y props.
+  */
   Grapher.prototype.getDisplayPosition = function (x, y) {
-    x = this.renderer.transformX(x);
-    y = this.renderer.transformY(y);
+    var xCoord = u.isUndefined(y) ? x.x : x;
+    var yCoord = u.isUndefined(y) ? x.y : y;
+    x = this.renderer.transformX(xCoord);
+    y = this.renderer.transformY(yCoord);
     return {x: x, y: y};
   };
 
@@ -733,7 +751,6 @@
   Grapher.prototype._onContextRestored = function (e) {
     var webGL = this._getWebGL();
     this.renderer.initGL(webGL);
-    this.renderer.resize(width, height);
     if (this.currentFrame) this.play(); // Play the graph if it was running.
     else if (this.rendered) this.render();
   };
