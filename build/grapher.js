@@ -95,18 +95,7 @@
 // Grapher.js may be freely distributed under the Apache 2.0 license
 
 ;(function () {
-/**
-  * Helpers and Renderers
-  * =====================
-  * Load helpers and renderers.
-  */
-  var WebGLRenderer = require('./renderers/gl/renderer.js'),
-      CanvasRenderer = require('./renderers/canvas/renderer.js'),
-      Color = require('./helpers/color.js'),
-      Link = require('./helpers/link.js'),
-      Node = require('./helpers/node.js'),
-      u = require('./helpers/utilities.js');
-
+  
 /**
   * Grapher
   * =======
@@ -116,6 +105,18 @@
     this.initialize.apply(this, arguments);
     return this;
   }
+
+/**
+  * Helpers and Renderers
+  * =====================
+  * Load helpers and renderers.
+  */
+  var WebGLRenderer = Grapher.WebGLRenderer = require('./renderers/gl/renderer.js'),
+      CanvasRenderer = Grapher.CanvasRenderer = require('./renderers/canvas/renderer.js'),
+      Color = Grapher.Color = require('./helpers/color.js'),
+      Link = Grapher.Link = require('./helpers/link.js'),
+      Node = Grapher.Node = require('./helpers/node.js'),
+      u = Grapher.utils = require('./helpers/utilities.js');
 
   Grapher.prototype = {};
 
@@ -155,8 +156,6 @@
 
     // Initialize sizes
     this.resize(this.props.width, this.props.height);
-
-    this.hasModifiedTransform = false;
 
     // Sprite array
     this.links = [];
@@ -230,21 +229,6 @@
   };
 
   /**
-    * grapher.palette
-    * ------------------
-    * 
-    * Set a grapher to use a pre-defined palette. Palettes can be pre-defined
-    * with the static function Grapher.setPalette.
-    */
-  Grapher.prototype.palette = function (name) {
-    if (u.isUndefined(name)) return this.props.palette;
-
-    this.props.palette = Grapher.getPalette(name);
-    this.update();
-    return this;
-  };
-
-  /**
     * grapher.data
     * ------------------
     * 
@@ -263,7 +247,6 @@
     this.enter();
     this.update();
 
-    if (!this.hasModifiedTransform) this.center();
     return this;
   };
 
@@ -448,45 +431,6 @@
   };
 
   /**
-    * grapher.center
-    * ------------------
-    * 
-    * Center the network in the view. This function modifies the scale and translate.
-    */
-  Grapher.prototype.center = function () {
-    var x = 0,
-        y = 0,
-        scale = 1,
-        nodes = this.data() ? this.data().nodes : null,
-        numNodes = nodes ? nodes.length : 0;
-
-    if (numNodes) { // get initial transform
-      var minX = Infinity, maxX = -Infinity,
-          minY = Infinity, maxY = -Infinity,
-          width = this.canvas.width / this.props.resolution,
-          height = this.canvas.height / this.props.resolution,
-          pad = 1.1,
-          i;
-
-      for (i = 0; i < numNodes; i++) {
-        if (nodes[i].x < minX) minX = nodes[i].x;
-        if (nodes[i].x > maxX) maxX = nodes[i].x;
-        if (nodes[i].y < minY) minY = nodes[i].y;
-        if (nodes[i].y > maxY) maxY = nodes[i].y;
-      }
-      
-      var dX = maxX - minX,
-          dY = maxY - minY;
-
-      scale = Math.min(width / dX, height / dY, 2) / pad;
-      x = (width - dX * scale) / 2 - minX * scale;
-      y = (height - dY * scale) / 2 - minY * scale;
-    }
-
-    return this.scale(scale).translate([x, y]);
-  };
-
-  /**
     * grapher.transform
     * ------------------
     * 
@@ -513,7 +457,6 @@
     if (u.isUndefined(scale)) return this.props.scale;
     if (u.isNumber(scale)) this.props.scale = scale;
     this.updateTransform = true;
-    this.hasModifiedTransform = true;
     return this;
   };
 
@@ -528,7 +471,6 @@
     if (u.isUndefined(translate)) return this.props.translate;
     if (u.isArray(translate)) this.props.translate = translate;
     this.updateTransform = true;
-    this.hasModifiedTransform = true;
     return this;
   };
 
@@ -704,11 +646,7 @@
     * integer.
     */
   Grapher.prototype._findColor = function (c) {
-    var color = NaN,
-        palette = this.palette();
-
-    if (palette && palette[c]) color = palette[c];
-    else color = Color.parse(c);
+    var color = Color.parse(c);
 
     // if color is still not set, use the default
     if (u.isNaN(color)) color = this.color();
@@ -762,42 +700,6 @@
   */
   var NODES = Grapher.NODES = 'nodes';
   var LINKS = Grapher.LINKS = 'links';
-  Grapher.palettes = {}; // Store palettes and textures staticly.
-
-/**
-  * Grapher Static Methods
-  * ======================
-  */
-
-  /**
-    * Grapher.getPalette
-    * -------------------
-    * 
-    * Get a palette that has been defined.
-    *
-    */
-  Grapher.getPalette = function (name) { return this.palettes[name]; };
-
-  /**
-    * Grapher.setPalette
-    * -------------------
-    * 
-    * Define a palette with a name and an array of color swatches.
-    *
-    */
-  Grapher.setPalette = function (name, swatches) {
-    var palette = this.palettes[name] = {};
-    swatches = u.map(swatches, Color.parse);
-
-    u.each(swatches, function (swatch, i) {
-      palette[i] = swatch;
-      for (var j = 0; j < i; j++) { // Interpolate 'in-between' link colors 50% between node colors.
-        var color = Color.interpolate(swatches[j], swatch, 0.5);
-        palette[j + '-' + i] = color;
-      }
-    }, this);
-    return this;
-  };
 
   if (module && module.exports) module.exports = Grapher;
 })();

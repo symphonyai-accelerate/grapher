@@ -124,16 +124,16 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "type": "heading",
           "data": {
             "level": 1,
-            "title": "Helpers and Renderers",
-            "slug": "helpers-and-renderers"
+            "title": "Grapher",
+            "slug": "grapher"
           },
           "depth": 1
         }, {
           "type": "heading",
           "data": {
             "level": 1,
-            "title": "Grapher",
-            "slug": "grapher"
+            "title": "Helpers and Renderers",
+            "slug": "helpers-and-renderers"
           },
           "depth": 1,
           "children": [
@@ -167,14 +167,6 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 "level": 2,
                 "title": "grapher.off",
                 "slug": "grapheroff"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "grapher.palette",
-                "slug": "grapherpalette"
               },
               "depth": 2
             }, {
@@ -285,14 +277,6 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "type": "heading",
               "data": {
                 "level": 2,
-                "title": "grapher.center",
-                "slug": "graphercenter"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
                 "title": "grapher.transform",
                 "slug": "graphertransform"
               },
@@ -319,6 +303,22 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 "level": 2,
                 "title": "grapher.color",
                 "slug": "graphercolor"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.getDataPosition",
+                "slug": "graphergetdataposition"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.getDisplayPosition",
+                "slug": "graphergetdisplayposition"
               },
               "depth": 2
             }
@@ -406,33 +406,6 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "slug": "grapher-static-properties"
           },
           "depth": 1
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 1,
-            "title": "Grapher Static Methods",
-            "slug": "grapher-static-methods"
-          },
-          "depth": 1,
-          "children": [
-            {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "Grapher.getPalette",
-                "slug": "graphergetpalette"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "Grapher.setPalette",
-                "slug": "graphersetpalette"
-              },
-              "depth": 2
-            }
-          ]
         }
       ]
     }

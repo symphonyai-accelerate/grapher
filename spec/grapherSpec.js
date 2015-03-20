@@ -1,21 +1,3 @@
-describe('grapher', function () {
-  var palette = [0x666666, 0x999999, 0xcccccc];
-
-  it('contains palettes', function () {
-    expect(Grapher.palettes).toBeDefined();
-  });
-
-  it('defines new palettes', function () {
-    Grapher.setPalette('greyscale', palette);
-    expect(Grapher.getPalette('greyscale')).toBeDefined();
-  });
-
-  it('generates interpolated textures and swatches for links', function () {
-    var swatch = Grapher.getPalette('greyscale')['0-1'];
-    expect(swatch).toBeDefined();
-  });
-});
-
 describe('a grapher instance', function () {
   var options = {width: 100, height: 100};
 

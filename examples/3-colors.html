@@ -37,7 +37,7 @@
           x: Math.random() * width,
           y: Math.random() * height,
           r: Math.random() * 10 + 5,
-          color: Math.floor(Math.random() * palette.length) // index into palette
+          color: palette[Math.floor(Math.random() * palette.length)]
         });
       }
 
@@ -45,12 +45,9 @@
         network.links.push({
           from: Math.floor(Math.random() * numNodes),
           to: Math.floor(Math.random() * numNodes),
-          color: Math.random() < 0.1 ? '#ff0000' : undefined
+          color: Math.random() < 0.1 ? '#ff0000' : palette[Math.floor(Math.random() * palette.length)]
         });
       }
-
-      // Grapher will staticly generate the needed textures.
-      Grapher.setPalette('GnBu', palette);
 
       // Create a grapher instance (width, height, options)
       // The options are the same as PIXI's renderer options.
@@ -60,9 +57,8 @@
         canvas: document.getElementById('graph')
       });
 
-      // Set it to use the palette we created above + some default colors.
-      grapher.palette('GnBu');
-      grapher.color('#ffffff'); // this is the default node and link color
+      // Set the default node and link color
+      grapher.color('#ffffff');
 
       // Give it the network data
       grapher.data(network);
