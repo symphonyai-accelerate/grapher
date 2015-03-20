@@ -37,6 +37,8 @@
     *
     */
   Grapher.prototype.initialize = function (o) {
+    if (!o) o = {};
+    
     // Extend default properties with options
     this.props = u.extend({
       color: 0x222222,

@@ -45,7 +45,8 @@
         network.links.push({
           from: Math.floor(Math.random() * numNodes),
           to: Math.floor(Math.random() * numNodes),
-          color: Math.random() < 0.1 ? '#ff0000' : palette[Math.floor(Math.random() * palette.length)]
+          // When undefined, Grapher interpolates the link color.
+          color: Math.random() < 0.1 ? '#ff0000' : undefined
         });
       }
 
