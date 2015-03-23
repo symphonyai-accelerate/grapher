@@ -1,8 +1,7 @@
-Ayasdi.Grapher
+Grapher
 ==============
 
-Create network graphs using WebGL (with canvas backup) that integrates well
-with d3.
+Draw network graphs using WebGL and Canvas backup.
 
 Download
 --------

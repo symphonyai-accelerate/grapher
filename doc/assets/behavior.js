@@ -21,8 +21,8 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "type": "heading",
           "data": {
             "level": 1,
-            "title": "Ayasdi.Grapher",
-            "slug": "ayasdigrapher",
+            "title": "Grapher",
+            "slug": "grapher",
             "isFileHeader": true
           },
           "depth": 1,
@@ -62,7 +62,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             }
           ]
         },
-        "title": "Ayasdi.Grapher"
+        "title": "Grapher"
       },
       "depth": 1,
       "outline": [

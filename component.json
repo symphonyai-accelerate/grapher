@@ -4,6 +4,6 @@
   "description": "WebGL/Canvas Network Graphs",
   "version": "1.0.0",
   "dependencies": {},
-  "scripts": ["index.js"],
+  "scripts": ["modules/grapher.js"],
   "license": "Apache 2.0"
 }

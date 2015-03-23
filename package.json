@@ -5,8 +5,8 @@
   "version": "1.0.0",
   "license": "Apache 2.0",
   "scripts": {
-    "grapher.js": "duo index.js > build/grapher.js",
-    "grapher-min.js": "uglifyjs build/grapher.js -o build/grapher-min.js --preamble='\/\/ Ayasdi Inc. Copyright 2014\n\/\/ Grapher.js may be freely distributed under the Apache 2.0 license.\n'"
+    "grapher.js": "duo modules/grapher.js > build/grapher.js -s 'Grapher'",
+    "grapher-min.js": "uglifyjs build/grapher.js -o build/grapher-min.js --preamble='\/\/ Ayasdi Inc. 2015\n\/\/ Grapher.js may be freely distributed under the Apache 2.0 license.\n'"
   },
   "devDependencies": {
     "duo": "~0.8.10",
