@@ -168,14 +168,13 @@
     */
   Grapher.prototype.enter = function () {
     var data = this.data();
-
     if (this.links.length < data.links.length) {
-      var links = data.links.slice(this.links.length, data.links.length - this.links.length);
+      var links = data.links.slice(this.links.length, data.links.length);
       u.eachPop(links, u.bind(function () { this.links.push(new Link()); }, this));
     }
 
     if (this.nodes.length < data.nodes.length) {
-      var nodes = data.nodes.slice(this.nodes.length, data.nodes.length - this.nodes.length);
+      var nodes = data.nodes.slice(this.nodes.length, data.nodes.length);
       u.eachPop(nodes, u.bind(function () { this.nodes.push(new Node()); }, this));
     }
 

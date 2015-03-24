@@ -39,7 +39,28 @@ describe('a grapher instance', function () {
   });
 
   it('creates or removes nodes and links when setting data', function () {
+    expect(grapher.data).toBeDefined();
     grapher.data(network);
+    expect(grapher.nodes.length).toEqual(network.nodes.length);
+    expect(grapher.links.length).toEqual(network.links.length);
+  });
+
+  it('creates nodes and links when entering new data', function () {
+    grapher.data(network);
+    expect(grapher.enter).toBeDefined();
+    network.nodes.push({x: 3, y: 300, r: 10});
+    network.links.push({from: 2, to: 3});
+    grapher.enter();
+    expect(grapher.nodes.length).toEqual(network.nodes.length);
+    expect(grapher.links.length).toEqual(network.links.length);
+  });
+
+  it('removes nodes and links when exiting new data', function () {
+    grapher.data(network);
+    expect(grapher.exit).toBeDefined();
+    network.nodes.pop();
+    network.links.pop();
+    grapher.exit();
     expect(grapher.nodes.length).toEqual(network.nodes.length);
     expect(grapher.links.length).toEqual(network.links.length);
   });
