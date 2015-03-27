@@ -65,6 +65,15 @@
         return node;
       };
 
+      // Helper function for offsets.
+      function getOffset (e) {
+        if (e.offsetX) return {x: e.offsetX, y: e.offsetY};
+        var rect = e.target.getBoundingClientRect();
+        var x = e.clientX - rect.left,
+            y = e.clientY - rect.top;
+        return {x: x, y: y};
+      };
+
       // Create a grapher instance (width, height, options)
       var grapher = new Grapher({
         width: width,
@@ -104,7 +113,8 @@
 
       // On mousedown, grab the node that was clicked.
       grapher.on('mousedown', function (e) {
-        var point = grapher.getDataPosition(e.offsetX, e.offsetY);
+        var eOffset = getOffset(e);
+        var point = grapher.getDataPosition(eOffset);
         var nodeId = getNodeIdAt(point);
         if (nodeId > -1) {
           dragging = {node: network.nodes[nodeId], id: nodeId};
@@ -115,7 +125,8 @@
 
       // When the user moves the mouse, we update the node's position
       grapher.on('mousemove', function (e) {
-        var point = grapher.getDataPosition(e.offsetX, e.offsetY);
+        var eOffset = getOffset(e);
+        var point = grapher.getDataPosition(eOffset);
         if (dragging) {
           offset = point;
           force.alpha(1); // restart the force graph

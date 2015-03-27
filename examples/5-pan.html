@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Pan</title>
+    <meta charset="utf-8">
   </head>
   <body>
     <style type="text/css">
@@ -42,6 +43,15 @@
         });
       }
 
+      // Helper function for offsets.
+      function getOffset (e) {
+        if (e.offsetX) return {x: e.offsetX, y: e.offsetY};
+        var rect = e.target.getBoundingClientRect();
+        var x = e.clientX - rect.left,
+            y = e.clientY - rect.top;
+        return {x: x, y: y};
+      };
+
       // Create a grapher instance (width, height, options)
       var grapher = new Grapher({
         width: width,
@@ -55,7 +65,7 @@
 
       function onMouseDown (e) {
         // Set the starting point
-        startPoint = {x: e.offsetX, y: e.offsetY};
+        startPoint = getOffset(e);
 
         // Start listening to other mouse events.
         grapher.on('mousemove', onMouseMove);
@@ -65,13 +75,13 @@
       function onMouseMove (e) {
         // Adjust the translate based on the change in mouse location.
         if (startPoint) {
-          var translate = grapher.translate();
+          var translate = grapher.translate(),
+              offset = getOffset(e);
 
-          translate[0] += (e.offsetX - startPoint.x);
-          translate[1] += (e.offsetY - startPoint.y);
+          translate[0] += (offset.x - startPoint.x);
+          translate[1] += (offset.y - startPoint.y);
 
-          startPoint.x = e.offsetX;
-          startPoint.y = e.offsetY;
+          startPoint = offset;
           grapher.translate(translate);
         }
       };
