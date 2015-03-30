@@ -2,19 +2,7 @@
 // Grapher.js may be freely distributed under the Apache 2.0 license
 
 ;(function () {
-/**
-  * Dependencies
-  * ==============
-  * Grapher uses PIXI.js as a dependency and uses Color and Utilities found in
-  * modules.
-  */
-  var PIXI = require('./vendor/pixi.js'),
-      Color = require('./color.js'),
-      u = require('./utilities.js');
-
-  // We suppress PIXI's initial console log.
-  PIXI.dontSayHello = true;
-
+  
 /**
   * Grapher
   * =======
@@ -25,7 +13,18 @@
     return this;
   }
 
-  if (module && module.exports) module.exports = Grapher;
+/**
+  * Helpers and Renderers
+  * =====================
+  * Load helpers and renderers.
+  */
+  var WebGLRenderer = Grapher.WebGLRenderer = require('./renderers/gl/renderer.js'),
+      CanvasRenderer = Grapher.CanvasRenderer = require('./renderers/canvas/renderer.js'),
+      Color = Grapher.Color = require('./helpers/color.js'),
+      Link = Grapher.Link = require('./helpers/link.js'),
+      Node = Grapher.Node = require('./helpers/node.js'),
+      u = Grapher.utils = require('./helpers/utilities.js');
+
   Grapher.prototype = {};
 
   /**
@@ -37,46 +36,47 @@
     *     var grapher = new Grapher(width, height, options);
     *
     */
-  Grapher.prototype.initialize = function (width, height, o) {
+  Grapher.prototype.initialize = function (o) {
+    if (!o) o = {};
+    
     // Extend default properties with options
     this.props = u.extend({
-      lineWidth: 2,
-      foregroundColor: 0x222222,
-      backgroundColor: 0xffffff,
-      antialias: true,
-      resolution: typeof devicePixelRatio !== 'undefined' ? Math.max(devicePixelRatio, 1) : 1
+      color: 0x222222,
+      scale: 1,
+      translate: [0, 0],
+      resolution: window.devicePixelRatio || 1
     }, o);
 
-    this.width = width;
-    this.height = height;
+    if (!o.canvas) this.props.canvas = document.createElement('canvas');
+    if (!o.width) this.props.width = this.props.canvas.clientWidth;
+    if (!o.height) this.props.height = this.props.canvas.clientHeight;
+    this.canvas = this.props.canvas;
+
+    var webGL = this._getWebGL();
+    if (webGL) {
+      this.props.webGL = webGL;
+      this.props.canvas.addEventListener('webglcontextlost', function (e) { this._onContextLost(e); }.bind(this));
+      this.props.canvas.addEventListener('webglcontextrestored', function (e) { this._onContextRestored(e); }.bind(this));
+    }
 
     // Renderer and view
+    this.renderer =  webGL ? new WebGLRenderer(this.props) : new CanvasRenderer(this.props);
     this.rendered = false;
-    this.renderer = PIXI.autoDetectRenderer(width, height, this.props);
-    this.view = this.renderer.view;
 
-    // Stage and containers
-    this.stage = new PIXI.Stage(this.backgroundColor());
-    this.network = new PIXI.DisplayObjectContainer();
-    this.stage.addChild(this.network);
-
-    // SpriteBatch containers
-    this.batches = {};
-    this.batches.nodes = {};
-    this.batches.links = {};
+    // Initialize sizes
+    this.resize(this.props.width, this.props.height);
 
     // Sprite array
     this.links = [];
     this.nodes = [];
 
-    // indices that will update
+    this.renderer.setLinks(this.links);
+    this.renderer.setNodes(this.nodes);
+
+    // Indices that will update
     this.willUpdate = {};
     this.updateAll = {};
     this._clearUpdateQueue();
-
-    // Set initial transform
-    this.center();
-    this.hasModifiedTransform = false;
 
     // Bind some updaters
     this._updateLink = u.bind(this._updateLink, this);
@@ -85,18 +85,8 @@
     this._updateNodeByIndex = u.bind(this._updateNodeByIndex, this);
     this.animate = u.bind(this.animate, this);
 
-    // Listeners
-    this.listeners = {};
-
-    // Interactions
-    this.stage.interactive = true;
-    this.stage.mousedown = this._onEvent('mousedown');
-    this.stage.mousemove = this._onEvent('mousemove');
-    this.stage.mouseup = this._onEvent('mouseup');
-
-    // Add lost context listeners
-    this.view.addEventListener('webglcontextlost', u.bind(this._onContextLost, this));
-    this.view.addEventListener('webglcontextrestored', u.bind(this._onContextRestored, this));
+    // Event Handlers
+    this.handlers = {};
 
     // Do any additional setup
     u.eachKey(o, this.set, this);
@@ -128,7 +118,9 @@
     *   * mouseup
     */
   Grapher.prototype.on = function (event, fn) {
-    if (u.isFunction(fn)) this.listeners[event] = fn;
+    this.handlers[event] = this.handlers[event] || [];
+    this.handlers[event].push(fn);
+    this.canvas.addEventListener(event, fn, false);
     return this;
   };
 
@@ -138,23 +130,10 @@
     * 
     * Remove a listener from an event.
     */
-  Grapher.prototype.off = function (event) {
-    if (event in this.listeners) this.listeners[event] = u.noop;
-    return this;
-  };
-
-  /**
-    * grapher.palette
-    * ------------------
-    * 
-    * Set a grapher to use a pre-defined palette. Palettes can be pre-defined
-    * with the static function Grapher.setPalette.
-    */
-  Grapher.prototype.palette = function (name) {
-    if (u.isUndefined(name)) return this.props.palette;
-
-    this.props.palette = Grapher.getPalette(name);
-    this.update();
+  Grapher.prototype.off = function (event, fn) {
+    var i = u.indexOf(this.handlers[event], fn);
+    if (i > -1) this.handlers[event].splice(i, 1);
+    this.canvas.removeEventListener(event, fn, false);
     return this;
   };
 
@@ -177,7 +156,6 @@
     this.enter();
     this.update();
 
-    if (!this.hasModifiedTransform) this.center();
     return this;
   };
 
@@ -189,15 +167,17 @@
     * data.
     */
   Grapher.prototype.enter = function () {
-    var data = this.data(),
-        entering = [];
+    var data = this.data();
+    if (this.links.length < data.links.length) {
+      var links = data.links.slice(this.links.length, data.links.length);
+      u.eachPop(links, u.bind(function () { this.links.push(new Link()); }, this));
+    }
 
-    if (this.links.length < data.links.length)
-        entering = entering.concat(data.links.slice(this.links.length, data.links.length - this.links.length));
-    if (this.nodes.length < data.nodes.length)
-        entering = entering.concat(data.nodes.slice(this.nodes.length, data.nodes.length - this.nodes.length));
+    if (this.nodes.length < data.nodes.length) {
+      var nodes = data.nodes.slice(this.nodes.length, data.nodes.length);
+      u.eachPop(nodes, u.bind(function () { this.nodes.push(new Node()); }, this));
+    }
 
-    u.each(entering, this._enter, this);
     return this;
   };
 
@@ -212,12 +192,13 @@
     var data = this.data(),
         exiting = [];
 
-    if (data.links.length < this.links.length)
-        exiting = exiting.concat(this.links.splice(data.links.length, this.links.length - data.links.length));
-    if (data.nodes.length < this.nodes.length)
-        exiting = exiting.concat(this.nodes.splice(data.nodes.length, this.nodes.length - data.nodes.length));
+    if (data.links.length < this.links.length) {
+      this.links.splice(data.links.length, this.links.length - data.links.length);
+    }
+    if (data.nodes.length < this.nodes.length) {
+      this.nodes.splice(data.nodes.length, this.nodes.length - data.nodes.length);
+    }
 
-    u.each(exiting, this._exit);
     return this;
   };
 
@@ -282,7 +263,7 @@
   Grapher.prototype.render = function () {
     this.rendered = true;
     this._update();
-    this.renderer.render(this.stage);
+    this.renderer.render();
     return this;
   };
 
@@ -320,7 +301,6 @@
     return this;
   };
 
-
   /**
     * grapher.resize
     * ------------------
@@ -328,50 +308,35 @@
     * Resize the grapher view.
     */
   Grapher.prototype.resize = function (width, height) {
-    this.width = width;
-    this.height = height;
+    this.props.width = width;
+    this.props.height = height;
 
     this.renderer.resize(width, height);
     return this;
   };
 
   /**
-    * grapher.center
+    * grapher.width
     * ------------------
     * 
-    * Center the network in the view. This function modifies the scale and translate.
+    * Specify or retrieve the width.
     */
-  Grapher.prototype.center = function () {
-    var x = 0,
-        y = 0,
-        scale = 1,
-        nodes = this.data() ? this.data().nodes : null,
-        numNodes = nodes ? nodes.length : 0;
+  Grapher.prototype.width = function (width) {
+    if (u.isUndefined(width)) return this.props.width;
+    this.resize(width, this.props.height);
+    return this;
+  };
 
-    if (numNodes) { // get initial transform
-      var minX = Infinity, maxX = -Infinity,
-          minY = Infinity, maxY = -Infinity,
-          width = this.renderer.width / this.renderer.resolution,
-          height = this.renderer.height / this.renderer.resolution,
-          pad = 1.1,
-          i;
-
-      for (i = 0; i < numNodes; i++) {
-        if (nodes[i].x < minX) minX = nodes[i].x;
-        if (nodes[i].x > maxX) maxX = nodes[i].x;
-        if (nodes[i].y < minY) minY = nodes[i].y;
-        if (nodes[i].y > maxY) maxY = nodes[i].y;
-      }
-      
-      var dX = maxX - minX,
-          dY = maxY - minY;
-
-      scale = Math.min(width / dX, height / dY, 2) / pad;
-      x = (width - dX * scale) / 2 - minX * scale;
-      y = (height - dY * scale) / 2 - minY * scale;
-    }
-
-    return this.scale(scale).translate([x, y]);
+   /**
+    * grapher.height
+    * ------------------
+    * 
+    * Specify or retrieve the height.
+    */
+  Grapher.prototype.height = function (height) {
+    if (u.isUndefined(height)) return this.props.height;
+    this.resize(this.props.width, height);
+    return this;
   };
 
   /**
@@ -401,7 +366,6 @@
     if (u.isUndefined(scale)) return this.props.scale;
     if (u.isNumber(scale)) this.props.scale = scale;
     this.updateTransform = true;
-    this.hasModifiedTransform = true;
     return this;
   };
 
@@ -416,74 +380,50 @@
     if (u.isUndefined(translate)) return this.props.translate;
     if (u.isArray(translate)) this.props.translate = translate;
     this.updateTransform = true;
-    this.hasModifiedTransform = true;
     return this;
   };
 
   /**
-    * grapher.backgroundColor
+    * grapher.color
     * ------------------
     * 
-    * Set the backgroundColor. This is the color of the background.
-    * If no arguments are passed in, returns the current backgroundColor.
+    * Set the default color of nodes and links.
+    * If no arguments are passed in, returns the current default color.
     */
-  Grapher.prototype.backgroundColor = function (color) {
-    if (u.isUndefined(color)) return this.props.backgroundColor;
-    this.props.backgroundColor = Color.parse(color);
-    this.stage.setBackgroundColor(this.props.backgroundColor);
+  Grapher.prototype.color = function (color) {
+    if (u.isUndefined(color)) return this.props.color;
+    this.props.color = Color.parse(color);
     return this;
   };
 
   /**
-    * grapher.foregroundColor
+    * grapher.getDataPosition
     * ------------------
     * 
-    * Set the foregroundColor. This is the default color of nodes and links.
-    * If no arguments are passed in, returns the current foregroundColor.
+    * Returns data space coordinates given display coordinates.
+    * If a single argument passed in, function considers first argument an object with x and y props.
     */
-  Grapher.prototype.foregroundColor = function (color) {
-    if (u.isUndefined(color)) return this.props.foregroundColor;
-    this.props.foregroundColor = Color.parse(color);
-    return this;
+  Grapher.prototype.getDataPosition = function (x, y) {
+    var xCoord = u.isUndefined(y) ? x.x : x;
+    var yCoord = u.isUndefined(y) ? x.y : y;
+    x = this.renderer.untransformX(xCoord);
+    y = this.renderer.untransformY(yCoord);
+    return {x: x, y: y};
   };
 
   /**
-    * grapher.lineWidth
-    * ------------------
-    * 
-    * Set the lineWidth. This is the line width of the links.
-    * If no arguments are passed in, returns the current lineWidth.
-    */
-  Grapher.prototype.lineWidth = function (size) {
-    if (u.isUndefined(size)) return this.props.lineWidth;
-    this.props.lineWidth = size;
-    return this;
-  };
-
-  /**
-    * grapher.getNodeIdAt
-    * -------------------
-    * 
-    * Search for a node index at a certain point.
-    *
-    *     var point = {x: 10, y: 10};
-    *     var foundNode = grapher.getNodeIdAt(point);
-    *
-    * Returns -1 if no node is found.
-    */
-  Grapher.prototype.getNodeIdAt = function (point) {
-    var node = -1,
-        x = point.x, y = point.y;
-
-    this.nodes.every(function (n, i) { // we'll want to look for ways to optimize this
-      var inX = x <= n.position.x + n.width && x >= n.position.x,
-          inY = y <= n.position.y + n.height && y >= n.position.y,
-          found = inX && inY;
-      if (found) node = i;
-      return !found;
-    });
-
-    return node;
+  * grapher.getDisplayPosition
+  * ------------------
+  * 
+  * Returns display space coordinates given data coordinates.
+  * If a single argument passed in, function considers first argument an object with x and y props.
+  */
+  Grapher.prototype.getDisplayPosition = function (x, y) {
+    var xCoord = u.isUndefined(y) ? x.x : x;
+    var yCoord = u.isUndefined(y) ? x.y : y;
+    x = this.renderer.transformX(xCoord);
+    y = this.renderer.transformY(yCoord);
+    return {x: x, y: y};
   };
 
 /**
@@ -491,29 +431,6 @@
   * =================
   * 
   */
-
-  /**
-    * grapher._exit
-    * -------------------
-    * 
-    * Remove a sprite from it's parent.
-    *
-    */
-  Grapher.prototype._exit = function (sprite) { return sprite.parent.removeChild(sprite); };
-
-  /**
-    * grapher._enter
-    * -------------------
-    * 
-    * Create a new sprite from the node or link data provided.
-    *
-    */
-  Grapher.prototype._enter = function (data) {
-    var type = u.isUndefined(data.from) ? NODES : LINKS,
-        spriteSet = type === NODES ? this.nodes : this.links;
-        sprite = new PIXI.Sprite(Grapher.getTexture(type, this.foregroundColor()));
-    spriteSet.push(sprite);
-  };
 
   /**
     * grapher._addToUpdateQueue
@@ -570,8 +487,8 @@
     else if (updatingNodes && updatingNodes.length) u.eachPop(updatingNodes, this._updateNodeByIndex);
 
     if (this.updateTransform) {
-      this.network.scale.set(this.props.scale);
-      this.network.position.set.apply(this.network, this.props.translate);
+      this.renderer.setScale(this.props.scale);
+      this.renderer.setTranslate(this.props.translate);
     }
 
     this._clearUpdateQueue();
@@ -579,31 +496,19 @@
 
   Grapher.prototype._updateLink = function (link, i) {
     var data = this.data(),
-        lw = this.lineWidth(),
         l = data.links[i],
         from = data.nodes[l.from],
-        to = data.nodes[l.to],
-        leftMost = from.x <= to.x ? from : to;
-
-    link.width = Math.sqrt(Math.pow(to.x - from.x, 2) + Math.pow(to.y - from.y, 2));
-    link.height = lw;
-    link.position.set(leftMost.x, leftMost.y - lw / 2);
-    link.pivot.set(0, lw / 2);
-    link.rotation = Math.atan((to.y - from.y) / (to.x - from.x));
+        to = data.nodes[l.to];
 
     var color = !u.isUndefined(l.color) ? this._findColor(l.color) :
         Color.interpolate(this._findColor(from.color), this._findColor(to.color));
 
-    this._setColor(LINKS, link, color);
+    link.update(from.x, from.y, to.x, to.y, color);
   };
 
   Grapher.prototype._updateNode = function (node, i) {
     var n = this.data().nodes[i];
-    node.width = n.r * 2;
-    node.height = n.r * 2;
-    node.position.set(n.x - n.r, n.y - n.r);
-
-    this._setColor(NODES, node, this._findColor(n.color));
+    node.update(n.x, n.y, n.r, this._findColor(n.color));
   };
 
   Grapher.prototype._updateNodeByIndex = function (i) { this._updateNode(this.nodes[i], i); };
@@ -650,68 +555,28 @@
     * integer.
     */
   Grapher.prototype._findColor = function (c) {
-    var color = NaN,
-        palette = this.palette();
-
-    if (palette && palette[c]) color = palette[c];
-    else color = Color.parse(c);
+    var color = Color.parse(c);
 
     // if color is still not set, use the default
-    if (u.isNaN(color)) color = this.foregroundColor();
+    if (u.isNaN(color)) color = this.color();
     return color;
   };
 
   /**
-    * grapher._setColor
+    * grapher._getWebGL
     * -------------------
     * 
-    * Set color on a sprite. This function moves the sprite into the appropriate
-    * sprite batch.
+    *get webGL context if available
     *
     */
-  Grapher.prototype._setColor = function (type, sprite, color) {
-    var texture = Grapher.getTexture(type, color);
-
-    sprite.setTexture(texture);
-    if (sprite.parent) this._exit(sprite);
-    this._getBatch(type, color).addChild(sprite);
+  Grapher.prototype._getWebGL = function () {
+    var gl = null;
+    try { gl = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl"); }
+    catch (x) { gl = null; }
+    return gl;
   };
 
-  /**
-    * grapher._getBatch
-    * -------------------
-    * 
-    * Get the sprite batch for the sprite type and color.
-    *
-    */
-  Grapher.prototype._getBatch = function (type, color) {
-    var batchSet = type === NODES ? this.batches.nodes : this.batches.links;
-    if (!batchSet[color]) {
-      var batch = new PIXI.SpriteBatch();
-      if (type === LINKS) this.network.addChildAt(batch, 0);
-      else this.network.addChild(batch);
-      batchSet[color] = batch;
-    }
-    return batchSet[color];
-  };
-
-  /**
-    * grapher._onEvent
-    * -------------------
-    * 
-    * Wraps listeners.
-    *
-    */
-  Grapher.prototype._onEvent = function (event) {
-    return function (e) {
-      var callback = this.listeners[event] ? this.listeners[event] : u.noop;
-      e.offset = e.getLocalPosition(this.stage);
-      e.offsetData = e.getLocalPosition(this.network);
-      callback(e);
-    }.bind(this);
-  };
-
-  /**
+ /**
     * grapher._onContextLost
     * ----------------------
     * 
@@ -731,34 +596,12 @@
     *
     */
   Grapher.prototype._onContextRestored = function (e) {
-    if (this.renderer.contextLost) this.renderer.initContext();
-    var gl = this.renderer.gl;
-
-    var restoreBatch = function (batch) {
-      if (batch.fastSpriteBatch) batch.fastSpriteBatch.setContext(gl);
-    };
-
-    if (gl) {
-      // Restore each spriteBatch manually.
-      u.eachKey(this.batches.nodes, restoreBatch);
-      u.eachKey(this.batches.links, restoreBatch);
-
-      // Re-enable vertex attrib array indices.
-      // PIXI remembers to re-enable 4 and 5, but not 0-3.
-      gl.enableVertexAttribArray(0);
-      gl.enableVertexAttribArray(1);
-      gl.enableVertexAttribArray(2);
-      gl.enableVertexAttribArray(3);
-
-      // Reset the blend mode (to PIXI.blendModesWebGL[PIXI.blendModes.NORMAL]).
-      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    }
-
-    this.resize(this.width, this.height);
-
+    var webGL = this._getWebGL();
+    this.renderer.initGL(webGL);
     if (this.currentFrame) this.play(); // Play the graph if it was running.
     else if (this.rendered) this.render();
   };
+
 
 /**
   * Grapher Static Properties
@@ -766,83 +609,6 @@
   */
   var NODES = Grapher.NODES = 'nodes';
   var LINKS = Grapher.LINKS = 'links';
-  Grapher.palettes = {}; // Store palettes and textures staticly.
-  Grapher.textures = {};
-  Grapher.textures.nodes = {};
-  Grapher.textures.links = {};
 
-/**
-  * Grapher Static Methods
-  * ======================
-  */
-
-  /**
-    * Grapher.getPalette
-    * -------------------
-    * 
-    * Get a palette that has been defined.
-    *
-    */
-  Grapher.getPalette = function (name) { return this.palettes[name]; };
-
-  /**
-    * Grapher.setPalette
-    * -------------------
-    * 
-    * Define a palette with a name and an array of color swatches.
-    *
-    */
-  Grapher.setPalette = function (name, swatches) {
-    var palette = this.palettes[name] = {};
-    swatches = u.map(swatches, Color.parse);
-
-    u.each(swatches, function (swatch, i) {
-      this.getTexture(LINKS, swatch);
-      this.getTexture(NODES, swatch);
-      palette[i] = swatch;
-
-      var j;
-      for (j = 0; j < i; j++) { // Interpolate 'in-between' link colors 50% between node colors.
-        var color = Color.interpolate(swatches[j], swatch, 0.5);
-        this.getTexture(LINKS, color);
-        palette[j + '-' + i] = color;
-      }
-    }, this);
-    return this;
-  };
-
-  /**
-    * Grapher.getTexture
-    * -------------------
-    * 
-    * Get a texture by 'nodes' or 'links' and a color.
-    *
-    */
-  Grapher.getTexture = function (type, color) {
-    var textureSet = type === NODES ? this.textures.nodes : this.textures.links;
-    if (!textureSet[color]) {
-      // Generate the textures from Canvas
-      var isNode = type === NODES,
-          size = isNode ? 100 : 1,
-          renderer = new PIXI.CanvasRenderer(size, size, {transparent: isNode, resolution: 1}),
-          stage = new PIXI.Stage(color),
-          graphics = null,
-          img = '';
-
-      if (isNode) {
-        graphics = new PIXI.Graphics();
-        graphics.beginFill(color);
-        graphics.drawCircle(size / 2, size / 2, size / 2);
-        graphics.endFill();
-
-        stage.addChild(graphics);
-      }
-
-      renderer.render(stage);
-
-      img = renderer.view.toDataURL();
-      textureSet[color] = PIXI.Texture.fromImage(img);
-    }
-    return textureSet[color];
-  };
+  if (module && module.exports) module.exports = Grapher;
 })();

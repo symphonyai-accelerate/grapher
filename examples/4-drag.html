@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Drag</title>
+    <meta charset="utf-8">
   </head>
   <body>
     <style type="text/css">
@@ -42,12 +43,36 @@
         });
       }
 
-      // For convenience
-      var Grapher = Ayasdi.Grapher;
+      // We create a function that determines whether a click event falls on a node.
+      var getNodeIdAt = function (point) {
+        var node = -1,
+            x = point.x, y = point.y;
+
+        network.nodes.every(function (n, i) {
+          var inX = x <= n.x + n.r && x >= n.x - n.r,
+              inY = y <= n.y + n.r && y >= n.y - n.r,
+              found = inX && inY;
+          if (found) node = i;
+          return !found;
+        });
+
+        return node;
+      };
+
+      // Helper function for offsets.
+      function getOffset (e) {
+        if (e.offsetX) return {x: e.offsetX, y: e.offsetY};
+        var rect = e.target.getBoundingClientRect();
+        var x = e.clientX - rect.left,
+            y = e.clientY - rect.top;
+        return {x: x, y: y};
+      };
 
       // Create a grapher instance (width, height, options)
-      // The options are the same as PIXI's renderer options.
-      var grapher = new Grapher(width, height);
+      var grapher = new Grapher({
+        width: width,
+        height: height
+      });
 
       // Give it the network data
       grapher.data(network);
@@ -56,18 +81,22 @@
       var dragging = null;
 
       // On mousedown, grab the node that was clicked.
-      // e.offsetData contains the coordinates within the data space
+      // Calling grapher.getDataPosition will return an object with x and y in the data space.
       grapher.on('mousedown', function (e) {
-        var nodeId = grapher.getNodeIdAt(e.offsetData);
+        var offset = getOffset(e);
+        var point = grapher.getDataPosition(offset);
+        var nodeId = getNodeIdAt(point);
         if (nodeId > -1) dragging = {node: network.nodes[nodeId], id: nodeId};
         else dragging = null;
       });
 
       // When the user moves the mouse, we update the node's position
       grapher.on('mousemove', function (e) {
+        var offset = getOffset(e);
         if (dragging) {
-          dragging.node.x = e.offsetData.x;
-          dragging.node.y = e.offsetData.y;
+          var point = grapher.getDataPosition(offset);
+          dragging.node.x = point.x;
+          dragging.node.y = point.y;
 
           // Call updateNode to update an individual node.
           // Passing in true will also update the links attached.
@@ -79,10 +108,11 @@
       grapher.on('mouseup', function (e) { dragging = null; });
 
       // Append the grapher's view onto the page
-      document.body.appendChild(grapher.view);
+      document.body.appendChild(grapher.canvas);
 
       // Render the graph using play. This will call render in a requestAnimationFrame loop.
       grapher.play();
+
     </script>
   </body>
 </html>

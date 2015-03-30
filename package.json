@@ -1,13 +1,12 @@
 {
   "name": "grapher",
   "repository": "ayasdi/grapher",
-  "description": "WebGL/Canvas Network Graphing using PIXI",
-  "version": "0.0.1",
+  "description": "WebGL/Canvas Network Graphs",
+  "version": "1.0.0",
   "license": "Apache 2.0",
   "scripts": {
-    "build": "npm run duo && npm run uglify",
-    "duo": "duo index.js > build/grapher.js",
-    "uglify": "uglifyjs build/grapher.js -o build/grapher-min.js --preamble='\/\/ Ayasdi Inc. Copyright 2014\n\/\/ Grapher.js may be freely distributed under the Apache 2.0 license.\n'"
+    "grapher.js": "duo modules/grapher.js > build/grapher.js -s 'Grapher'",
+    "grapher-min.js": "uglifyjs build/grapher.js -o build/grapher-min.js --preamble='\/\/ Ayasdi Inc. 2015\n\/\/ Grapher.js may be freely distributed under the Apache 2.0 license.\n'"
   },
   "devDependencies": {
     "duo": "~0.8.10",

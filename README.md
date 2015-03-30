@@ -1,20 +1,36 @@
-Ayasdi.Grapher
+Grapher
 ==============
 
-WebGL/Canvas Network Graphing using PIXI.js.
-
+Draw network graphs using WebGL and Canvas backup.
 
 Download
 --------
-Grapher comes bundled with PIXI.js.
 
-* [bundled](http://ayasdi.github.io/grapher/build/grapher.js)
-* [bundled-min](http://ayasdi.github.io/grapher/build/grapher-min.js)
+* [grapher](http://ayasdi.github.io/grapher/build/grapher.js)
+* [grapher-min](http://ayasdi.github.io/grapher/build/grapher-min.js)
 
-An unbundled version can be found in the modules folder.
-This version is useful if you are already using some of the dependencies or
-are using a package management system.
+Installing
+----------
 
+You can import grapher in a script tag, or build grapher into your application
+using [Duo](http://duojs.org/):
+
+    var Grapher = require('ayasdi/grapher');
+
+Additional Modules
+------------------
+
+Need a specific feature? Create your own modules for Grapher!
+Here are some modules we've made:
+
+* [center](https://github.com/ayasdi/grapher-center):
+    Helpful functions for centering the graph.
+* [palette](https://github.com/ayasdi/grapher-palette):
+    Set up custom palettes and set colors by palette indices.
+* [target](https://github.com/ayasdi/grapher-target):
+    Target a node or link, or find the nearest nodes and links.
+* [zoom](https://github.com/ayasdi/grapher-zoom):
+    Zoom adjusts Grapher's scale by ratio. Optionally target a point as the zoom center.
 
 Examples
 --------
