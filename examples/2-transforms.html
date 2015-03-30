@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Transforms</title>
+    <meta charset="utf-8">
   </head>
   <body>
     <style type="text/css">
@@ -17,6 +18,7 @@
         height: 100%;
       }
     </style>
+    <canvas id="graph"></canvas>
     <script type="text/javascript" src="../build/grapher.js"></script>
     <script type="text/javascript">
       // Generate some data
@@ -42,28 +44,36 @@
         });
       }
 
-      // For convenience
-      var Grapher = Ayasdi.Grapher;
+      // Helper function for offsets.
+      function getOffset (e) {
+        if (e.offsetX) return {x: e.offsetX, y: e.offsetY};
+        var rect = e.target.getBoundingClientRect();
+        var x = e.clientX - rect.left,
+            y = e.clientY - rect.top;
+        return {x: x, y: y};
+      };
 
       // Create a grapher instance (width, height, options)
       // The options are the same as PIXI's renderer options.
-      var grapher = new Grapher(width, height);
+      var grapher = new Grapher({
+        canvas: document.getElementById('graph'),
+        width: width,
+        height: height
+      });
 
       // Give it the network data
       grapher.data(network);
-
-      // Append the grapher's view onto the page
-      document.body.appendChild(grapher.view);
 
       // Render the graph
       grapher.render();
 
       // Setup transforms with the mousewheel event
-      window.onmousewheel = function (e) {
-        var transform = grapher.transform(),
-            delta = e.wheelDelta / 5000,
-            fromCenterX = e.offsetX - width / 2;
-            fromCenterY = e.offsetY - height / 2;
+      grapher.on('wheel', function (e) {
+        var offset = getOffset(e),
+            transform = grapher.transform(),
+            delta = e.deltaY / 5000,
+            fromCenterX = offset.x - width / 2;
+            fromCenterY = offset.y - height / 2;
 
         transform.scale = transform.scale + delta;
         transform.translate = [
@@ -73,10 +83,9 @@
 
         // Set the new transform
         grapher.transform(transform);
-
         // Render the graph
         grapher.render();
-      };
+      });
     </script>
   </body>
 </html>

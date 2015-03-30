@@ -21,8 +21,8 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "type": "heading",
           "data": {
             "level": 1,
-            "title": "Ayasdi.Grapher",
-            "slug": "ayasdigrapher",
+            "title": "Grapher",
+            "slug": "grapher",
             "isFileHeader": true
           },
           "depth": 1,
@@ -33,6 +33,22 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 "level": 2,
                 "title": "Download",
                 "slug": "download"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Installing",
+                "slug": "installing"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Additional Modules",
+                "slug": "additional-modules"
               },
               "depth": 2
             }, {
@@ -62,7 +78,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             }
           ]
         },
-        "title": "Ayasdi.Grapher"
+        "title": "Grapher"
       },
       "depth": 1,
       "outline": [
@@ -72,6 +88,22 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "level": 2,
             "title": "Download",
             "slug": "download"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Installing",
+            "slug": "installing"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Additional Modules",
+            "slug": "additional-modules"
           },
           "depth": 2
         }, {
@@ -112,26 +144,6 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "foldPrefix": "^",
           "name": "JavaScript"
         },
-        "sourcePath": "/Users/CZhang/Documents/ayasdi/grapher/modules/color.js",
-        "projectPath": "modules/color.js",
-        "targetPath": "color",
-        "pageTitle": "color",
-        "title": "color"
-      },
-      "depth": 1,
-      "outline": []
-    }, {
-      "type": "file",
-      "data": {
-        "language": {
-          "nameMatchers": [".js"],
-          "pygmentsLexer": "javascript",
-          "multiLineComment": ["/*", "*", "*/"],
-          "singleLineComment": ["//"],
-          "ignorePrefix": "}",
-          "foldPrefix": "^",
-          "name": "JavaScript"
-        },
         "sourcePath": "/Users/CZhang/Documents/ayasdi/grapher/modules/grapher.js",
         "projectPath": "modules/grapher.js",
         "targetPath": "grapher",
@@ -144,16 +156,16 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "type": "heading",
           "data": {
             "level": 1,
-            "title": "Dependencies",
-            "slug": "dependencies"
+            "title": "Grapher",
+            "slug": "grapher"
           },
           "depth": 1
         }, {
           "type": "heading",
           "data": {
             "level": 1,
-            "title": "Grapher",
-            "slug": "grapher"
+            "title": "Helpers and Renderers",
+            "slug": "helpers-and-renderers"
           },
           "depth": 1,
           "children": [
@@ -187,14 +199,6 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 "level": 2,
                 "title": "grapher.off",
                 "slug": "grapheroff"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "grapher.palette",
-                "slug": "grapherpalette"
               },
               "depth": 2
             }, {
@@ -289,8 +293,16 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "type": "heading",
               "data": {
                 "level": 2,
-                "title": "grapher.center",
-                "slug": "graphercenter"
+                "title": "grapher.width",
+                "slug": "grapherwidth"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "grapher.height",
+                "slug": "grapherheight"
               },
               "depth": 2
             }, {
@@ -321,32 +333,24 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "type": "heading",
               "data": {
                 "level": 2,
-                "title": "grapher.backgroundColor",
-                "slug": "grapherbackgroundcolor"
+                "title": "grapher.color",
+                "slug": "graphercolor"
               },
               "depth": 2
             }, {
               "type": "heading",
               "data": {
                 "level": 2,
-                "title": "grapher.foregroundColor",
-                "slug": "grapherforegroundcolor"
+                "title": "grapher.getDataPosition",
+                "slug": "graphergetdataposition"
               },
               "depth": 2
             }, {
               "type": "heading",
               "data": {
                 "level": 2,
-                "title": "grapher.lineWidth",
-                "slug": "grapherlinewidth"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "grapher.getNodeIdAt",
-                "slug": "graphergetnodeidat"
+                "title": "grapher.getDisplayPosition",
+                "slug": "graphergetdisplayposition"
               },
               "depth": 2
             }
@@ -361,22 +365,6 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "depth": 1,
           "children": [
             {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "grapher._exit",
-                "slug": "grapher-exit"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "grapher._enter",
-                "slug": "grapher-enter"
-              },
-              "depth": 2
-            }, {
               "type": "heading",
               "data": {
                 "level": 2,
@@ -420,24 +408,24 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "type": "heading",
               "data": {
                 "level": 2,
-                "title": "grapher._setColor",
-                "slug": "grapher-setcolor"
+                "title": "grapher._getWebGL",
+                "slug": "grapher-getwebgl"
               },
               "depth": 2
             }, {
               "type": "heading",
               "data": {
                 "level": 2,
-                "title": "grapher._getBatch",
-                "slug": "grapher-getbatch"
+                "title": "grapher._onContextLost",
+                "slug": "grapher-oncontextlost"
               },
               "depth": 2
             }, {
               "type": "heading",
               "data": {
                 "level": 2,
-                "title": "grapher._onEvent",
-                "slug": "grapher-onevent"
+                "title": "grapher._onContextRestored",
+                "slug": "grapher-oncontextrestored"
               },
               "depth": 2
             }
@@ -450,348 +438,6 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "slug": "grapher-static-properties"
           },
           "depth": 1
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 1,
-            "title": "Grapher Static Methods",
-            "slug": "grapher-static-methods"
-          },
-          "depth": 1,
-          "children": [
-            {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "Grapher.getPalette",
-                "slug": "graphergetpalette"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "Grapher.setPalette",
-                "slug": "graphersetpalette"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "Grapher.getTexture",
-                "slug": "graphergettexture"
-              },
-              "depth": 2
-            }
-          ]
-        }
-      ]
-    }, {
-      "type": "file",
-      "data": {
-        "language": {
-          "nameMatchers": [".js"],
-          "pygmentsLexer": "javascript",
-          "multiLineComment": ["/*", "*", "*/"],
-          "singleLineComment": ["//"],
-          "ignorePrefix": "}",
-          "foldPrefix": "^",
-          "name": "JavaScript"
-        },
-        "sourcePath": "/Users/CZhang/Documents/ayasdi/grapher/modules/utilities.js",
-        "projectPath": "modules/utilities.js",
-        "targetPath": "utilities",
-        "pageTitle": "utilities",
-        "firstHeader": {
-          "type": "heading",
-          "data": {
-            "level": 1,
-            "title": "Utilities",
-            "slug": "utilities",
-            "isFileHeader": true
-          },
-          "depth": 1,
-          "children": [
-            {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "noop",
-                "slug": "noop"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "each",
-                "slug": "each"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "eachPop",
-                "slug": "eachpop"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "eachKey",
-                "slug": "eachkey"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "map",
-                "slug": "map"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "clean",
-                "slug": "clean"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "range",
-                "slug": "range"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "sortedIndex",
-                "slug": "sortedindex"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "indexOf",
-                "slug": "indexof"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "uniqueInsert",
-                "slug": "uniqueinsert"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "extend",
-                "slug": "extend"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "bind",
-                "slug": "bind"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "isUndefined",
-                "slug": "isundefined"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "isFunction",
-                "slug": "isfunction"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "isObject",
-                "slug": "isobject"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "isNumber",
-                "slug": "isnumber"
-              },
-              "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "isNaN",
-                "slug": "isnan"
-              },
-              "depth": 2
-            }
-          ]
-        },
-        "title": "Utilities"
-      },
-      "depth": 1,
-      "outline": [
-        {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "noop",
-            "slug": "noop"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "each",
-            "slug": "each"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "eachPop",
-            "slug": "eachpop"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "eachKey",
-            "slug": "eachkey"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "map",
-            "slug": "map"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "clean",
-            "slug": "clean"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "range",
-            "slug": "range"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "sortedIndex",
-            "slug": "sortedindex"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "indexOf",
-            "slug": "indexof"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "uniqueInsert",
-            "slug": "uniqueinsert"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "extend",
-            "slug": "extend"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "bind",
-            "slug": "bind"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "isUndefined",
-            "slug": "isundefined"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "isFunction",
-            "slug": "isfunction"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "isObject",
-            "slug": "isobject"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "isNumber",
-            "slug": "isnumber"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "isNaN",
-            "slug": "isnan"
-          },
-          "depth": 2
         }
       ]
     }
