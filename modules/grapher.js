@@ -298,6 +298,7 @@
   Grapher.prototype.pause = function () {
     if (this.currentFrame) cancelAnimationFrame(this.currentFrame);
     this.currentFrame = null;
+    return this;
   };
 
   /**
