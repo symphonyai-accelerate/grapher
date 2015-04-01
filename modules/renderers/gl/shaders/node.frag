@@ -1,5 +1,5 @@
 precision mediump float;
-varying vec4 color;
+varying vec3 rgb;
 varying vec2 center;
 varying vec2 resolution;
 varying float radius;
@@ -10,8 +10,11 @@ void main() {
   float dx = center[0] - x;
   float dy = center[1] - y;
   float distance = sqrt(dx*dx + dy*dy);
-  if ( distance < radius )
-    gl_FragColor = color;
+  float diff = distance - radius;
+  if ( diff < 0.0 ) 
+    gl_FragColor = vec4(rgb, 1.0);
+  else if ( diff >= 0.0 && diff <= 1.0 )
+    gl_FragColor = vec4(rgb, 1.0 - diff);
   else 
     gl_FragColor = color0;
 }

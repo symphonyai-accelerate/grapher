@@ -24,7 +24,7 @@
       this.gl.linkProgram(this.linksProgram);
       this.gl.linkProgram(this.nodesProgram);
 
-      this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+      this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.ONE, this.gl.ONE_MINUS_SRC_ALPHA);
       this.gl.enable(this.gl.BLEND);
     },
 
@@ -51,7 +51,8 @@
         var node = this.nodeObjects[i];
         var cx = this.transformX(node.x) * this.resolution;
         var cy = this.transformY(node.y) * this.resolution;
-        var r = node.r * Math.abs(this.scale * this.resolution);
+        // adding one px to keep shader area big enough for antialiasing pixesls
+        var r = node.r * Math.abs(this.scale * this.resolution) + 1;
         var color = node.color;
 
 
