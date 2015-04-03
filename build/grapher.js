@@ -224,8 +224,10 @@
     * Remove a listener from an event.
     */
   Grapher.prototype.off = function (event, fn) {
-    var i = u.indexOf(this.handlers[event], fn);
-    if (i > -1) this.handlers[event].splice(i, 1);
+    if (this.handlers[event]) {
+      var i = u.indexOf(this.handlers[event], fn);
+      if (i > -1) this.handlers[event].splice(i, 1);
+    }
     this.canvas.removeEventListener(event, fn, false);
     return this;
   };
