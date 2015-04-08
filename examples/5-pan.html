@@ -52,14 +52,10 @@
         return {x: x, y: y};
       };
 
-      // Create a grapher instance (width, height, options)
+      // Create a grapher instance
       var grapher = new Grapher({
-        width: width,
-        height: height
+        data: network
       });
-
-      // Give it the network data
-      grapher.data(network);
 
       var startPoint;
 

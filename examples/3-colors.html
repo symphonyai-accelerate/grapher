@@ -51,19 +51,12 @@
         });
       }
 
-      // Create a grapher instance (width, height, options)
-      // The options are the same as PIXI's renderer options.
+      // Create a grapher instance
       var grapher = new Grapher({
-        width: width,
-        height: height,
-        canvas: document.getElementById('graph')
+        canvas: document.getElementById('graph'),
+        data: network,
+        color: '#ffffff'
       });
-
-      // Set the default node and link color
-      grapher.color('#ffffff');
-
-      // Give it the network data
-      grapher.data(network);
 
       // Render the graph
       grapher.render();

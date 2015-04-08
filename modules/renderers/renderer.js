@@ -23,11 +23,11 @@
     untransformX: function (x) { return (x - this.translate[0]) / this.scale; },
     untransformY: function (y) { return (y - this.translate[1]) / this.scale; },
     resize: function (width, height) {
-      var displayWidth  = width * this.resolution;
-      var displayHeight = height * this.resolution;
+      var displayWidth  = (width || this.canvas.clientWidth) * this.resolution;
+      var displayHeight = (height || this.canvas.clientHeight) * this.resolution;
 
-      this.canvas.width  = displayWidth;
-      this.canvas.height = displayHeight;
+      if (this.canvas.width != displayWidth) this.canvas.width  = displayWidth;
+      if (this.canvas.height != displayHeight) this.canvas.height = displayHeight;
     }
   };
 

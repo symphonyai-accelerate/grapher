@@ -16,7 +16,6 @@
 
     initGL: function (gl) {
       this.gl = gl;
-      this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 
       this.linksProgram = this.initShaders(LinkVertexShaderSource, LinkFragmentShaderSource);
       this.nodesProgram = this.initShaders(NodeVertexShaderSource, NodeFragmentShaderSource);
@@ -102,10 +101,11 @@
 
     resize: function (width, height) {
       this._super(width, height);
-      this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+      this.gl.viewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
     },
 
     render: function () {
+      this.resize();
       this.updateNodesBuffer();
       this.updateLinksBuffer();
       this.renderLinks(); // links have to be rendered first because of blending;

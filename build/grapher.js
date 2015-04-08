@@ -141,8 +141,6 @@
     }, o);
 
     if (!o.canvas) this.props.canvas = document.createElement('canvas');
-    if (!o.width) this.props.width = this.props.canvas.clientWidth;
-    if (!o.height) this.props.height = this.props.canvas.clientHeight;
     this.canvas = this.props.canvas;
 
     var webGL = this._getWebGL();
@@ -155,9 +153,6 @@
     // Renderer and view
     this.renderer =  webGL ? new WebGLRenderer(this.props) : new CanvasRenderer(this.props);
     this.rendered = false;
-
-    // Initialize sizes
-    this.resize(this.props.width, this.props.height);
 
     // Sprite array
     this.links = [];
@@ -403,9 +398,6 @@
     * Resize the grapher view.
     */
   Grapher.prototype.resize = function (width, height) {
-    this.props.width = width;
-    this.props.height = height;
-
     this.renderer.resize(width, height);
     return this;
   };
@@ -417,8 +409,8 @@
     * Specify or retrieve the width.
     */
   Grapher.prototype.width = function (width) {
-    if (u.isUndefined(width)) return this.props.width;
-    this.resize(width, this.props.height);
+    if (u.isUndefined(width)) return this.canvas.clientWidth;
+    this.resize(width, null);
     return this;
   };
 
@@ -429,8 +421,8 @@
     * Specify or retrieve the height.
     */
   Grapher.prototype.height = function (height) {
-    if (u.isUndefined(height)) return this.props.height;
-    this.resize(this.props.width, height);
+    if (u.isUndefined(height)) return this.canvas.clientHeight;
+    this.resize(null, height);
     return this;
   };
 
@@ -728,7 +720,6 @@
 
     initGL: function (gl) {
       this.gl = gl;
-      this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 
       this.linksProgram = this.initShaders(LinkVertexShaderSource, LinkFragmentShaderSource);
       this.nodesProgram = this.initShaders(NodeVertexShaderSource, NodeFragmentShaderSource);
@@ -814,10 +805,11 @@
 
     resize: function (width, height) {
       this._super(width, height);
-      this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+      this.gl.viewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
     },
 
     render: function () {
+      this.resize();
       this.updateNodesBuffer();
       this.updateLinksBuffer();
       this.renderLinks(); // links have to be rendered first because of blending;
@@ -928,11 +920,11 @@ module.exports = 'precision mediump float;\nvarying vec3 rgb;\nvarying vec2 cent
     untransformX: function (x) { return (x - this.translate[0]) / this.scale; },
     untransformY: function (y) { return (y - this.translate[1]) / this.scale; },
     resize: function (width, height) {
-      var displayWidth  = width * this.resolution;
-      var displayHeight = height * this.resolution;
+      var displayWidth  = (width || this.canvas.clientWidth) * this.resolution;
+      var displayHeight = (height || this.canvas.clientHeight) * this.resolution;
 
-      this.canvas.width  = displayWidth;
-      this.canvas.height = displayHeight;
+      if (this.canvas.width != displayWidth) this.canvas.width  = displayWidth;
+      if (this.canvas.height != displayHeight) this.canvas.height = displayHeight;
     }
   };
 
@@ -1000,12 +992,12 @@ module.exports = 'precision mediump float;\nvarying vec3 rgb;\nvarying vec2 cent
   var CanvasRenderer = Renderer.extend({
     init: function (o) {
       this._super(o);
-
       this.context = this.canvas.getContext('2d');
     },
 
     render: function () {
-      this.context.clearRect( 0 , 0 , this.canvas.width, this.canvas.height );
+      this.resize();
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
       this.renderLinks();
       this.renderNodes();
     },

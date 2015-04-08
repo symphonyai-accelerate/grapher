@@ -6,12 +6,12 @@
   var CanvasRenderer = Renderer.extend({
     init: function (o) {
       this._super(o);
-
       this.context = this.canvas.getContext('2d');
     },
 
     render: function () {
-      this.context.clearRect( 0 , 0 , this.canvas.width, this.canvas.height );
+      this.resize();
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
       this.renderLinks();
       this.renderNodes();
     },

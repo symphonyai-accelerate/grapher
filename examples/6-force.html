@@ -76,12 +76,8 @@
 
       // Create a grapher instance (width, height, options)
       var grapher = new Grapher({
-        width: width,
-        height: height
+        data: network
       });
-
-      // Give it the network data
-      grapher.data(network);
 
       // Variable to keep track of the node we're dragging and the current offset
       var dragging = null,

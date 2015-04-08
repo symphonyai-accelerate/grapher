@@ -48,8 +48,6 @@
     }, o);
 
     if (!o.canvas) this.props.canvas = document.createElement('canvas');
-    if (!o.width) this.props.width = this.props.canvas.clientWidth;
-    if (!o.height) this.props.height = this.props.canvas.clientHeight;
     this.canvas = this.props.canvas;
 
     var webGL = this._getWebGL();
@@ -62,9 +60,6 @@
     // Renderer and view
     this.renderer =  webGL ? new WebGLRenderer(this.props) : new CanvasRenderer(this.props);
     this.rendered = false;
-
-    // Initialize sizes
-    this.resize(this.props.width, this.props.height);
 
     // Sprite array
     this.links = [];
@@ -310,9 +305,6 @@
     * Resize the grapher view.
     */
   Grapher.prototype.resize = function (width, height) {
-    this.props.width = width;
-    this.props.height = height;
-
     this.renderer.resize(width, height);
     return this;
   };
@@ -324,8 +316,8 @@
     * Specify or retrieve the width.
     */
   Grapher.prototype.width = function (width) {
-    if (u.isUndefined(width)) return this.props.width;
-    this.resize(width, this.props.height);
+    if (u.isUndefined(width)) return this.canvas.clientWidth;
+    this.resize(width, null);
     return this;
   };
 
@@ -336,8 +328,8 @@
     * Specify or retrieve the height.
     */
   Grapher.prototype.height = function (height) {
-    if (u.isUndefined(height)) return this.props.height;
-    this.resize(this.props.width, height);
+    if (u.isUndefined(height)) return this.canvas.clientHeight;
+    this.resize(null, height);
     return this;
   };
 
