@@ -13,6 +13,8 @@
       this.resolution = o.resolution || 1;
       this.scale = o.scale;
       this.translate = o.translate;
+
+      this.resize();
     },
     setNodes: function (nodes) { this.nodeObjects = nodes; },
     setLinks: function (links) { this.linkObjects = links; },
