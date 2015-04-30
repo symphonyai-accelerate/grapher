@@ -23,6 +23,7 @@
       Color = Grapher.Color = require('./helpers/color.js'),
       Link = Grapher.Link = require('./helpers/link.js'),
       Node = Grapher.Node = require('./helpers/node.js'),
+      Shaders = Grapher.Shaders = require('./helpers/shaders.js'),
       u = Grapher.utils = require('./helpers/utilities.js');
 
   Grapher.prototype = {};
