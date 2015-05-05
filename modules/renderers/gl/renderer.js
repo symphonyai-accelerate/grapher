@@ -7,8 +7,8 @@
 
   var WebGLRenderer = Renderer.extend({
     init: function (o) {
-      this._super(o);
       this.initGL(o.webGL);
+      this._super(o);
 
       this.NODE_ATTRIBUTES = 6;
       this.LINKS_ATTRIBUTES = 3;

@@ -711,8 +711,8 @@
 
   var WebGLRenderer = Renderer.extend({
     init: function (o) {
-      this._super(o);
       this.initGL(o.webGL);
+      this._super(o);
 
       this.NODE_ATTRIBUTES = 6;
       this.LINKS_ATTRIBUTES = 3;
@@ -910,6 +910,8 @@ module.exports = 'precision mediump float;\nvarying vec3 rgb;\nvarying vec2 cent
       this.resolution = o.resolution || 1;
       this.scale = o.scale;
       this.translate = o.translate;
+
+      this.resize();
     },
     setNodes: function (nodes) { this.nodeObjects = nodes; },
     setLinks: function (links) { this.linkObjects = links; },
