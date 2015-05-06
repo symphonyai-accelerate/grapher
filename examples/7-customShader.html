@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Custom Shader</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <style type="text/css">
+      html, body {
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+      }
+      canvas {
+        width: 100%;
+        height: 100%;
+        background-color: #333333;
+      }
+    </style>
+    <canvas id="graph"></canvas>
+    <script type="text/javascript" src="../build/grapher.js"></script>
+    <script type="text/javascript">
+      // 5-class GnBu ColorBrewer palette.
+      var palette = ['#f0f9e8', '#bae4bc', '#7bccc4', '#43a2ca', '#0868ac'];
+
+      // Generate some data
+      var network = {nodes: [], links: []},
+          width = window.innerWidth,
+          height = window.innerHeight,
+          numNodes = 10,
+          numLinks = 30,
+          i;
+
+      for (i = 0; i < numNodes; i++) {
+        network.nodes.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: Math.random() * 10 + 5,
+          color: palette[Math.floor(Math.random() * palette.length)]
+        });
+      }
+
+      for (i = 0; i < numLinks; i++) {
+        network.links.push({
+          from: Math.floor(Math.random() * numNodes),
+          to: Math.floor(Math.random() * numNodes),
+          // When undefined, Grapher interpolates the link color.
+          color: Math.random() < 0.1 ? '#ff0000' : undefined
+        });
+      }
+
+      // Create a grapher instance
+      var grapher = new Grapher({
+        canvas: document.getElementById('graph'),
+        data: network,
+        color: '#ffffff',
+        linkShaders: {
+          vertexCode: 
+            'uniform vec2 u_resolution; attribute vec2 a_position; attribute float a_color; varying vec4 color; varying vec2 position; varying vec2 resolution; void main() { vec2 clipspace = a_position / u_resolution * 2.0 - 1.0; gl_Position = vec4(clipspace * vec2(1, -1), 0, 1); float c = a_color; color.b = mod(c, 256.0); c = floor(c / 256.0); color.g = mod(c, 256.0); c = floor(c / 256.0); color.r = mod(c, 256.0); c = floor(c / 256.0); color /= 255.0; color.a = 0.7; }'
+        },
+        nodeShaders: {
+          vertexCode: 
+            'uniform vec2 u_resolution; attribute vec2 a_position; attribute float a_color; attribute vec2 a_center; attribute float a_radius; varying vec3 rgb; varying vec3 rgbStroke; varying vec2 center; varying vec2 resolution; varying float radius; void main() { vec2 clipspace = a_position / u_resolution * 2.0 - 1.0; gl_Position = vec4(clipspace * vec2(1, -1), 0, 1); float c = a_color; rgb.b = mod(c, 256.0); c = floor(c / 256.0); rgb.g = mod(c, 256.0); c = floor(c / 256.0); rgb.r = mod(c, 256.0); c = floor(c / 256.0); rgb /= 255.0; rgbStroke = rgb * 0.7; radius = a_radius - 1.0 ; center = a_center;resolution = u_resolution;}',
+          fragmentCode: 
+            'precision mediump float; varying vec3 rgb; varying vec3 rgbStroke; varying vec2 center; varying vec2 resolution; varying float radius; void main() { vec4 color0 = vec4(0.0, 0.0, 0.0, 0.0);float x = gl_FragCoord.x; float y = resolution[1] - gl_FragCoord.y; float dx = center[0] - x; float dy = center[1] - y; float distance = sqrt(dx*dx + dy*dy); float diff = distance - radius; if ( diff < 0.0 )  gl_FragColor = vec4(rgb, 1.0); else if ( diff >= 0.0 && diff <= 3.0 ) gl_FragColor = vec4(rgbStroke, 1.0); else  gl_FragColor = color0; }'
+        }        
+      });
+
+      // Render the graph
+      grapher.render();
+    </script>
+  </body>
+</html>

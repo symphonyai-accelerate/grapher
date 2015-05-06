@@ -1,9 +1,7 @@
 ;(function () {
   function Shaders (obj) {
-    this.vertexCode = obj && obj.vertexCode || '';
-    this.fragmentCode = obj && obj.fragmentCode || '';
-    this.vertexAttrs = obj && obj.vertexAttrs || [];
-    this.uniformAttrs = obj && obj.uniformAttrs || [];
+    this.vertexCode = obj && obj.vertexCode || null;
+    this.fragmentCode = obj && obj.fragmentCode || null;
     return this;
   }
 
