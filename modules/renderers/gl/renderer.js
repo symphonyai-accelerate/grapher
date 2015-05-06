@@ -7,24 +7,26 @@
 
   var WebGLRenderer = Renderer.extend({
     init: function (o) {
-      this.initGL(o.webGL, o.shaders || null);
-      this._super(o);
+      this.gl = o.webGL;
+      
+      this.linkVertexShader = o.linkShaders && o.linkShaders.vertexCode || LinkVertexShaderSource;
+      this.linkFragmentShader = o.linkShaders && o.linkShaders.fragmentCode || LinkFragmentShaderSource;
+      this.nodeVertexShader = o.nodeShaders && o.nodeShaders.vertexCode ||  NodeVertexShaderSource;
+      this.nodeFragmentShader = o.nodeShaders && o.nodeShaders.fragmentCode || NodeFragmentShaderSource;
 
+
+      this._super(o);
+      this.initGL();
 
       this.NODE_ATTRIBUTES = 6;
       this.LINKS_ATTRIBUTES = 3;
     },
 
-    initGL: function (gl, shaders) {
-      this.gl = gl;
+    initGL: function (gl) {
+      if (gl) this.gl = gl;
 
-      var linkVertexShader = (shaders && shaders.link && shaders.link.vertexCode) ? shaders.link.vertexCode : LinkVertexShaderSource;
-      var linkFragmentShader = (shaders && shaders.link && shaders.link.fragmentCode) ? shaders.link.fragmentCode : LinkFragmentShaderSource;
-      var nodeVertexShader = (shaders && shaders.node && shaders.node.vertexCode) ? shaders.node.vertexCode : NodeVertexShaderSource;
-      var nodeFragmentShader = (shaders && shaders.node && shaders.node.fragmentCode) ? shaders.node.fragmentCode : NodeFragmentShaderSource;
-      
-      this.linksProgram = this.initShaders(linkVertexShader, linkFragmentShader);
-      this.nodesProgram = this.initShaders(nodeVertexShader, nodeFragmentShader);
+      this.linksProgram = this.initShaders(this.linkVertexShader, this.linkFragmentShader);
+      this.nodesProgram = this.initShaders(this.nodeVertexShader, this.nodeFragmentShader);
 
       this.gl.linkProgram(this.linksProgram);
       this.gl.linkProgram(this.nodesProgram);

@@ -51,14 +51,13 @@
     if (!o.canvas) this.props.canvas = document.createElement('canvas');
     this.canvas = this.props.canvas;
 
-    var shaders =  new Shaders(o.shaders);
-
     var webGL = this._getWebGL();
     if (webGL) {
       this.props.webGL = webGL;
       this.props.canvas.addEventListener('webglcontextlost', function (e) { this._onContextLost(e); }.bind(this));
       this.props.canvas.addEventListener('webglcontextrestored', function (e) { this._onContextRestored(e); }.bind(this));
-      this.props.shaders = shaders;
+      this.props.linkShaders = new Shaders(this.props.linkShaders);
+      this.props.nodeShaders = new Shaders(this.props.nodeShaders);
     }
 
     // Renderer and view

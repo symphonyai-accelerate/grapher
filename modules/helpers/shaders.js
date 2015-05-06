@@ -1,11 +1,7 @@
 ;(function () {
-  function Shaders (shaders) {
-    for (var i = 0; i < shaders.length; i++) {
-      var shader = shaders[i];
-      this[shader.type] = {};
-      this[shader.type].vertexCode = shader.vertexCode;
-      this[shader.type].fragmentCode = shader.fragmentCode;
-    }
+  function Shaders (obj) {
+    this.vertexCode = obj && obj.vertexCode || null;
+    this.fragmentCode = obj && obj.fragmentCode || null;
     return this;
   }
 

@@ -144,14 +144,13 @@
     if (!o.canvas) this.props.canvas = document.createElement('canvas');
     this.canvas = this.props.canvas;
 
-    var shaders =  new Shaders(o.shaders);
-
     var webGL = this._getWebGL();
     if (webGL) {
       this.props.webGL = webGL;
       this.props.canvas.addEventListener('webglcontextlost', function (e) { this._onContextLost(e); }.bind(this));
       this.props.canvas.addEventListener('webglcontextrestored', function (e) { this._onContextRestored(e); }.bind(this));
-      this.props.shaders = shaders;
+      this.props.linkShaders = new Shaders(this.props.linkShaders);
+      this.props.nodeShaders = new Shaders(this.props.nodeShaders);
     }
 
     // Renderer and view
@@ -715,24 +714,26 @@
 
   var WebGLRenderer = Renderer.extend({
     init: function (o) {
-      this.initGL(o.webGL, o.shaders || null);
-      this._super(o);
+      this.gl = o.webGL;
+      
+      this.linkVertexShader = o.linkShaders && o.linkShaders.vertexCode || LinkVertexShaderSource;
+      this.linkFragmentShader = o.linkShaders && o.linkShaders.fragmentCode || LinkFragmentShaderSource;
+      this.nodeVertexShader = o.nodeShaders && o.nodeShaders.vertexCode ||  NodeVertexShaderSource;
+      this.nodeFragmentShader = o.nodeShaders && o.nodeShaders.fragmentCode || NodeFragmentShaderSource;
 
+
+      this._super(o);
+      this.initGL();
 
       this.NODE_ATTRIBUTES = 6;
       this.LINKS_ATTRIBUTES = 3;
     },
 
-    initGL: function (gl, shaders) {
-      this.gl = gl;
+    initGL: function (gl) {
+      if (gl) this.gl = gl;
 
-      var linkVertexShader = (shaders && shaders.link && shaders.link.vertexCode) ? shaders.link.vertexCode : LinkVertexShaderSource;
-      var linkFragmentShader = (shaders && shaders.link && shaders.link.fragmentCode) ? shaders.link.fragmentCode : LinkFragmentShaderSource;
-      var nodeVertexShader = (shaders && shaders.node && shaders.node.vertexCode) ? shaders.node.vertexCode : NodeVertexShaderSource;
-      var nodeFragmentShader = (shaders && shaders.node && shaders.node.fragmentCode) ? shaders.node.fragmentCode : NodeFragmentShaderSource;
-      
-      this.linksProgram = this.initShaders(linkVertexShader, linkFragmentShader);
-      this.nodesProgram = this.initShaders(nodeVertexShader, nodeFragmentShader);
+      this.linksProgram = this.initShaders(this.linkVertexShader, this.linkFragmentShader);
+      this.nodesProgram = this.initShaders(this.nodeVertexShader, this.nodeFragmentShader);
 
       this.gl.linkProgram(this.linksProgram);
       this.gl.linkProgram(this.nodesProgram);
@@ -1155,13 +1156,9 @@ function toRgb (intColor) {
 }, {}],
 7: [function(require, module, exports) {
 ;(function () {
-  function Shaders (shaders) {
-    for (var i = 0; i < shaders.length; i++) {
-      var shader = shaders[i];
-      this[shader.type] = {};
-      this[shader.type].vertexCode = shader.vertexCode;
-      this[shader.type].fragmentCode = shader.fragmentCode;
-    }
+  function Shaders (obj) {
+    this.vertexCode = obj && obj.vertexCode || null;
+    this.fragmentCode = obj && obj.fragmentCode || null;
     return this;
   }
 
