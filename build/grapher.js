@@ -116,6 +116,7 @@
       Color = Grapher.Color = require('./helpers/color.js'),
       Link = Grapher.Link = require('./helpers/link.js'),
       Node = Grapher.Node = require('./helpers/node.js'),
+      Shaders = Grapher.Shaders = require('./helpers/shaders.js'),
       u = Grapher.utils = require('./helpers/utilities.js');
 
   Grapher.prototype = {};
@@ -143,11 +144,14 @@
     if (!o.canvas) this.props.canvas = document.createElement('canvas');
     this.canvas = this.props.canvas;
 
+    var shaders =  new Shaders(o.shaders);
+
     var webGL = this._getWebGL();
     if (webGL) {
       this.props.webGL = webGL;
       this.props.canvas.addEventListener('webglcontextlost', function (e) { this._onContextLost(e); }.bind(this));
       this.props.canvas.addEventListener('webglcontextrestored', function (e) { this._onContextRestored(e); }.bind(this));
+      this.props.shaders = shaders;
     }
 
     // Renderer and view
@@ -700,7 +704,7 @@
   if (module && module.exports) module.exports = Grapher;
 })();
 
-}, {"./renderers/gl/renderer.js":2,"./renderers/canvas/renderer.js":3,"./helpers/color.js":4,"./helpers/link.js":5,"./helpers/node.js":6,"./helpers/utilities.js":7}],
+}, {"./renderers/gl/renderer.js":2,"./renderers/canvas/renderer.js":3,"./helpers/color.js":4,"./helpers/link.js":5,"./helpers/node.js":6,"./helpers/shaders.js":7,"./helpers/utilities.js":8}],
 2: [function(require, module, exports) {
 ;(function () {
   var LinkVertexShaderSource = require('./shaders/link.vert'),
@@ -711,18 +715,24 @@
 
   var WebGLRenderer = Renderer.extend({
     init: function (o) {
+      this.initGL(o.webGL, o.shaders || null);
       this._super(o);
-      this.initGL(o.webGL);
+
 
       this.NODE_ATTRIBUTES = 6;
       this.LINKS_ATTRIBUTES = 3;
     },
 
-    initGL: function (gl) {
+    initGL: function (gl, shaders) {
       this.gl = gl;
 
-      this.linksProgram = this.initShaders(LinkVertexShaderSource, LinkFragmentShaderSource);
-      this.nodesProgram = this.initShaders(NodeVertexShaderSource, NodeFragmentShaderSource);
+      var linkVertexShader = (shaders && shaders.link && shaders.link.vertexCode) ? shaders.link.vertexCode : LinkVertexShaderSource;
+      var linkFragmentShader = (shaders && shaders.link && shaders.link.fragmentCode) ? shaders.link.fragmentCode : LinkFragmentShaderSource;
+      var nodeVertexShader = (shaders && shaders.node && shaders.node.vertexCode) ? shaders.node.vertexCode : NodeVertexShaderSource;
+      var nodeFragmentShader = (shaders && shaders.node && shaders.node.fragmentCode) ? shaders.node.fragmentCode : NodeFragmentShaderSource;
+      
+      this.linksProgram = this.initShaders(linkVertexShader, linkFragmentShader);
+      this.nodesProgram = this.initShaders(nodeVertexShader, nodeFragmentShader);
 
       this.gl.linkProgram(this.linksProgram);
       this.gl.linkProgram(this.nodesProgram);
@@ -754,27 +764,28 @@
         var node = this.nodeObjects[i];
         var cx = this.transformX(node.x) * this.resolution;
         var cy = this.transformY(node.y) * this.resolution;
-        // adding one px to keep shader area big enough for antialiasing pixesls
         var r = node.r * Math.abs(this.scale * this.resolution) + 1;
+        // adding few px to keep shader area big enough for antialiasing pixesls
+        var shaderSize = r + 10;
         var color = node.color;
 
 
-        this.nodes[j++] = (cx - r);
-        this.nodes[j++] = (cy - r);
+        this.nodes[j++] = (cx - shaderSize);
+        this.nodes[j++] = (cy - shaderSize);
         this.nodes[j++] = color;
         this.nodes[j++] = cx;
         this.nodes[j++] = cy;
         this.nodes[j++] = r;
 
-        this.nodes[j++] = (cx + (1 + Math.sqrt(2))*r);
-        this.nodes[j++] = cy - r;
+        this.nodes[j++] = (cx + (1 + Math.sqrt(2)) * shaderSize);
+        this.nodes[j++] = cy - shaderSize;
         this.nodes[j++] = color;
         this.nodes[j++] = cx;
         this.nodes[j++] = cy;
         this.nodes[j++] = r;
 
-        this.nodes[j++] = (cx - r);
-        this.nodes[j++] = (cy + (1 + Math.sqrt(2))*r);
+        this.nodes[j++] = (cx - shaderSize);
+        this.nodes[j++] = (cy + (1 + Math.sqrt(2)) * shaderSize);
         this.nodes[j++] = color;
         this.nodes[j++] = cx;
         this.nodes[j++] = cy;
@@ -881,20 +892,20 @@
   if (module && module.exports) module.exports = WebGLRenderer;
 })();
 
-}, {"./shaders/link.vert":8,"./shaders/link.frag":9,"./shaders/node.vert":10,"./shaders/node.frag":11,"../renderer.js":12}],
-8: [function(require, module, exports) {
+}, {"./shaders/link.vert":9,"./shaders/link.frag":10,"./shaders/node.vert":11,"./shaders/node.frag":12,"../renderer.js":13}],
+9: [function(require, module, exports) {
 module.exports = 'uniform vec2 u_resolution;\nattribute vec2 a_position;\nattribute float a_color;\nvarying vec4 color;\nvarying vec2 position;\nvarying vec2 resolution;\nvoid main() {\n  vec2 clipspace = a_position / u_resolution * 2.0 - 1.0;\n  gl_Position = vec4(clipspace * vec2(1, -1), 0, 1);\n  float c = a_color;\n  color.b = mod(c, 256.0); c = floor(c / 256.0);\n  color.g = mod(c, 256.0); c = floor(c / 256.0);\n  color.r = mod(c, 256.0); c = floor(c / 256.0); color /= 255.0;\n  color.a = 1.0;\n}\n';
 }, {}],
-9: [function(require, module, exports) {
+10: [function(require, module, exports) {
 module.exports = 'precision mediump float;\nvarying vec4 color;\nvoid main() {\n  gl_FragColor = color;\n}\n';
 }, {}],
-10: [function(require, module, exports) {
+11: [function(require, module, exports) {
 module.exports = 'uniform vec2 u_resolution;\nattribute vec2 a_position;\nattribute float a_color;\nattribute vec2 a_center;\nattribute float a_radius;\nvarying vec3 rgb;\nvarying vec2 center;\nvarying vec2 resolution;\nvarying float radius;\nvoid main() {\n  vec2 clipspace = a_position / u_resolution * 2.0 - 1.0;\n  gl_Position = vec4(clipspace * vec2(1, -1), 0, 1);\n  float c = a_color;\n  rgb.b = mod(c, 256.0); c = floor(c / 256.0);\n  rgb.g = mod(c, 256.0); c = floor(c / 256.0);\n  rgb.r = mod(c, 256.0); c = floor(c / 256.0); rgb /= 255.0;\n  radius = a_radius - 1.0 ;\n  center = a_center;\n  resolution = u_resolution;\n}\n';
 }, {}],
-11: [function(require, module, exports) {
+12: [function(require, module, exports) {
 module.exports = 'precision mediump float;\nvarying vec3 rgb;\nvarying vec2 center;\nvarying vec2 resolution;\nvarying float radius;\nvoid main() {\n  vec4 color0 = vec4(0.0, 0.0, 0.0, 0.0);\n  float x = gl_FragCoord.x;\n  float y = resolution[1] - gl_FragCoord.y;\n  float dx = center[0] - x;\n  float dy = center[1] - y;\n  float distance = sqrt(dx*dx + dy*dy);\n  float diff = distance - radius;\n  if ( diff < 0.0 ) \n    gl_FragColor = vec4(rgb, 1.0);\n  else if ( diff >= 0.0 && diff <= 1.0 )\n    gl_FragColor = vec4(rgb, 1.0 - diff);\n  else \n    gl_FragColor = color0;\n}\n';
 }, {}],
-12: [function(require, module, exports) {
+13: [function(require, module, exports) {
 ;(function () {
 
   var Renderer = function () {
@@ -910,6 +921,8 @@ module.exports = 'precision mediump float;\nvarying vec3 rgb;\nvarying vec2 cent
       this.resolution = o.resolution || 1;
       this.scale = o.scale;
       this.translate = o.translate;
+
+      this.resize();
     },
     setNodes: function (nodes) { this.nodeObjects = nodes; },
     setLinks: function (links) { this.linkObjects = links; },
@@ -1038,7 +1051,7 @@ module.exports = 'precision mediump float;\nvarying vec3 rgb;\nvarying vec2 cent
   if (module && module.exports) module.exports = CanvasRenderer;
 })();
 
-}, {"../renderer.js":12,"../../helpers/color.js":4}],
+}, {"../renderer.js":13,"../../helpers/color.js":4}],
 4: [function(require, module, exports) {
 // Ayasdi Inc. Copyright 2014
 // Color.js may be freely distributed under the Apache 2.0 license
@@ -1141,6 +1154,43 @@ function toRgb (intColor) {
 
 }, {}],
 7: [function(require, module, exports) {
+;(function () {
+  function Shaders (shaders) {
+    for (var i = 0; i < shaders.length; i++) {
+      var shader = shaders[i];
+      this[shader.type] = {};
+      this[shader.type].vertexCode = shader.vertexCode;
+      this[shader.type].fragmentCode = shader.fragmentCode;
+    }
+    return this;
+  }
+
+  Shaders.prototype.addVertexAttr = function (name, value, size, type, normalized) {
+    var attrs = {
+      name: name,
+      value: value,
+      size: size,
+      type: type,
+      normalized: normalized
+    };
+
+    this.vertexAttrs.push(attrs);
+  };
+
+  Shaders.prototype.addUniformAttr = function (name, value) {
+    var attrs = {
+      name: name,
+      value: value
+    };
+
+    this.uniformAttrs.push(attrs);
+  };
+
+  if (module && module.exports) module.exports = Shaders;
+})();
+
+}, {}],
+8: [function(require, module, exports) {
 /**
  * Utilities
  * =========

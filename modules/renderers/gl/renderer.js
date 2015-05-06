@@ -7,18 +7,24 @@
 
   var WebGLRenderer = Renderer.extend({
     init: function (o) {
+      this.initGL(o.webGL, o.shaders || null);
       this._super(o);
-      this.initGL(o.webGL);
+
 
       this.NODE_ATTRIBUTES = 6;
       this.LINKS_ATTRIBUTES = 3;
     },
 
-    initGL: function (gl) {
+    initGL: function (gl, shaders) {
       this.gl = gl;
 
-      this.linksProgram = this.initShaders(LinkVertexShaderSource, LinkFragmentShaderSource);
-      this.nodesProgram = this.initShaders(NodeVertexShaderSource, NodeFragmentShaderSource);
+      var linkVertexShader = (shaders && shaders.link && shaders.link.vertexCode) ? shaders.link.vertexCode : LinkVertexShaderSource;
+      var linkFragmentShader = (shaders && shaders.link && shaders.link.fragmentCode) ? shaders.link.fragmentCode : LinkFragmentShaderSource;
+      var nodeVertexShader = (shaders && shaders.node && shaders.node.vertexCode) ? shaders.node.vertexCode : NodeVertexShaderSource;
+      var nodeFragmentShader = (shaders && shaders.node && shaders.node.fragmentCode) ? shaders.node.fragmentCode : NodeFragmentShaderSource;
+      
+      this.linksProgram = this.initShaders(linkVertexShader, linkFragmentShader);
+      this.nodesProgram = this.initShaders(nodeVertexShader, nodeFragmentShader);
 
       this.gl.linkProgram(this.linksProgram);
       this.gl.linkProgram(this.nodesProgram);
@@ -50,27 +56,28 @@
         var node = this.nodeObjects[i];
         var cx = this.transformX(node.x) * this.resolution;
         var cy = this.transformY(node.y) * this.resolution;
-        // adding one px to keep shader area big enough for antialiasing pixesls
         var r = node.r * Math.abs(this.scale * this.resolution) + 1;
+        // adding few px to keep shader area big enough for antialiasing pixesls
+        var shaderSize = r + 10;
         var color = node.color;
 
 
-        this.nodes[j++] = (cx - r);
-        this.nodes[j++] = (cy - r);
+        this.nodes[j++] = (cx - shaderSize);
+        this.nodes[j++] = (cy - shaderSize);
         this.nodes[j++] = color;
         this.nodes[j++] = cx;
         this.nodes[j++] = cy;
         this.nodes[j++] = r;
 
-        this.nodes[j++] = (cx + (1 + Math.sqrt(2))*r);
-        this.nodes[j++] = cy - r;
+        this.nodes[j++] = (cx + (1 + Math.sqrt(2)) * shaderSize);
+        this.nodes[j++] = cy - shaderSize;
         this.nodes[j++] = color;
         this.nodes[j++] = cx;
         this.nodes[j++] = cy;
         this.nodes[j++] = r;
 
-        this.nodes[j++] = (cx - r);
-        this.nodes[j++] = (cy + (1 + Math.sqrt(2))*r);
+        this.nodes[j++] = (cx - shaderSize);
+        this.nodes[j++] = (cy + (1 + Math.sqrt(2)) * shaderSize);
         this.nodes[j++] = color;
         this.nodes[j++] = cx;
         this.nodes[j++] = cy;

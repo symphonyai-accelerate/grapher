@@ -1,9 +1,11 @@
 ;(function () {
-  function Shaders (obj) {
-    this.vertexCode = obj && obj.vertexCode || '';
-    this.fragmentCode = obj && obj.fragmentCode || '';
-    this.vertexAttrs = obj && obj.vertexAttrs || [];
-    this.uniformAttrs = obj && obj.uniformAttrs || [];
+  function Shaders (shaders) {
+    for (var i = 0; i < shaders.length; i++) {
+      var shader = shaders[i];
+      this[shader.type] = {};
+      this[shader.type].vertexCode = shader.vertexCode;
+      this[shader.type].fragmentCode = shader.fragmentCode;
+    }
     return this;
   }
 
