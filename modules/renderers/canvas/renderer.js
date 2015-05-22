@@ -25,7 +25,7 @@
 
         this.context.beginPath();
         this.context.arc(cx, cy, r, 0, 2 * Math.PI, false);
-        this.context.fillStyle = Color.toRgb(node.color);
+        this.context.fillStyle = Color.fromIntToRgbaString(node.color);
         this.context.fill();
       }
     },
@@ -42,8 +42,7 @@
         this.context.moveTo(x1, y1);
         this.context.lineTo(x2, y2);
         this.context.lineWidth = this.lineWidth * Math.abs(this.scale * this.resolution);
-
-        this.context.strokeStyle = Color.toRgb(link.color);
+        this.context.strokeStyle = Color.fromIntToRgbaString(link.color);
         this.context.stroke();
       }
     }
