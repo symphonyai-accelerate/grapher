@@ -157,7 +157,7 @@ function sortedIndex (arr, n) {
 
   while (min < max) {
     var mid = min + max >>> 1;
-    if (n < mid) max = mid;
+    if (n < arr[mid]) max = mid;
     else min = mid + 1;
   }
 
