@@ -126,11 +126,12 @@
     * Remove a listener from an event.
     */
   Grapher.prototype.off = function (event, fn) {
-    if (this.handlers[event]) {
-      var i = u.indexOf(this.handlers[event], fn);
-      if (i > -1) this.handlers[event].splice(i, 1);
-    }
-    this.canvas.removeEventListener(event, fn, false);
+    var i = u.indexOf(this.handlers[event], fn),
+        removeHandler = u.bind(function (fn) { this.canvas.removeEventListener(event, fn, false); }, this);
+    if (i > -1) {
+      this.handlers[event].splice(i, 1);
+      removeHandler(fn);
+    } else if (u.isUndefined(fn)) u.each(this.handlers[event], removeHandler);
     return this;
   };
 
