@@ -105,6 +105,8 @@
     },
 
     render: function () {
+      this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+
       this.resize();
       this.updateNodesBuffer();
       this.updateLinksBuffer();
