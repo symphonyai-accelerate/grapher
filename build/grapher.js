@@ -813,6 +813,8 @@
     },
 
     render: function () {
+      this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+
       this.resize();
       this.updateNodesBuffer();
       this.updateLinksBuffer();
@@ -1306,7 +1308,7 @@ function sortedIndex (arr, n) {
 
   while (min < max) {
     var mid = min + max >>> 1;
-    if (n < mid) max = mid;
+    if (n < arr[mid]) max = mid;
     else min = mid + 1;
   }
 
