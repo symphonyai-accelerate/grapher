@@ -219,14 +219,18 @@
     * grapher.off
     * ------------------
     * 
-    * Remove a listener from an event.
+    * Remove a listener from an event, or all listeners from an event if fn is not specified.
     */
   Grapher.prototype.off = function (event, fn) {
-    if (this.handlers[event]) {
+    var removeHandler = u.bind(function (fn) {
       var i = u.indexOf(this.handlers[event], fn);
       if (i > -1) this.handlers[event].splice(i, 1);
-    }
-    this.canvas.removeEventListener(event, fn, false);
+      this.canvas.removeEventListener(event, fn, false);
+    }, this);
+
+    if (fn && this.handlers[event]) removeHandler(fn);
+    else if (u.isUndefined(fn) && this.handlers[event]) u.each(this.handlers[event], removeHandler);
+
     return this;
   };
 
@@ -836,6 +840,8 @@
     },
 
     render: function () {
+      this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+
       this.resize();
       this.updateNodesBuffer();
       this.updateLinksBuffer();
@@ -1413,7 +1419,7 @@ function sortedIndex (arr, n) {
 
   while (min < max) {
     var mid = min + max >>> 1;
-    if (n < mid) max = mid;
+    if (n < arr[mid]) max = mid;
     else min = mid + 1;
   }
 
