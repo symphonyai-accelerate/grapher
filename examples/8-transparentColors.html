@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Custom Shader</title>
+    <title>Transparent Colors</title>
     <meta charset="utf-8">
   </head>
   <body>
@@ -16,15 +16,11 @@
       canvas {
         width: 100%;
         height: 100%;
-        background-color: #ffffff;
       }
     </style>
     <canvas id="graph"></canvas>
     <script type="text/javascript" src="../build/grapher.js"></script>
     <script type="text/javascript">
-      // 5-class GnBu ColorBrewer palette.
-      var palette = ['#f0f9e8', '#bae4bc', '#7bccc4', '#43a2ca', '#0868ac'];
-
       // Generate some data
       var network = {nodes: [], links: []},
           width = window.innerWidth,
@@ -38,7 +34,7 @@
           x: Math.random() * width,
           y: Math.random() * height,
           r: Math.random() * 10 + 5,
-          color: palette[Math.floor(Math.random() * palette.length)]
+          color: 'rgba(51, 51, 255, 0.7)'
         });
       }
 
@@ -46,19 +42,19 @@
         network.links.push({
           from: Math.floor(Math.random() * numNodes),
           to: Math.floor(Math.random() * numNodes),
-          color: '#eeeeee'
+          color: 'rgb(128, 128, 128)'
         });
       }
 
-      // Create a grapher instance
+      // Create a grapher instance (width, height, options)
+      // The options are the same as PIXI's renderer options.
       var grapher = new Grapher({
-        canvas: document.getElementById('graph'),
-        data: network,
-        nodeShaders: {
-          vertexCode: 
-            'uniform vec2 u_resolution; attribute vec2 a_position; attribute vec4 a_rgba; attribute vec2 a_center; attribute float a_radius; varying vec4 rgba; varying vec2 center; varying vec2 resolution; varying float radius; void main() { vec2 clipspace = a_position / u_resolution * 2.0 - 1.0; gl_Position = vec4(clipspace * vec2(1, -1), 0, 1); rgba = a_rgba / 255.0; rgba.a = 0.7; radius = a_radius; center = a_center; resolution = u_resolution; }'      
-          }
-        });
+        // Pass grapher the canvas
+        canvas: document.getElementById('graph')
+      });
+
+      // Give it the network data
+      grapher.data(network);
 
       // Render the graph
       grapher.render();

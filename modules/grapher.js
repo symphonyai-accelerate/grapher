@@ -42,7 +42,7 @@
     
     // Extend default properties with options
     this.props = u.extend({
-      color: 0x222222,
+      color: 0xff222222,
       scale: 1,
       translate: [0, 0],
       resolution: window.devicePixelRatio || 1
