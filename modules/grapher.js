@@ -259,6 +259,18 @@
   };
 
   /**
+    * grapher.clear
+    * ------------------
+    * 
+    * Clears the canvas and grapher data.
+    */
+  Grapher.prototype.clear = function () {
+    this.data({links: [], nodes: []});
+    this.render();
+    return this;
+  };
+
+  /**
     * grapher.render
     * ------------------
     * 
