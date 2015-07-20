@@ -1,8 +1,8 @@
 ;(function () {
-  var LinkVertexShaderSource = require('./shaders/link.vert'),
-      LinkFragmentShaderSource = require('./shaders/link.frag'),
-      NodeVertexShaderSource = require('./shaders/node.vert'),
-      NodeFragmentShaderSource = require('./shaders/node.frag'),
+  var LinkVertexShaderSource = require('./shaders/link.vert.js'),
+      LinkFragmentShaderSource = require('./shaders/link.frag.js'),
+      NodeVertexShaderSource = require('./shaders/node.vert.js'),
+      NodeFragmentShaderSource = require('./shaders/node.frag.js'),
       Renderer = require('../renderer.js');
 
   var WebGLRenderer = Renderer.extend({
