@@ -1,9 +1,6 @@
 {
   "name": "grapher",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/ayasdi/grapher.git"
-  },
+  "repository": "ayasdi/grapher",
   "main": "./modules/grapher.js",
   "description": "WebGL/Canvas Network Graphs",
   "version": "1.0.1",
