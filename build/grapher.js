@@ -352,6 +352,18 @@
   };
 
   /**
+    * grapher.clear
+    * ------------------
+    * 
+    * Clears the canvas and grapher data.
+    */
+  Grapher.prototype.clear = function () {
+    this.data({links: [], nodes: []});
+    this.render();
+    return this;
+  };
+
+  /**
     * grapher.render
     * ------------------
     * 
@@ -840,7 +852,7 @@
     },
 
     render: function () {
-      this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+      this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
       this.resize();
       this.updateNodesBuffer();
