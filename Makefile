@@ -13,7 +13,7 @@ test: grapher.js
 	@grunt jasmine
 
 doc: grapher.js
-	@groc
+	@npm run doc
 
 grapher.js:
 	@npm run grapher.js

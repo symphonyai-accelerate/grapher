@@ -141,4 +141,11 @@ describe('a grapher instance', function () {
     grapher.on(e, handler);
     expect(grapher.handlers[e][0]).toBe(handler);
   });
+
+  it('can clear nodes and links', function () {
+    grapher.data(network);
+    grapher.clear();
+    expect(grapher.links.length).toEqual(0);
+    expect(grapher.nodes.length).toEqual(0);
+  });
 });
