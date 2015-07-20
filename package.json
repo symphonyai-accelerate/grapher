@@ -4,6 +4,7 @@
     "type": "git",
     "url": "git://github.com/ayasdi/grapher.git"
   },
+  "main": "./build/grapher.js",
   "description": "WebGL/Canvas Network Graphs",
   "version": "1.0.1",
   "license": "Apache 2.0",
