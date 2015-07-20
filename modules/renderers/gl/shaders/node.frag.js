@@ -1,4 +1,4 @@
-module.exports = '
+module.exports = ' \
 precision mediump float; \
 varying vec3 rgb; \
 varying vec2 center; \
