@@ -18,5 +18,4 @@ module.exports = ' \
       gl_FragColor = vec4(rgba.r, rgba.g, rgba.b, rgba.a - diff); \
     else  \
       gl_FragColor = color0; \
-  }'
-};
+  }';

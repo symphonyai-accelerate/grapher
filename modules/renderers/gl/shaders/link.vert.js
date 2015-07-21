@@ -7,5 +7,4 @@ module.exports = ' \
     vec2 clipspace = a_position / u_resolution * 2.0 - 1.0; \
     gl_Position = vec4(clipspace * vec2(1, -1), 0, 1); \
     rgba = a_rgba / 255.0; \
-  }'
-};
+  }';

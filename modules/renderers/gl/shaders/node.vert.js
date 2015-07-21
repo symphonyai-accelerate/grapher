@@ -15,5 +15,4 @@ module.exports = ' \
     radius = a_radius; \
     center = a_center; \
     resolution = u_resolution; \
-  }'
-};
+  }';
