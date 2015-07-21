@@ -722,10 +722,10 @@
 }, {"./renderers/gl/renderer.js":2,"./renderers/canvas/renderer.js":3,"./helpers/color.js":4,"./helpers/link.js":5,"./helpers/node.js":6,"./helpers/shaders.js":7,"./helpers/utilities.js":8}],
 2: [function(require, module, exports) {
 ;(function () {
-  var LinkVertexShaderSource = require('./shaders/link.vert'),
-      LinkFragmentShaderSource = require('./shaders/link.frag'),
-      NodeVertexShaderSource = require('./shaders/node.vert'),
-      NodeFragmentShaderSource = require('./shaders/node.frag'),
+  var LinkVertexShaderSource = require('./shaders/link.vert.js'),
+      LinkFragmentShaderSource = require('./shaders/link.frag.js'),
+      NodeVertexShaderSource = require('./shaders/node.vert.js'),
+      NodeFragmentShaderSource = require('./shaders/node.frag.js'),
       Renderer = require('../renderer.js'),
       Color = require('../../helpers/color.js');
 
@@ -926,20 +926,8 @@
   if (module && module.exports) module.exports = WebGLRenderer;
 })();
 
-}, {"./shaders/link.vert":9,"./shaders/link.frag":10,"./shaders/node.vert":11,"./shaders/node.frag":12,"../renderer.js":13,"../../helpers/color.js":4}],
+}, {"../renderer.js":9,"../../helpers/color.js":4}],
 9: [function(require, module, exports) {
-module.exports = 'uniform vec2 u_resolution;\nattribute vec2 a_position;\nattribute vec4 a_rgba;\nvarying vec4 rgba;\nvoid main() {\n  vec2 clipspace = a_position / u_resolution * 2.0 - 1.0;\n  gl_Position = vec4(clipspace * vec2(1, -1), 0, 1);\n  rgba = a_rgba / 255.0;\n}';
-}, {}],
-10: [function(require, module, exports) {
-module.exports = 'precision mediump float;\nvarying vec4 rgba;\nvoid main() {\n  gl_FragColor = rgba;\n}\n';
-}, {}],
-11: [function(require, module, exports) {
-module.exports = 'uniform vec2 u_resolution;\nattribute vec2 a_position;\nattribute vec4 a_rgba;\nattribute vec2 a_center;\nattribute float a_radius;\nvarying vec4 rgba;\nvarying vec2 center;\nvarying vec2 resolution;\nvarying float radius;\nvoid main() {\n  vec2 clipspace = a_position / u_resolution * 2.0 - 1.0;\n  gl_Position = vec4(clipspace * vec2(1, -1), 0, 1);\n  rgba = a_rgba / 255.0;\n  radius = a_radius;\n  center = a_center;\n  resolution = u_resolution;\n}\n';
-}, {}],
-12: [function(require, module, exports) {
-module.exports = 'precision mediump float;\nvarying vec4 rgba;\nvarying vec2 center;\nvarying vec2 resolution;\nvarying float radius;\nvoid main() {\n  vec4 color0 = vec4(0.0, 0.0, 0.0, 0.0);\n  float x = gl_FragCoord.x;\n  float y = resolution[1] - gl_FragCoord.y;\n  float dx = center[0] - x;\n  float dy = center[1] - y;\n  float distance = sqrt(dx * dx + dy * dy);\n  float diff = distance - radius;\n  if ( diff < 0.0 ) \n    gl_FragColor = rgba;\n  else if ( diff >= 0.0 && diff <= 1.0 )\n    gl_FragColor = vec4(rgba.r, rgba.g, rgba.b, rgba.a - diff);\n  else \n    gl_FragColor = color0;\n}\n';
-}, {}],
-13: [function(require, module, exports) {
 ;(function () {
 
   var Renderer = function () {
@@ -1191,7 +1179,7 @@ function fromHexToInt (string) {
   if (module && module.exports) module.exports = CanvasRenderer;
 })();
 
-}, {"../renderer.js":13,"../../helpers/color.js":4}],
+}, {"../renderer.js":9,"../../helpers/color.js":4}],
 5: [function(require, module, exports) {
 ;(function () {
   function Link () {
