@@ -1,8 +1,8 @@
 ;(function () {
-  var LinkVertexShaderSource = require('./shaders/link.vert.js'),
-      LinkFragmentShaderSource = require('./shaders/link.frag.js'),
-      NodeVertexShaderSource = require('./shaders/node.vert.js'),
-      NodeFragmentShaderSource = require('./shaders/node.frag.js'),
+  var LinkVertexShaderSource = require('./shaders/link.vert'),
+      LinkFragmentShaderSource = require('./shaders/link.frag'),
+      NodeVertexShaderSource = require('./shaders/node.vert'),
+      NodeFragmentShaderSource = require('./shaders/node.frag'),
       Renderer = require('../renderer.js'),
       Color = require('../../helpers/color.js');
 
