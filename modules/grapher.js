@@ -23,6 +23,7 @@
       Color = Grapher.Color = require('./helpers/color.js'),
       Link = Grapher.Link = require('./helpers/link.js'),
       Node = Grapher.Node = require('./helpers/node.js'),
+      Shaders = Grapher.Shaders = require('./helpers/shaders.js'),
       u = Grapher.utils = require('./helpers/utilities.js');
 
   Grapher.prototype = {};
@@ -41,7 +42,7 @@
     
     // Extend default properties with options
     this.props = u.extend({
-      color: 0x222222,
+      color: 0xff222222,
       scale: 1,
       translate: [0, 0],
       resolution: window.devicePixelRatio || 1
@@ -55,6 +56,8 @@
       this.props.webGL = webGL;
       this.props.canvas.addEventListener('webglcontextlost', function (e) { this._onContextLost(e); }.bind(this));
       this.props.canvas.addEventListener('webglcontextrestored', function (e) { this._onContextRestored(e); }.bind(this));
+      this.props.linkShaders = new Shaders(this.props.linkShaders);
+      this.props.nodeShaders = new Shaders(this.props.nodeShaders);
     }
 
     // Renderer and view
@@ -252,6 +255,18 @@
     */
   Grapher.prototype.updateLink = function (index) {
     this._addToUpdateQueue(LINKS, [index]);
+    return this;
+  };
+
+  /**
+    * grapher.clear
+    * ------------------
+    * 
+    * Clears the canvas and grapher data.
+    */
+  Grapher.prototype.clear = function () {
+    this.data({links: [], nodes: []});
+    this.render();
     return this;
   };
 

@@ -6,6 +6,7 @@
   "version": "1.0.1",
   "license": "Apache 2.0",
   "scripts": {
+    "doc": "groc",
     "grapher.js": "duo modules/grapher.js > build/grapher.js -s 'Grapher'",
     "grapher-min.js": "uglifyjs build/grapher.js -o build/grapher-min.js --preamble='\/\/ Ayasdi Inc. 2015\n\/\/ Grapher.js may be freely distributed under the Apache 2.0 license.\n'"
   },

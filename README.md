@@ -53,7 +53,7 @@ Developing
 
 Grapher uses [Node.js](http://nodejs.org/). Install Node.js then run the following command:
 
-    sudo npm install
+    npm install
 
 This will install the development dependencies that Grapher uses to run its various tasks.
 
