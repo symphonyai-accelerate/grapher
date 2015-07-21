@@ -1,3 +1,4 @@
+/*jshint multistr: true */
 module.exports = ' \
   uniform vec2 u_resolution; \
   attribute vec2 a_position; \
