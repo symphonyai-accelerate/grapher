@@ -1,0 +1,19 @@
+/*jshint multistr: true */
+module.exports = ' \
+  uniform vec2 u_resolution; \
+  attribute vec2 a_position; \
+  attribute vec4 a_rgba; \
+  attribute vec2 a_center; \
+  attribute float a_radius; \
+  varying vec4 rgba; \
+  varying vec2 center; \
+  varying vec2 resolution; \
+  varying float radius; \
+  void main() { \
+    vec2 clipspace = a_position / u_resolution * 2.0 - 1.0; \
+    gl_Position = vec4(clipspace * vec2(1, -1), 0, 1); \
+    rgba = a_rgba / 255.0; \
+    radius = a_radius; \
+    center = a_center; \
+    resolution = u_resolution; \
+  }';
