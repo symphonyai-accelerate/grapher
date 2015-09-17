@@ -1,105 +1,62 @@
 <!DOCTYPE html><html lang="en"><head><title>index</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="index"><meta name="groc-project-path" content="README.md"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path">README.md</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h1 id="grapher">Grapher</h1>
-
 <p>Draw network graphs using WebGL and Canvas backup.</p>
-
 <h2 id="download">Download</h2>
-
 <ul>
 <li><a href="http://ayasdi.github.io/grapher/build/grapher.js">grapher</a></li>
 <li><a href="http://ayasdi.github.io/grapher/build/grapher-min.js">grapher-min</a></li>
 </ul>
-
 <h2 id="installing">Installing</h2>
-
 <p>You can import grapher in a script tag, or build grapher into your application
 using <a href="http://duojs.org/">Duo</a>:</p>
-
-<pre><code>var Grapher = require('ayasdi/grapher');
-</code></pre>
-
+<pre><code>var Grapher = require(&#39;ayasdi/grapher&#39;);</code></pre>
 <h2 id="additional-modules">Additional Modules</h2>
-
 <p>Need a specific feature? Create your own modules for Grapher!
-Here are some modules we've made:</p>
-
+Here are some modules we&#39;ve made:</p>
 <ul>
 <li><a href="https://github.com/ayasdi/grapher-center">center</a>:
-Helpful functions for centering the graph.</li>
+  Helpful functions for centering the graph.</li>
 <li><a href="https://github.com/ayasdi/grapher-palette">palette</a>:
-Set up custom palettes and set colors by palette indices.</li>
+  Set up custom palettes and set colors by palette indices.</li>
 <li><a href="https://github.com/ayasdi/grapher-target">target</a>:
-Target a node or link, or find the nearest nodes and links.</li>
+  Target a node or link, or find the nearest nodes and links.</li>
 <li><a href="https://github.com/ayasdi/grapher-zoom">zoom</a>:
-Zoom adjusts Grapher's scale by ratio. Optionally target a point as the zoom center.</li>
+  Zoom adjusts Grapher&#39;s scale by ratio. Optionally target a point as the zoom center.</li>
 </ul>
-
 <h2 id="examples">Examples</h2>
-
 <p>Here are a few examples:</p>
-
 <ol>
 <li><a href="http://ayasdi.github.io/grapher/examples/1-simple.html">Simple</a></li>
 <li><a href="http://ayasdi.github.io/grapher/examples/2-transforms.html">Transforms</a></li>
 <li><a href="http://ayasdi.github.io/grapher/examples/3-colors.html">Colors</a></li>
 <li><a href="http://ayasdi.github.io/grapher/examples/4-drag.html">Drag</a></li>
 <li><a href="http://ayasdi.github.io/grapher/examples/5-pan.html">Pan</a></li>
-<li><a href="http://ayasdi.github.io/grapher/examples/6-force.html">Force (using d3's force layout)</a></li>
+<li><a href="http://ayasdi.github.io/grapher/examples/6-force.html">Force (using d3&#39;s force layout)</a></li>
 </ol>
-
 <p>These examples can be also found in the examples folder.</p>
-
 <h2 id="developing">Developing</h2>
-
 <p><strong>Installing</strong></p>
-
 <p>Grapher uses <a href="http://nodejs.org/">Node.js</a>. Install Node.js then run the following command:</p>
-
-<pre><code>sudo npm install
-</code></pre>
-
+<pre><code>npm install</code></pre>
 <p>This will install the development dependencies that Grapher uses to run its various tasks.</p>
-
 <p><strong>Building</strong></p>
-
 <p>To build Grapher, run make:</p>
-
-<pre><code>make
-</code></pre>
-
+<pre><code>make</code></pre>
 <p>This will bundle modules/grapher.js with its dependencies and outputs the result to
 grapher.js and grapher-min.js in the build folder. This will also generate documentation
 files in the doc folder. If you want to avoid creating docs, run this instead:</p>
-
-<pre><code>make grapher.js
-</code></pre>
-
+<pre><code>make grapher.js</code></pre>
 <p>This will only build grapher.js and grapher-min.js.</p>
-
 <p><strong>Testing</strong></p>
-
 <p>Unit tests are run using Jasmine with this command:</p>
-
-<pre><code>make test
-</code></pre>
-
+<pre><code>make test</code></pre>
 <p>This will also make grapher.js. Test specs can be found in the spec folder.</p>
-
 <p><strong>Documentation</strong></p>
-
 <p>Documentation is generated from the make command when building.</p>
-
-<pre><code>make
-</code></pre>
-
+<pre><code>make</code></pre>
 <p>If you need to generate docs into the gh-pages branch, you can use:</p>
-
-<pre><code>make gh-pages
-</code></pre>
-
+<pre><code>make gh-pages</code></pre>
 <p>This will create a new branch off gh-pages named gh-pages-$(commit) which will
 contain the build and docs generated from the current HEAD.
 Please make sure to commit or stash any changes before running this command.</p>
-
 <h2 id="license">License</h2>
-
 <p>Grapher.js may be freely distributed under the Apache 2.0 license.</p></div></div></div></div></body></html>

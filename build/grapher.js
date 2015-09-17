@@ -926,8 +926,76 @@
   if (module && module.exports) module.exports = WebGLRenderer;
 })();
 
-}, {"../renderer.js":9,"../../helpers/color.js":4}],
+}, {"./shaders/link.vert.js":9,"./shaders/link.frag.js":10,"./shaders/node.vert.js":11,"./shaders/node.frag.js":12,"../renderer.js":13,"../../helpers/color.js":4}],
 9: [function(require, module, exports) {
+/*jshint multistr: true */
+module.exports = ' \
+  uniform vec2 u_resolution; \
+  attribute vec2 a_position; \
+  attribute vec4 a_rgba; \
+  varying vec4 rgba; \
+  void main() { \
+    vec2 clipspace = a_position / u_resolution * 2.0 - 1.0; \
+    gl_Position = vec4(clipspace * vec2(1, -1), 0, 1); \
+    rgba = a_rgba / 255.0; \
+  }';
+}, {}],
+10: [function(require, module, exports) {
+/*jshint multistr: true */
+module.exports = ' \
+  precision mediump float; \
+  varying vec4 rgba; \
+  void main() { \
+    gl_FragColor = rgba; \
+  }';
+
+}, {}],
+11: [function(require, module, exports) {
+/*jshint multistr: true */
+module.exports = ' \
+  uniform vec2 u_resolution; \
+  attribute vec2 a_position; \
+  attribute vec4 a_rgba; \
+  attribute vec2 a_center; \
+  attribute float a_radius; \
+  varying vec4 rgba; \
+  varying vec2 center; \
+  varying vec2 resolution; \
+  varying float radius; \
+  void main() { \
+    vec2 clipspace = a_position / u_resolution * 2.0 - 1.0; \
+    gl_Position = vec4(clipspace * vec2(1, -1), 0, 1); \
+    rgba = a_rgba / 255.0; \
+    radius = a_radius; \
+    center = a_center; \
+    resolution = u_resolution; \
+  }';
+}, {}],
+12: [function(require, module, exports) {
+/*jshint multistr: true */
+module.exports = ' \
+  precision mediump float; \
+  varying vec4 rgba; \
+  varying vec2 center; \
+  varying vec2 resolution; \
+  varying float radius; \
+  void main() { \
+    vec4 color0 = vec4(0.0, 0.0, 0.0, 0.0); \
+    float x = gl_FragCoord.x; \
+    float y = resolution[1] - gl_FragCoord.y; \
+    float dx = center[0] - x; \
+    float dy = center[1] - y; \
+    float distance = sqrt(dx * dx + dy * dy); \
+    float diff = distance - radius; \
+    if ( diff < 0.0 ) \
+      gl_FragColor = rgba; \
+    else if ( diff >= 0.0 && diff <= 1.0 ) \
+      gl_FragColor = vec4(rgba.r, rgba.g, rgba.b, rgba.a - diff); \
+    else  \
+      gl_FragColor = color0; \
+  }';
+}, {}],
+13: [function(require, module, exports) {
 ;(function () {
 
   var Renderer = function () {
@@ -1179,7 +1247,7 @@ function fromHexToInt (string) {
   if (module && module.exports) module.exports = CanvasRenderer;
 })();
 
-}, {"../renderer.js":9,"../../helpers/color.js":4}],
+}, {"../renderer.js":13,"../../helpers/color.js":4}],
 5: [function(require, module, exports) {
 ;(function () {
   function Link () {
