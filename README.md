@@ -1,6 +1,5 @@
-Grapher
+Grapher [![Build Status](https://travis-ci.org/ayasdi/grapher.svg)](https://travis-ci.org/ayasdi/grapher)
 ==============
-
 Draw network graphs using WebGL and Canvas backup.
 
 Download
