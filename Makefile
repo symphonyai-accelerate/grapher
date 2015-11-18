@@ -10,7 +10,7 @@ endif
 all: grapher.js grapher-min.js doc
 
 test: grapher.js
-	@grunt jasmine
+	@npm test
 
 doc: grapher.js
 	@npm run doc

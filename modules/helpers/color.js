@@ -1,104 +1,72 @@
 // Ayasdi Inc. Copyright 2014
 // Color.js may be freely distributed under the Apache 2.0 license
 
-var Color = module.exports = {
+/**
+  * Color.js
+  * ========
+  * Color helper.
+  *
+  * Colors parsed by this helper will be in the format:
+  * [r, g, b, a]
+  * where each color attribute is a value between 0-255.
+  */
+
+module.exports = {
   interpolate: interpolate,
-  parse: parse,
-  fromIntToRgb: fromIntToRgb,
-  fromIntToRgba: fromIntToRgba,
-  fromRgbToHex: fromRgbToHex,
-  fromRgbaToHex: fromRgbaToHex,
-  fromIntToRgbString: fromIntToRgbString,
-  fromIntToRgbaString: fromIntToRgbaString,
-  fromRgbStringToInt: fromRgbStringToInt,
-  fromRgbaStringToInt: fromRgbaStringToInt,
-  fromRgbToInt: fromRgbToInt,
-  fromRgbaToInt: fromRgbaToInt,
-  fromHexToInt: fromHexToInt
+  parse: parse
 };
 
 function interpolate (a, b, amt) {
   amt = amt === undefined ? 0.5 : amt;
-  var colorA = fromIntToRgba(a),
-      colorB = fromIntToRgba(b),
-      interpolated = {
-        r: colorA.r + (colorB.r - colorA.r) * amt,
-        g: colorA.g + (colorB.g - colorA.g) * amt,
-        b: colorA.b + (colorB.b - colorA.b) * amt,
-        a: colorA.a + (colorB.a - colorA.a) * amt
-      };
-  return fromRgbaToInt(interpolated.r, interpolated.g, interpolated.b, interpolated.a);
+  var interpolated = a.map(function (colorA, index) {
+    var colorB = b[index];
+    return colorA + (colorB - colorA) * amt;
+  });
+  return interpolated;
 }
 
 function parse (c) {
-  var color = parseInt(c, 10); // usually NaN, in case we pass in an int for color
+  var color;
   if (typeof c === 'string') {
     var string = c.replace(/ /g, ''); // strip spaces immediately
 
-    if (c.split('#').length > 1) color = fromHexToInt(string);
-    else if (c.split('rgb(').length > 1) color = fromRgbStringToInt(string);
-    else if (c.split('rgba(').length > 1) color = fromRgbaStringToInt(string);
+    if (c.split('#').length > 1) color = parseHex(string);
+    else if (c.split('rgb(').length > 1) color = parseRgb(string);
+    else if (c.split('rgba(').length > 1) color = parseRgba(string);
+  } else if (typeof c === 'number') {
+    color = parseColorInteger(parseInt(c, 10));
   }
   return color;
 }
 
-function fromIntToRgb (intColor) {
-  return {
-    r: Math.floor(intColor / Math.pow(2, 16)) % Math.pow(2, 8),
-    g: Math.floor(intColor / Math.pow(2, 8)) % Math.pow(2, 8),
-    b: intColor % Math.pow(2, 8)
-  };
+function parseColorInteger (intColor) {
+  return [
+    Math.floor(intColor / Math.pow(2, 16)) % Math.pow(2, 8),
+    Math.floor(intColor / Math.pow(2, 8)) % Math.pow(2, 8),
+    intColor % Math.pow(2, 8),
+    Math.floor(intColor / Math.pow(2, 24)) % Math.pow(2, 8)
+  ];
 }
 
-function fromIntToRgba (intColor) {
-  return {
-    a: Math.floor(intColor / Math.pow(2, 24)) % Math.pow(2, 8),
-    r: Math.floor(intColor / Math.pow(2, 16)) % Math.pow(2, 8),
-    g: Math.floor(intColor / Math.pow(2, 8)) % Math.pow(2, 8),
-    b: intColor % Math.pow(2, 8)
-  };
-}
-
-function fromRgbToHex (r, g, b) {
-  var rgb = (parseInt(r, 10) * Math.pow(2, 16)) + (parseInt(g, 10) * Math.pow(2, 8)) + parseInt(b, 10);
-  return '#' + (0x1000000 + rgb).toString(16).slice(1);
-}
-
-function fromRgbaToHex (r, g, b, a) {
-  var rgba = (parseInt(a, 10) * Math.pow(2, 24)) + (parseInt(r, 10) * Math.pow(2, 16)) + (parseInt(g, 10) * Math.pow(2, 8)) + parseInt(b, 10);
-  return '#' + ( 0x100000000 + rgba).toString(16).slice(1);
-}
-
-function fromIntToRgbString (intColor) {
-  var rgb = fromIntToRgb(intColor);
-  return 'rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
-}
-
-function fromIntToRgbaString (intColor) {
-  var rgba = fromIntToRgba(intColor);
-  return 'rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ', ' + rgba.a / 255 + ')';
-}
-
-function fromRgbStringToInt (string) {
-  var rgb = string.substring(4, string.length - 1).split(',');
-  return fromRgbToInt(rgb[0], rgb[1], rgb[2]);
-}
-
-function fromRgbaStringToInt (string) {
-  var rgba = string.substring(5, string.length - 1).split(',');
-  return fromRgbaToInt(rgba[0], rgba[1], rgba[2], rgba[3] * 255);
-}
-
-function fromRgbToInt (r, g, b) {
-  return fromRgbaToInt(r, g, b, 255);
-}
-
-function fromRgbaToInt (r, g, b, a) {
-  return parseInt(fromRgbaToHex(r, g, b, a ).replace('#', '0x'), 16);
-}
-
-function fromHexToInt (string) {
+function parseHex (string) {
   var hex = string.replace('#', '');
   if (hex.length === 6) hex = 'ff' + hex; // prepend full alpha if needed
-  return parseInt(hex, 16);
+  return parseColorInteger(parseInt(hex, 16));
+}
+
+function parseRgb (string) {
+  var rgba = string.substring(4, string.length - 1).split(',').map(function (c) {
+    return parseInt(c, 10);
+  });
+  rgba[3] = 255; // full alpha
+  return rgba;
+}
+
+function parseRgba (string) {
+  var rgba = string.substring(5, string.length - 1).split(',').map(function (c) {
+    return parseFloat(c, 10);
+  });
+  // Assume that if the given alpha is 0-1, it's normalized.
+  rgba[3] = rgba[3] <= 1 ? 255 * rgba[3] : rgba[3];
+  return rgba;
 }
