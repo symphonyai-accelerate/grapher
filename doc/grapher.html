@@ -1,343 +1,339 @@
 <!DOCTYPE html><html lang="en"><head><title>grapher</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="grapher"><meta name="groc-project-path" content="modules/grapher.js"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path">modules/grapher.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>Ayasdi Inc. Copyright 2014
-Grapher.js may be freely distributed under the Apache 2.0 license</p></div></div><div class="code"><div class="wrapper">;(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
-  </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="grapher">Grapher</h1>
-<p>WebGL network grapher rendering with PIXI</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Grapher</span> <span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">this</span>.initialize.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="helpers-and-renderers">Helpers and Renderers</h1>
-<p>Load helpers and renderers.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">var</span> WebGLRenderer = Grapher.WebGLRenderer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./renderers/gl/renderer.js'</span>),
-      CanvasRenderer = Grapher.CanvasRenderer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./renderers/canvas/renderer.js'</span>),
-      Color = Grapher.Color = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./helpers/color.js'</span>),
-      Link = Grapher.Link = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./helpers/link.js'</span>),
-      Node = Grapher.Node = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./helpers/node.js'</span>),
-      Shaders = Grapher.Shaders = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./helpers/shaders.js'</span>),
-      u = Grapher.utils = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./helpers/utilities.js'</span>);
+Grapher.js may be freely distributed under the Apache 2.0 license</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="grapher">Grapher</h1>
+<p>WebGL network grapher rendering with PIXI</p></div></div><div class="code"><div class="wrapper"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Grapher</span> <span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">this</span>.initialize.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+}</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="helpers-and-renderers">Helpers and Renderers</h1>
+<p>Load helpers and renderers.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> WebGLRenderer = Grapher.WebGLRenderer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./renderers/gl/renderer.js'</span>),
+    CanvasRenderer = Grapher.CanvasRenderer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./renderers/canvas/renderer.js'</span>),
+    Color = Grapher.Color = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./helpers/color.js'</span>),
+    Link = Grapher.Link = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./helpers/link.js'</span>),
+    Node = Grapher.Node = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./helpers/node.js'</span>),
+    Shaders = Grapher.Shaders = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./helpers/shaders.js'</span>),
+    u = Grapher.utils = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./helpers/utilities.js'</span>);
 
-  Grapher.prototype = {};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherinitialize">grapher.initialize</h2>
+Grapher.prototype = {};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherinitialize">grapher.initialize</h2>
 <p>Initialize is called when a grapher instance is created:</p>
-<pre><code>var grapher = new Grapher(width, height, options);</code></pre></div></div><div class="code"><div class="wrapper">  Grapher.prototype.initialize = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(o)</span> </span>{
-    <span class="hljs-keyword">if</span> (!o) o = {};
-    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Extend default properties with options</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">this</span>.props = u.extend({
-      color: <span class="hljs-number">0xff222222</span>,
-      scale: <span class="hljs-number">1</span>,
-      translate: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
-      resolution: <span class="hljs-built_in">window</span>.devicePixelRatio || <span class="hljs-number">1</span>
-    }, o);
+<pre><code>var grapher = new Grapher(width, height, options);</code></pre></div></div><div class="code"><div class="wrapper">Grapher.prototype.initialize = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(o)</span> </span>{
+  <span class="hljs-keyword">if</span> (!o) o = {};
+  </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Extend default properties with options</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">this</span>.props = u.extend({
+    color: Color.parse(<span class="hljs-string">'#222222'</span>),
+    scale: <span class="hljs-number">1</span>,
+    translate: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
+    resolution: <span class="hljs-built_in">window</span>.devicePixelRatio || <span class="hljs-number">1</span>
+  }, o);
 
-    <span class="hljs-keyword">if</span> (!o.canvas) <span class="hljs-keyword">this</span>.props.canvas = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'canvas'</span>);
-    <span class="hljs-keyword">this</span>.canvas = <span class="hljs-keyword">this</span>.props.canvas;
+  <span class="hljs-keyword">if</span> (!o.canvas) <span class="hljs-keyword">this</span>.props.canvas = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'canvas'</span>);
+  <span class="hljs-keyword">this</span>.canvas = <span class="hljs-keyword">this</span>.props.canvas;
 
-    <span class="hljs-keyword">var</span> webGL = <span class="hljs-keyword">this</span>._getWebGL();
-    <span class="hljs-keyword">if</span> (webGL) {
-      <span class="hljs-keyword">this</span>.props.webGL = webGL;
-      <span class="hljs-keyword">this</span>.props.canvas.addEventListener(<span class="hljs-string">'webglcontextlost'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(e)</span> </span>{ <span class="hljs-keyword">this</span>._onContextLost(e); }.bind(<span class="hljs-keyword">this</span>));
-      <span class="hljs-keyword">this</span>.props.canvas.addEventListener(<span class="hljs-string">'webglcontextrestored'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(e)</span> </span>{ <span class="hljs-keyword">this</span>._onContextRestored(e); }.bind(<span class="hljs-keyword">this</span>));
-      <span class="hljs-keyword">this</span>.props.linkShaders = <span class="hljs-keyword">new</span> Shaders(<span class="hljs-keyword">this</span>.props.linkShaders);
-      <span class="hljs-keyword">this</span>.props.nodeShaders = <span class="hljs-keyword">new</span> Shaders(<span class="hljs-keyword">this</span>.props.nodeShaders);
-    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Renderer and view</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">this</span>.renderer =  webGL ? <span class="hljs-keyword">new</span> WebGLRenderer(<span class="hljs-keyword">this</span>.props) : <span class="hljs-keyword">new</span> CanvasRenderer(<span class="hljs-keyword">this</span>.props);
-    <span class="hljs-keyword">this</span>.rendered = <span class="hljs-literal">false</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Sprite array</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">this</span>.links = [];
-    <span class="hljs-keyword">this</span>.nodes = [];
+  <span class="hljs-keyword">var</span> webGL = <span class="hljs-keyword">this</span>._getWebGL();
+  <span class="hljs-keyword">if</span> (webGL) {
+    <span class="hljs-keyword">this</span>.props.webGL = webGL;
+    <span class="hljs-keyword">this</span>.props.canvas.addEventListener(<span class="hljs-string">'webglcontextlost'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(e)</span> </span>{ <span class="hljs-keyword">this</span>._onContextLost(e); }.bind(<span class="hljs-keyword">this</span>));
+    <span class="hljs-keyword">this</span>.props.canvas.addEventListener(<span class="hljs-string">'webglcontextrestored'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(e)</span> </span>{ <span class="hljs-keyword">this</span>._onContextRestored(e); }.bind(<span class="hljs-keyword">this</span>));
+    <span class="hljs-keyword">this</span>.props.linkShaders = <span class="hljs-keyword">new</span> Shaders(<span class="hljs-keyword">this</span>.props.linkShaders);
+    <span class="hljs-keyword">this</span>.props.nodeShaders = <span class="hljs-keyword">new</span> Shaders(<span class="hljs-keyword">this</span>.props.nodeShaders);
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Renderer and view</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">this</span>.renderer =  webGL ? <span class="hljs-keyword">new</span> WebGLRenderer(<span class="hljs-keyword">this</span>.props) : <span class="hljs-keyword">new</span> CanvasRenderer(<span class="hljs-keyword">this</span>.props);
+  <span class="hljs-keyword">this</span>.rendered = <span class="hljs-literal">false</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Sprite array</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">this</span>.links = [];
+  <span class="hljs-keyword">this</span>.nodes = [];
 
-    <span class="hljs-keyword">this</span>.renderer.setLinks(<span class="hljs-keyword">this</span>.links);
-    <span class="hljs-keyword">this</span>.renderer.setNodes(<span class="hljs-keyword">this</span>.nodes);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Indices that will update</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">this</span>.willUpdate = {};
-    <span class="hljs-keyword">this</span>.updateAll = {};
-    <span class="hljs-keyword">this</span>._clearUpdateQueue();</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Bind some updaters</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">this</span>._updateLink = u.bind(<span class="hljs-keyword">this</span>._updateLink, <span class="hljs-keyword">this</span>);
-    <span class="hljs-keyword">this</span>._updateNode = u.bind(<span class="hljs-keyword">this</span>._updateNode, <span class="hljs-keyword">this</span>);
-    <span class="hljs-keyword">this</span>._updateLinkByIndex = u.bind(<span class="hljs-keyword">this</span>._updateLinkByIndex, <span class="hljs-keyword">this</span>);
-    <span class="hljs-keyword">this</span>._updateNodeByIndex = u.bind(<span class="hljs-keyword">this</span>._updateNodeByIndex, <span class="hljs-keyword">this</span>);
-    <span class="hljs-keyword">this</span>.animate = u.bind(<span class="hljs-keyword">this</span>.animate, <span class="hljs-keyword">this</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Event Handlers</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">this</span>.handlers = {};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Do any additional setup</p></div></div><div class="code"><div class="wrapper">    u.eachKey(o, <span class="hljs-keyword">this</span>.set, <span class="hljs-keyword">this</span>);
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherset">grapher.set</h2>
+  <span class="hljs-keyword">this</span>.renderer.setLinks(<span class="hljs-keyword">this</span>.links);
+  <span class="hljs-keyword">this</span>.renderer.setNodes(<span class="hljs-keyword">this</span>.nodes);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Indices that will update</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">this</span>.willUpdate = {};
+  <span class="hljs-keyword">this</span>.updateAll = {};
+  <span class="hljs-keyword">this</span>._clearUpdateQueue();</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Bind some updaters</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">this</span>._updateLink = u.bind(<span class="hljs-keyword">this</span>._updateLink, <span class="hljs-keyword">this</span>);
+  <span class="hljs-keyword">this</span>._updateNode = u.bind(<span class="hljs-keyword">this</span>._updateNode, <span class="hljs-keyword">this</span>);
+  <span class="hljs-keyword">this</span>._updateLinkByIndex = u.bind(<span class="hljs-keyword">this</span>._updateLinkByIndex, <span class="hljs-keyword">this</span>);
+  <span class="hljs-keyword">this</span>._updateNodeByIndex = u.bind(<span class="hljs-keyword">this</span>._updateNodeByIndex, <span class="hljs-keyword">this</span>);
+  <span class="hljs-keyword">this</span>.animate = u.bind(<span class="hljs-keyword">this</span>.animate, <span class="hljs-keyword">this</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Event Handlers</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">this</span>.handlers = {};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Do any additional setup</p></div></div><div class="code"><div class="wrapper">  u.eachKey(o, <span class="hljs-keyword">this</span>.set, <span class="hljs-keyword">this</span>);
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherset">grapher.set</h2>
 <p>General setter for a grapher&#39;s properties.</p>
-<pre><code>grapher.set(1, &#39;scale&#39;);</code></pre></div></div><div class="code"><div class="wrapper">  Grapher.prototype.set = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(val, key)</span> </span>{
-    <span class="hljs-keyword">var</span> setter = <span class="hljs-keyword">this</span>[key];
-    <span class="hljs-keyword">if</span> (setter &amp;&amp; u.isFunction(setter))
-      <span class="hljs-keyword">return</span> setter.call(<span class="hljs-keyword">this</span>, val);
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapheron">grapher.on</h2>
+<pre><code>grapher.set(1, &#39;scale&#39;);</code></pre></div></div><div class="code"><div class="wrapper">Grapher.prototype.set = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(val, key)</span> </span>{
+  <span class="hljs-keyword">var</span> setter = <span class="hljs-keyword">this</span>[key];
+  <span class="hljs-keyword">if</span> (setter &amp;&amp; u.isFunction(setter))
+    <span class="hljs-keyword">return</span> setter.call(<span class="hljs-keyword">this</span>, val);
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapheron">grapher.on</h2>
 <p>Add a listener to a grapher event. Only one listener can be bound to an
 event at this time. Available events:</p>
 <ul>
 <li>mousedown</li>
 <li>mouseover</li>
 <li>mouseup</li>
-</ul></div></div><div class="code"><div class="wrapper">  Grapher.prototype.on = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event, fn)</span> </span>{
-    <span class="hljs-keyword">this</span>.handlers[event] = <span class="hljs-keyword">this</span>.handlers[event] || [];
-    <span class="hljs-keyword">this</span>.handlers[event].push(fn);
-    <span class="hljs-keyword">this</span>.canvas.addEventListener(event, fn, <span class="hljs-literal">false</span>);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapheroff">grapher.off</h2>
-<p>Remove a listener from an event, or all listeners from an event if fn is not specified.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype.off = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event, fn)</span> </span>{
-    <span class="hljs-keyword">var</span> removeHandler = u.bind(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(fn)</span> </span>{
-      <span class="hljs-keyword">var</span> i = u.indexOf(<span class="hljs-keyword">this</span>.handlers[event], fn);
-      <span class="hljs-keyword">if</span> (i &gt; -<span class="hljs-number">1</span>) <span class="hljs-keyword">this</span>.handlers[event].splice(i, <span class="hljs-number">1</span>);
-      <span class="hljs-keyword">this</span>.canvas.removeEventListener(event, fn, <span class="hljs-literal">false</span>);
-    }, <span class="hljs-keyword">this</span>);
+</ul></div></div><div class="code"><div class="wrapper">Grapher.prototype.on = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event, fn)</span> </span>{
+  <span class="hljs-keyword">this</span>.handlers[event] = <span class="hljs-keyword">this</span>.handlers[event] || [];
+  <span class="hljs-keyword">this</span>.handlers[event].push(fn);
+  <span class="hljs-keyword">this</span>.canvas.addEventListener(event, fn, <span class="hljs-literal">false</span>);
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapheroff">grapher.off</h2>
+<p>Remove a listener from an event, or all listeners from an event if fn is not specified.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.off = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(event, fn)</span> </span>{
+  <span class="hljs-keyword">var</span> removeHandler = u.bind(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(fn)</span> </span>{
+    <span class="hljs-keyword">var</span> i = u.indexOf(<span class="hljs-keyword">this</span>.handlers[event], fn);
+    <span class="hljs-keyword">if</span> (i &gt; -<span class="hljs-number">1</span>) <span class="hljs-keyword">this</span>.handlers[event].splice(i, <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">this</span>.canvas.removeEventListener(event, fn, <span class="hljs-literal">false</span>);
+  }, <span class="hljs-keyword">this</span>);
 
-    <span class="hljs-keyword">if</span> (fn &amp;&amp; <span class="hljs-keyword">this</span>.handlers[event]) removeHandler(fn);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (u.isUndefined(fn) &amp;&amp; <span class="hljs-keyword">this</span>.handlers[event]) u.each(<span class="hljs-keyword">this</span>.handlers[event], removeHandler);
+  <span class="hljs-keyword">if</span> (fn &amp;&amp; <span class="hljs-keyword">this</span>.handlers[event]) removeHandler(fn);
+  <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (u.isUndefined(fn) &amp;&amp; <span class="hljs-keyword">this</span>.handlers[event]) u.each(<span class="hljs-keyword">this</span>.handlers[event], removeHandler);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherdata">grapher.data</h2>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherdata">grapher.data</h2>
 <p>Accepts network data in the form:</p>
 <pre><code>{
   nodes: [{x: 0, y: 0, r: 20, color: (swatch or hex/rgb)}, ... ],
   links: [{from: 0, to: 1, color: (swatch or hex/rgb)}, ... ]
-}</code></pre></div></div><div class="code"><div class="wrapper">  Grapher.prototype.data = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(data)</span> </span>{
-    <span class="hljs-keyword">if</span> (u.isUndefined(data)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.props.data;
+}</code></pre></div></div><div class="code"><div class="wrapper">Grapher.prototype.data = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(data)</span> </span>{
+  <span class="hljs-keyword">if</span> (u.isUndefined(data)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.props.data;
 
-    <span class="hljs-keyword">this</span>.props.data = data;
-    <span class="hljs-keyword">this</span>.exit();
-    <span class="hljs-keyword">this</span>.enter();
-    <span class="hljs-keyword">this</span>.update();
+  <span class="hljs-keyword">this</span>.props.data = data;
+  <span class="hljs-keyword">this</span>.exit();
+  <span class="hljs-keyword">this</span>.enter();
+  <span class="hljs-keyword">this</span>.update();
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherenter">grapher.enter</h2>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherenter">grapher.enter</h2>
 <p>Creates node and link sprites to match the number of nodes and links in the
-data.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype.enter = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">var</span> data = <span class="hljs-keyword">this</span>.data();
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.links.length &lt; data.links.length) {
-      <span class="hljs-keyword">var</span> links = data.links.slice(<span class="hljs-keyword">this</span>.links.length, data.links.length);
-      u.eachPop(links, u.bind(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">this</span>.links.push(<span class="hljs-keyword">new</span> Link()); }, <span class="hljs-keyword">this</span>));
-    }
+data.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.enter = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">var</span> data = <span class="hljs-keyword">this</span>.data();
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.links.length &lt; data.links.length) {
+    <span class="hljs-keyword">var</span> links = data.links.slice(<span class="hljs-keyword">this</span>.links.length, data.links.length);
+    u.eachPop(links, u.bind(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">this</span>.links.push(<span class="hljs-keyword">new</span> Link()); }, <span class="hljs-keyword">this</span>));
+  }
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.nodes.length &lt; data.nodes.length) {
-      <span class="hljs-keyword">var</span> nodes = data.nodes.slice(<span class="hljs-keyword">this</span>.nodes.length, data.nodes.length);
-      u.eachPop(nodes, u.bind(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">this</span>.nodes.push(<span class="hljs-keyword">new</span> Node()); }, <span class="hljs-keyword">this</span>));
-    }
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.nodes.length &lt; data.nodes.length) {
+    <span class="hljs-keyword">var</span> nodes = data.nodes.slice(<span class="hljs-keyword">this</span>.nodes.length, data.nodes.length);
+    u.eachPop(nodes, u.bind(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">this</span>.nodes.push(<span class="hljs-keyword">new</span> Node()); }, <span class="hljs-keyword">this</span>));
+  }
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherexit">grapher.exit</h2>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherexit">grapher.exit</h2>
 <p>Removes node and link sprites to match the number of nodes and links in the
-data.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype.exit = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">var</span> data = <span class="hljs-keyword">this</span>.data(),
-        exiting = [];
+data.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.exit = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">var</span> data = <span class="hljs-keyword">this</span>.data();
 
-    <span class="hljs-keyword">if</span> (data.links.length &lt; <span class="hljs-keyword">this</span>.links.length) {
-      <span class="hljs-keyword">this</span>.links.splice(data.links.length, <span class="hljs-keyword">this</span>.links.length - data.links.length);
-    }
-    <span class="hljs-keyword">if</span> (data.nodes.length &lt; <span class="hljs-keyword">this</span>.nodes.length) {
-      <span class="hljs-keyword">this</span>.nodes.splice(data.nodes.length, <span class="hljs-keyword">this</span>.nodes.length - data.nodes.length);
-    }
+  <span class="hljs-keyword">if</span> (data.links.length &lt; <span class="hljs-keyword">this</span>.links.length) {
+    <span class="hljs-keyword">this</span>.links.splice(data.links.length, <span class="hljs-keyword">this</span>.links.length - data.links.length);
+  }
+  <span class="hljs-keyword">if</span> (data.nodes.length &lt; <span class="hljs-keyword">this</span>.nodes.length) {
+    <span class="hljs-keyword">this</span>.nodes.splice(data.nodes.length, <span class="hljs-keyword">this</span>.nodes.length - data.nodes.length);
+  }
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherupdate">grapher.update</h2>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherupdate">grapher.update</h2>
 <p>Add nodes and/or links to the update queue by index. Passing in no arguments will 
 add all nodes and links to the update queue. Node and link sprites in the update
 queue are updated at the time of rendering.</p>
 <pre><code>grapher.update(); // updates all nodes and links
 grapher.update(&#39;links&#39;); // updates only links
 grapher.update(&#39;nodes&#39;, 0, 4); // updates nodes indices 0 to 3 (4 is not inclusive)
-grapher.update(&#39;links&#39;, [0, 1, 2, 6, 32]); // updates links indexed by the indices</code></pre></div></div><div class="code"><div class="wrapper">  Grapher.prototype.update = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(type, start, end)</span> </span>{
-    <span class="hljs-keyword">var</span> indices;
-    <span class="hljs-keyword">if</span> (u.isArray(start)) indices = start;
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (u.isNumber(start) &amp;&amp; u.isNumber(end)) indices = u.range(start, end);
+grapher.update(&#39;links&#39;, [0, 1, 2, 6, 32]); // updates links indexed by the indices</code></pre></div></div><div class="code"><div class="wrapper">Grapher.prototype.update = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(type, start, end)</span> </span>{
+  <span class="hljs-keyword">var</span> indices;
+  <span class="hljs-keyword">if</span> (u.isArray(start)) indices = start;
+  <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (u.isNumber(start) &amp;&amp; u.isNumber(end)) indices = u.range(start, end);
 
-    <span class="hljs-keyword">if</span> (u.isArray(indices)) {
-      <span class="hljs-keyword">this</span>._addToUpdateQueue(type, indices);
-      <span class="hljs-keyword">if</span> (type === NODES) <span class="hljs-keyword">this</span>._addToUpdateQueue(LINKS, <span class="hljs-keyword">this</span>._findLinks(indices));
-    } <span class="hljs-keyword">else</span> {
-      <span class="hljs-keyword">if</span> (type !== NODES) <span class="hljs-keyword">this</span>.updateAll.links = <span class="hljs-literal">true</span>;
-      <span class="hljs-keyword">if</span> (type !== LINKS) <span class="hljs-keyword">this</span>.updateAll.nodes = <span class="hljs-literal">true</span>;
-    }
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherupdatenode">grapher.updateNode</h2>
+  <span class="hljs-keyword">if</span> (u.isArray(indices)) {
+    <span class="hljs-keyword">this</span>._addToUpdateQueue(type, indices);
+    <span class="hljs-keyword">if</span> (type === NODES) <span class="hljs-keyword">this</span>._addToUpdateQueue(LINKS, <span class="hljs-keyword">this</span>._findLinks(indices));
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-keyword">if</span> (type !== NODES) <span class="hljs-keyword">this</span>.updateAll.links = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (type !== LINKS) <span class="hljs-keyword">this</span>.updateAll.nodes = <span class="hljs-literal">true</span>;
+  }
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherupdatenode">grapher.updateNode</h2>
 <p>Add an individual node to the update queue. Optionally pass in a boolean to
-specify whether or not to also add links connected with the node to the update queue.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype.updateNode = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(index, willUpdateLinks)</span> </span>{
-    <span class="hljs-keyword">this</span>._addToUpdateQueue(NODES, [index]);
-    <span class="hljs-keyword">if</span> (willUpdateLinks) <span class="hljs-keyword">this</span>._addToUpdateQueue(LINKS, <span class="hljs-keyword">this</span>._findLinks([index]));
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherupdatelink">grapher.updateLink</h2>
-<p>Add an individual link to the update queue.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype.updateLink = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(index)</span> </span>{
-    <span class="hljs-keyword">this</span>._addToUpdateQueue(LINKS, [index]);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherclear">grapher.clear</h2>
-<p>Clears the canvas and grapher data.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype.clear = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">this</span>.data({links: [], nodes: []});
-    <span class="hljs-keyword">this</span>.render();
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherrender">grapher.render</h2>
-<p>Updates each sprite and renders the network.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype.render = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">this</span>.rendered = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>._update();
-    <span class="hljs-keyword">this</span>.renderer.render();
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapheranimate">grapher.animate</h2>
-<p>Calls render in a requestAnimationFrame loop.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype.animate = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(time)</span> </span>{
-    <span class="hljs-keyword">this</span>.render();
-    <span class="hljs-keyword">this</span>.currentFrame = requestAnimationFrame(<span class="hljs-keyword">this</span>.animate);
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherplay">grapher.play</h2>
-<p>Starts the animate loop.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype.play = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">this</span>.currentFrame = requestAnimationFrame(<span class="hljs-keyword">this</span>.animate);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherpause">grapher.pause</h2>
-<p>Pauses the animate loop.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype.pause = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.currentFrame) cancelAnimationFrame(<span class="hljs-keyword">this</span>.currentFrame);
-    <span class="hljs-keyword">this</span>.currentFrame = <span class="hljs-literal">null</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherresize">grapher.resize</h2>
-<p>Resize the grapher view.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype.resize = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(width, height)</span> </span>{
-    <span class="hljs-keyword">this</span>.renderer.resize(width, height);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherwidth">grapher.width</h2>
-<p>Specify or retrieve the width.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype.width = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(width)</span> </span>{
-    <span class="hljs-keyword">if</span> (u.isUndefined(width)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.canvas.clientWidth;
-    <span class="hljs-keyword">this</span>.resize(width, <span class="hljs-literal">null</span>);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherheight">grapher.height</h2>
-<p>Specify or retrieve the height.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype.height = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(height)</span> </span>{
-    <span class="hljs-keyword">if</span> (u.isUndefined(height)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.canvas.clientHeight;
-    <span class="hljs-keyword">this</span>.resize(<span class="hljs-literal">null</span>, height);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="graphertransform">grapher.transform</h2>
+specify whether or not to also add links connected with the node to the update queue.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.updateNode = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(index, willUpdateLinks)</span> </span>{
+  <span class="hljs-keyword">this</span>._addToUpdateQueue(NODES, [index]);
+  <span class="hljs-keyword">if</span> (willUpdateLinks) <span class="hljs-keyword">this</span>._addToUpdateQueue(LINKS, <span class="hljs-keyword">this</span>._findLinks([index]));
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherupdatelink">grapher.updateLink</h2>
+<p>Add an individual link to the update queue.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.updateLink = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(index)</span> </span>{
+  <span class="hljs-keyword">this</span>._addToUpdateQueue(LINKS, [index]);
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherclear">grapher.clear</h2>
+<p>Clears the canvas and grapher data.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.clear = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">this</span>.data({links: [], nodes: []});
+  <span class="hljs-keyword">this</span>.render();
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherrender">grapher.render</h2>
+<p>Updates each sprite and renders the network.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.render = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">this</span>.rendered = <span class="hljs-literal">true</span>;
+  <span class="hljs-keyword">this</span>._update();
+  <span class="hljs-keyword">this</span>.renderer.render();
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapheranimate">grapher.animate</h2>
+<p>Calls render in a requestAnimationFrame loop.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.animate = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">this</span>.render();
+  <span class="hljs-keyword">this</span>.currentFrame = requestAnimationFrame(<span class="hljs-keyword">this</span>.animate);
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherplay">grapher.play</h2>
+<p>Starts the animate loop.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.play = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">this</span>.currentFrame = requestAnimationFrame(<span class="hljs-keyword">this</span>.animate);
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherpause">grapher.pause</h2>
+<p>Pauses the animate loop.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.pause = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.currentFrame) cancelAnimationFrame(<span class="hljs-keyword">this</span>.currentFrame);
+  <span class="hljs-keyword">this</span>.currentFrame = <span class="hljs-literal">null</span>;
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherresize">grapher.resize</h2>
+<p>Resize the grapher view.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.resize = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(width, height)</span> </span>{
+  <span class="hljs-keyword">this</span>.renderer.resize(width, height);
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherwidth">grapher.width</h2>
+<p>Specify or retrieve the width.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.width = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(width)</span> </span>{
+  <span class="hljs-keyword">if</span> (u.isUndefined(width)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.canvas.clientWidth;
+  <span class="hljs-keyword">this</span>.resize(width, <span class="hljs-literal">null</span>);
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherheight">grapher.height</h2>
+<p>Specify or retrieve the height.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.height = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(height)</span> </span>{
+  <span class="hljs-keyword">if</span> (u.isUndefined(height)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.canvas.clientHeight;
+  <span class="hljs-keyword">this</span>.resize(<span class="hljs-literal">null</span>, height);
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="graphertransform">grapher.transform</h2>
 <p>Set the scale and translate as an object.
-If no arguments are passed in, returns the current transform object.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype.transform = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(transform)</span> </span>{
-    <span class="hljs-keyword">if</span> (u.isUndefined(transform))
-      <span class="hljs-keyword">return</span> {scale: <span class="hljs-keyword">this</span>.props.scale, translate: <span class="hljs-keyword">this</span>.props.translate};
+If no arguments are passed in, returns the current transform object.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.transform = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(transform)</span> </span>{
+  <span class="hljs-keyword">if</span> (u.isUndefined(transform))
+    <span class="hljs-keyword">return</span> {scale: <span class="hljs-keyword">this</span>.props.scale, translate: <span class="hljs-keyword">this</span>.props.translate};
 
-    <span class="hljs-keyword">this</span>.scale(transform.scale);
-    <span class="hljs-keyword">this</span>.translate(transform.translate);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherscale">grapher.scale</h2>
+  <span class="hljs-keyword">this</span>.scale(transform.scale);
+  <span class="hljs-keyword">this</span>.translate(transform.translate);
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherscale">grapher.scale</h2>
 <p>Set the scale.
-If no arguments are passed in, returns the current scale.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype.scale = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(scale)</span> </span>{
-    <span class="hljs-keyword">if</span> (u.isUndefined(scale)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.props.scale;
-    <span class="hljs-keyword">if</span> (u.isNumber(scale)) <span class="hljs-keyword">this</span>.props.scale = scale;
-    <span class="hljs-keyword">this</span>.updateTransform = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="graphertranslate">grapher.translate</h2>
+If no arguments are passed in, returns the current scale.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.scale = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(scale)</span> </span>{
+  <span class="hljs-keyword">if</span> (u.isUndefined(scale)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.props.scale;
+  <span class="hljs-keyword">if</span> (u.isNumber(scale)) <span class="hljs-keyword">this</span>.props.scale = scale;
+  <span class="hljs-keyword">this</span>.updateTransform = <span class="hljs-literal">true</span>;
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="graphertranslate">grapher.translate</h2>
 <p>Set the translate.
-If no arguments are passed in, returns the current translate.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype.translate = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(translate)</span> </span>{
-    <span class="hljs-keyword">if</span> (u.isUndefined(translate)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.props.translate;
-    <span class="hljs-keyword">if</span> (u.isArray(translate)) <span class="hljs-keyword">this</span>.props.translate = translate;
-    <span class="hljs-keyword">this</span>.updateTransform = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="graphercolor">grapher.color</h2>
+If no arguments are passed in, returns the current translate.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.translate = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(translate)</span> </span>{
+  <span class="hljs-keyword">if</span> (u.isUndefined(translate)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.props.translate;
+  <span class="hljs-keyword">if</span> (u.isArray(translate)) <span class="hljs-keyword">this</span>.props.translate = translate;
+  <span class="hljs-keyword">this</span>.updateTransform = <span class="hljs-literal">true</span>;
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="graphercolor">grapher.color</h2>
 <p>Set the default color of nodes and links.
-If no arguments are passed in, returns the current default color.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype.color = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(color)</span> </span>{
-    <span class="hljs-keyword">if</span> (u.isUndefined(color)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.props.color;
-    <span class="hljs-keyword">this</span>.props.color = Color.parse(color);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="graphergetdataposition">grapher.getDataPosition</h2>
+If no arguments are passed in, returns the current default color.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.color = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(color)</span> </span>{
+  <span class="hljs-keyword">if</span> (u.isUndefined(color)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.props.color;
+  <span class="hljs-keyword">this</span>.props.color = Color.parse(color);
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="graphergetdataposition">grapher.getDataPosition</h2>
 <p>Returns data space coordinates given display coordinates.
-If a single argument passed in, function considers first argument an object with x and y props.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype.getDataPosition = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(x, y)</span> </span>{
-    <span class="hljs-keyword">var</span> xCoord = u.isUndefined(y) ? x.x : x;
-    <span class="hljs-keyword">var</span> yCoord = u.isUndefined(y) ? x.y : y;
-    x = <span class="hljs-keyword">this</span>.renderer.untransformX(xCoord);
-    y = <span class="hljs-keyword">this</span>.renderer.untransformY(yCoord);
-    <span class="hljs-keyword">return</span> {x: x, y: y};
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="graphergetdisplayposition">grapher.getDisplayPosition</h2>
+If a single argument passed in, function considers first argument an object with x and y props.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.getDataPosition = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(x, y)</span> </span>{
+  <span class="hljs-keyword">var</span> xCoord = u.isUndefined(y) ? x.x : x;
+  <span class="hljs-keyword">var</span> yCoord = u.isUndefined(y) ? x.y : y;
+  x = <span class="hljs-keyword">this</span>.renderer.untransformX(xCoord);
+  y = <span class="hljs-keyword">this</span>.renderer.untransformY(yCoord);
+  <span class="hljs-keyword">return</span> {x: x, y: y};
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="graphergetdisplayposition">grapher.getDisplayPosition</h2>
 <p>Returns display space coordinates given data coordinates.
-If a single argument passed in, function considers first argument an object with x and y props.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype.getDisplayPosition = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(x, y)</span> </span>{
-    <span class="hljs-keyword">var</span> xCoord = u.isUndefined(y) ? x.x : x;
-    <span class="hljs-keyword">var</span> yCoord = u.isUndefined(y) ? x.y : y;
-    x = <span class="hljs-keyword">this</span>.renderer.transformX(xCoord);
-    y = <span class="hljs-keyword">this</span>.renderer.transformY(yCoord);
-    <span class="hljs-keyword">return</span> {x: x, y: y};
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="private-functions">Private Functions</h1></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-addtoupdatequeue">grapher._addToUpdateQueue</h2>
-<p>Add indices to the nodes or links update queue.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype._addToUpdateQueue = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(type, indices)</span> </span>{
-    <span class="hljs-keyword">var</span> willUpdate = type === NODES ? <span class="hljs-keyword">this</span>.willUpdate.nodes : <span class="hljs-keyword">this</span>.willUpdate.links,
-        updateAll = type === NODES ? <span class="hljs-keyword">this</span>.updateAll.nodes : <span class="hljs-keyword">this</span>.updateAll.links,
-        spriteSet = type === NODES ? <span class="hljs-keyword">this</span>.nodes : <span class="hljs-keyword">this</span>.links;
+If a single argument passed in, function considers first argument an object with x and y props.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.getDisplayPosition = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(x, y)</span> </span>{
+  <span class="hljs-keyword">var</span> xCoord = u.isUndefined(y) ? x.x : x;
+  <span class="hljs-keyword">var</span> yCoord = u.isUndefined(y) ? x.y : y;
+  x = <span class="hljs-keyword">this</span>.renderer.transformX(xCoord);
+  y = <span class="hljs-keyword">this</span>.renderer.transformY(yCoord);
+  <span class="hljs-keyword">return</span> {x: x, y: y};
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="private-functions">Private Functions</h1></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-addtoupdatequeue">grapher._addToUpdateQueue</h2>
+<p>Add indices to the nodes or links update queue.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype._addToUpdateQueue = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(type, indices)</span> </span>{
+  <span class="hljs-keyword">var</span> willUpdate = type === NODES ? <span class="hljs-keyword">this</span>.willUpdate.nodes : <span class="hljs-keyword">this</span>.willUpdate.links,
+      updateAll = type === NODES ? <span class="hljs-keyword">this</span>.updateAll.nodes : <span class="hljs-keyword">this</span>.updateAll.links,
+      spriteSet = type === NODES ? <span class="hljs-keyword">this</span>.nodes : <span class="hljs-keyword">this</span>.links;
 
-    <span class="hljs-keyword">var</span> insert = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(n)</span> </span>{ u.uniqueInsert(willUpdate, n); };
-    <span class="hljs-keyword">if</span> (!updateAll &amp;&amp; u.isArray(indices)) u.each(indices, insert, <span class="hljs-keyword">this</span>);
+  <span class="hljs-keyword">var</span> insert = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(n)</span> </span>{ u.uniqueInsert(willUpdate, n); };
+  <span class="hljs-keyword">if</span> (!updateAll &amp;&amp; u.isArray(indices)) u.each(indices, insert, <span class="hljs-keyword">this</span>);
 
-    updateAll = updateAll || willUpdate.length &gt;= spriteSet.length;
+  updateAll = updateAll || willUpdate.length &gt;= spriteSet.length;
 
-    <span class="hljs-keyword">if</span> (type === NODES) <span class="hljs-keyword">this</span>.updateAll.nodes = updateAll;
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.updateAll.links = updateAll;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-clearupdatequeue">grapher._clearUpdateQueue</h2>
-<p>Clear the update queue.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype._clearUpdateQueue = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">this</span>.willUpdate.links = [];
-    <span class="hljs-keyword">this</span>.willUpdate.nodes = [];
-    <span class="hljs-keyword">this</span>.updateAll.links = <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">this</span>.updateAll.nodes = <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">this</span>.updateTransform = <span class="hljs-literal">false</span>;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-update">grapher._update</h2>
-<p>Update nodes and links in the update queue.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype._update = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">var</span> updatingLinks = <span class="hljs-keyword">this</span>.willUpdate.links,
-        updatingNodes = <span class="hljs-keyword">this</span>.willUpdate.nodes,
-        i;
+  <span class="hljs-keyword">if</span> (type === NODES) <span class="hljs-keyword">this</span>.updateAll.nodes = updateAll;
+  <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.updateAll.links = updateAll;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-clearupdatequeue">grapher._clearUpdateQueue</h2>
+<p>Clear the update queue.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype._clearUpdateQueue = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">this</span>.willUpdate.links = [];
+  <span class="hljs-keyword">this</span>.willUpdate.nodes = [];
+  <span class="hljs-keyword">this</span>.updateAll.links = <span class="hljs-literal">false</span>;
+  <span class="hljs-keyword">this</span>.updateAll.nodes = <span class="hljs-literal">false</span>;
+  <span class="hljs-keyword">this</span>.updateTransform = <span class="hljs-literal">false</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-update">grapher._update</h2>
+<p>Update nodes and links in the update queue.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype._update = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">var</span> updatingLinks = <span class="hljs-keyword">this</span>.willUpdate.links,
+      updatingNodes = <span class="hljs-keyword">this</span>.willUpdate.nodes;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.updateAll.links) u.each(<span class="hljs-keyword">this</span>.links, <span class="hljs-keyword">this</span>._updateLink);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (updatingLinks &amp;&amp; updatingLinks.length) u.eachPop(updatingLinks, <span class="hljs-keyword">this</span>._updateLinkByIndex);
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.updateAll.links) u.each(<span class="hljs-keyword">this</span>.links, <span class="hljs-keyword">this</span>._updateLink);
+  <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (updatingLinks &amp;&amp; updatingLinks.length) u.eachPop(updatingLinks, <span class="hljs-keyword">this</span>._updateLinkByIndex);
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.updateAll.nodes) u.each(<span class="hljs-keyword">this</span>.nodes, <span class="hljs-keyword">this</span>._updateNode);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (updatingNodes &amp;&amp; updatingNodes.length) u.eachPop(updatingNodes, <span class="hljs-keyword">this</span>._updateNodeByIndex);
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.updateAll.nodes) u.each(<span class="hljs-keyword">this</span>.nodes, <span class="hljs-keyword">this</span>._updateNode);
+  <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (updatingNodes &amp;&amp; updatingNodes.length) u.eachPop(updatingNodes, <span class="hljs-keyword">this</span>._updateNodeByIndex);
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.updateTransform) {
-      <span class="hljs-keyword">this</span>.renderer.setScale(<span class="hljs-keyword">this</span>.props.scale);
-      <span class="hljs-keyword">this</span>.renderer.setTranslate(<span class="hljs-keyword">this</span>.props.translate);
-    }
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.updateTransform) {
+    <span class="hljs-keyword">this</span>.renderer.setScale(<span class="hljs-keyword">this</span>.props.scale);
+    <span class="hljs-keyword">this</span>.renderer.setTranslate(<span class="hljs-keyword">this</span>.props.translate);
+  }
 
-    <span class="hljs-keyword">this</span>._clearUpdateQueue();
-  };
+  <span class="hljs-keyword">this</span>._clearUpdateQueue();
+};
 
-  Grapher.prototype._updateLink = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(link, i)</span> </span>{
-    <span class="hljs-keyword">var</span> data = <span class="hljs-keyword">this</span>.data(),
-        l = data.links[i],
-        from = data.nodes[l.from],
-        to = data.nodes[l.to];
+Grapher.prototype._updateLink = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(link, i)</span> </span>{
+  <span class="hljs-keyword">var</span> data = <span class="hljs-keyword">this</span>.data(),
+      l = data.links[i],
+      from = data.nodes[l.from],
+      to = data.nodes[l.to];
 
-    <span class="hljs-keyword">var</span> color = !u.isUndefined(l.color) ? <span class="hljs-keyword">this</span>._findColor(l.color) :
-        Color.interpolate(<span class="hljs-keyword">this</span>._findColor(from.color), <span class="hljs-keyword">this</span>._findColor(to.color));
+  <span class="hljs-keyword">var</span> color = !u.isUndefined(l.color) ? <span class="hljs-keyword">this</span>._findColor(l.color) :
+      Color.interpolate(<span class="hljs-keyword">this</span>._findColor(from.color), <span class="hljs-keyword">this</span>._findColor(to.color));
 
-    link.update(from.x, from.y, to.x, to.y, color);
-  };
+  link.update(from.x, from.y, to.x, to.y, color);
+};
 
-  Grapher.prototype._updateNode = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(node, i)</span> </span>{
-    <span class="hljs-keyword">var</span> n = <span class="hljs-keyword">this</span>.data().nodes[i];
-    node.update(n.x, n.y, n.r, <span class="hljs-keyword">this</span>._findColor(n.color));
-  };
+Grapher.prototype._updateNode = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(node, i)</span> </span>{
+  <span class="hljs-keyword">var</span> n = <span class="hljs-keyword">this</span>.data().nodes[i];
+  node.update(n.x, n.y, n.r, <span class="hljs-keyword">this</span>._findColor(n.color));
+};
 
-  Grapher.prototype._updateNodeByIndex = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(i)</span> </span>{ <span class="hljs-keyword">this</span>._updateNode(<span class="hljs-keyword">this</span>.nodes[i], i); };
+Grapher.prototype._updateNodeByIndex = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(i)</span> </span>{ <span class="hljs-keyword">this</span>._updateNode(<span class="hljs-keyword">this</span>.nodes[i], i); };
 
-  Grapher.prototype._updateLinkByIndex = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(i)</span> </span>{ <span class="hljs-keyword">this</span>._updateLink(<span class="hljs-keyword">this</span>.links[i], i); };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-findlinks">grapher._findLinks</h2>
+Grapher.prototype._updateLinkByIndex = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(i)</span> </span>{ <span class="hljs-keyword">this</span>._updateLink(<span class="hljs-keyword">this</span>.links[i], i); };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-findlinks">grapher._findLinks</h2>
 <p>Search for links connected to the node indices provided.</p>
 <p>isLinked is a helper function that returns true if a link is
-connected to a node in indices.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">var</span> isLinked = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(indices, l)</span> </span>{
-    <span class="hljs-keyword">var</span> i, len = indices.length, flag = <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i++) {
-      <span class="hljs-keyword">if</span> (l.to == indices[i] || l.from == indices[i]) {
-        flag = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">break</span>;
-      }
+connected to a node in indices.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> isLinked = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(indices, l)</span> </span>{
+  <span class="hljs-keyword">var</span> i, len = indices.length, flag = <span class="hljs-literal">false</span>;
+  <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i++) {
+    <span class="hljs-keyword">if</span> (l.to == indices[i] || l.from == indices[i]) {
+      flag = <span class="hljs-literal">true</span>;
+      <span class="hljs-keyword">break</span>;
     }
-    <span class="hljs-keyword">return</span> flag;
-  };
+  }
+  <span class="hljs-keyword">return</span> flag;
+};
 
-  Grapher.prototype._findLinks = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(indices)</span> </span>{
-    <span class="hljs-keyword">var</span> links = <span class="hljs-keyword">this</span>.data().links,
-        i, numLinks = links.length,
-        updatingLinks = [];
+Grapher.prototype._findLinks = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(indices)</span> </span>{
+  <span class="hljs-keyword">var</span> links = <span class="hljs-keyword">this</span>.data().links,
+      i, numLinks = links.length,
+      updatingLinks = [];
 
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; numLinks; i++) {
-      <span class="hljs-keyword">if</span> (isLinked(indices, links[i])) updatingLinks.push(i);
-    }
+  <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; numLinks; i++) {
+    <span class="hljs-keyword">if</span> (isLinked(indices, links[i])) updatingLinks.push(i);
+  }
 
-    <span class="hljs-keyword">return</span> updatingLinks;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-findcolor">grapher._findColor</h2>
+  <span class="hljs-keyword">return</span> updatingLinks;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-findcolor">grapher._findColor</h2>
 <p>Search for a color whether it&#39;s defined by palette index, string,
-integer.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype._findColor = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(c)</span> </span>{
-    <span class="hljs-keyword">var</span> color = Color.parse(c);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if color is still not set, use the default</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">if</span> (u.isNaN(color)) color = <span class="hljs-keyword">this</span>.color();
-    <span class="hljs-keyword">return</span> color;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-getwebgl">grapher._getWebGL</h2>
-<p>  *get webGL context if available</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype._getWebGL = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">var</span> gl = <span class="hljs-literal">null</span>;
-    <span class="hljs-keyword">try</span> { gl = <span class="hljs-keyword">this</span>.canvas.getContext(<span class="hljs-string">"webgl"</span>) || <span class="hljs-keyword">this</span>.canvas.getContext(<span class="hljs-string">"experimental-webgl"</span>); }
-    <span class="hljs-keyword">catch</span> (x) { gl = <span class="hljs-literal">null</span>; }
-    <span class="hljs-keyword">return</span> gl;
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-oncontextlost">grapher._onContextLost</h2>
-<p>Handle context lost.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype._onContextLost = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(e)</span> </span>{
-    e.preventDefault();
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.currentFrame) cancelAnimationFrame(<span class="hljs-keyword">this</span>.currentFrame);
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-oncontextrestored">grapher._onContextRestored</h2>
-<p>Handle context restored.</p></div></div><div class="code"><div class="wrapper">  Grapher.prototype._onContextRestored = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(e)</span> </span>{
-    <span class="hljs-keyword">var</span> webGL = <span class="hljs-keyword">this</span>._getWebGL();
-    <span class="hljs-keyword">this</span>.renderer.initGL(webGL);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.currentFrame) <span class="hljs-keyword">this</span>.play(); <span class="hljs-comment">// Play the graph if it was running.</span>
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.rendered) <span class="hljs-keyword">this</span>.render();
-  };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="grapher-static-properties">Grapher Static Properties</h1></div></div></div><div class="segment"><div class="code"><div class="wrapper">  <span class="hljs-keyword">var</span> NODES = Grapher.NODES = <span class="hljs-string">'nodes'</span>;
-  <span class="hljs-keyword">var</span> LINKS = Grapher.LINKS = <span class="hljs-string">'links'</span>;
+integer.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype._findColor = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(c)</span> </span>{
+  <span class="hljs-keyword">var</span> color = Color.parse(c);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if color is still not set, use the default</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">if</span> (u.isUndefined(color)) color = <span class="hljs-keyword">this</span>.color();
+  <span class="hljs-keyword">return</span> color;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-getwebgl">grapher._getWebGL</h2>
+<p>  *get webGL context if available</p></div></div><div class="code"><div class="wrapper">Grapher.prototype._getWebGL = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">var</span> gl = <span class="hljs-literal">null</span>;
+  <span class="hljs-keyword">try</span> { gl = <span class="hljs-keyword">this</span>.canvas.getContext(<span class="hljs-string">"webgl"</span>) || <span class="hljs-keyword">this</span>.canvas.getContext(<span class="hljs-string">"experimental-webgl"</span>); }
+  <span class="hljs-keyword">catch</span> (x) { gl = <span class="hljs-literal">null</span>; }
+  <span class="hljs-keyword">return</span> gl;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-oncontextlost">grapher._onContextLost</h2>
+<p>Handle context lost.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype._onContextLost = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(e)</span> </span>{
+  e.preventDefault();
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.currentFrame) cancelAnimationFrame(<span class="hljs-keyword">this</span>.currentFrame);
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapher-oncontextrestored">grapher._onContextRestored</h2>
+<p>Handle context restored.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype._onContextRestored = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">var</span> webGL = <span class="hljs-keyword">this</span>._getWebGL();
+  <span class="hljs-keyword">this</span>.renderer.initGL(webGL);
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.currentFrame) <span class="hljs-keyword">this</span>.play(); <span class="hljs-comment">// Play the graph if it was running.</span>
+  <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.rendered) <span class="hljs-keyword">this</span>.render();
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="grapher-static-properties">Grapher Static Properties</h1></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> NODES = Grapher.NODES = <span class="hljs-string">'nodes'</span>;
+<span class="hljs-keyword">var</span> LINKS = Grapher.LINKS = <span class="hljs-string">'links'</span>;
 
-  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">module</span> &amp;&amp; <span class="hljs-built_in">module</span>.exports) <span class="hljs-built_in">module</span>.exports = Grapher;
-})();</div></div></div></div></body></html>
+<span class="hljs-built_in">module</span>.exports = Grapher;</div></div></div></div></body></html>

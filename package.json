@@ -6,11 +6,12 @@
   "version": "1.1.2",
   "license": "Apache 2.0",
   "scripts": {
+    "test": "npm run grapher.js && grunt jasmine",
     "doc": "groc",
     "grapher.js": "duo modules/grapher.js > build/grapher.js -s 'Grapher'",
     "grapher-min.js": "uglifyjs build/grapher.js -o build/grapher-min.js --preamble='\/\/ Ayasdi Inc. 2015\n\/\/ Grapher.js may be freely distributed under the Apache 2.0 license.\n'"
   },
-  "devDependencies": {
+  "dependencies": {
     "duo": "~0.8.10",
     "grunt": "~0.4.5",
     "grunt-contrib-jasmine": "~0.8.1",
