@@ -13,8 +13,14 @@ var WebGLRenderer = Renderer.extend({
     this.nodeVertexShader = o.nodeShaders && o.nodeShaders.vertexCode ||  NodeVertexShaderSource;
     this.nodeFragmentShader = o.nodeShaders && o.nodeShaders.fragmentCode || NodeFragmentShaderSource;
 
-
     this._super(o);
+
+    this.transform = new Float32Array([
+      1, 0, 0,
+      0, 1, 0,
+      0, 0, 1
+    ]);
+    this.setTransform();
     this.initGL();
 
     this.NODE_ATTRIBUTES = 9;
@@ -24,6 +30,7 @@ var WebGLRenderer = Renderer.extend({
   initGL: function (gl) {
     if (gl) this.gl = gl;
 
+    compileShader(this.gl, this.nodeVertexShader, this.gl.VERTEX_SHADER);
     this.linksProgram = this.initShaders(this.linkVertexShader, this.linkFragmentShader);
     this.nodesProgram = this.initShaders(this.nodeVertexShader, this.nodeFragmentShader);
 
@@ -51,46 +58,19 @@ var WebGLRenderer = Renderer.extend({
   },
 
   updateNodesBuffer: function () {
-    var j = 0;
-    this.nodes = [];
-    for (var i = 0; i < this.nodeObjects.length; i++) {
-      var node = this.nodeObjects[i];
-      var cx = this.transformX(node.x) * this.resolution;
-      var cy = this.transformY(node.y) * this.resolution;
-      var r = node.r * Math.abs(this.scale * this.resolution) + 1;
-      // adding few px to keep shader area big enough for antialiasing pixesls
-      var shaderSize = r + 10;
-
-      this.nodes[j++] = (cx - shaderSize);
-      this.nodes[j++] = (cy - shaderSize);
-      this.nodes[j++] = node.color[0];
-      this.nodes[j++] = node.color[1];
-      this.nodes[j++] = node.color[2];
-      this.nodes[j++] = node.color[3];
-      this.nodes[j++] = cx;
-      this.nodes[j++] = cy;
-      this.nodes[j++] = r;
-
-      this.nodes[j++] = (cx + (1 + Math.sqrt(2)) * shaderSize);
-      this.nodes[j++] = cy - shaderSize;
-      this.nodes[j++] = node.color[0];
-      this.nodes[j++] = node.color[1];
-      this.nodes[j++] = node.color[2];
-      this.nodes[j++] = node.color[3];
-      this.nodes[j++] = cx;
-      this.nodes[j++] = cy;
-      this.nodes[j++] = r;
-
-      this.nodes[j++] = (cx - shaderSize);
-      this.nodes[j++] = (cy + (1 + Math.sqrt(2)) * shaderSize);
-      this.nodes[j++] = node.color[0];
-      this.nodes[j++] = node.color[1];
-      this.nodes[j++] = node.color[2];
-      this.nodes[j++] = node.color[3];
-      this.nodes[j++] = cx;
-      this.nodes[j++] = cy;
-      this.nodes[j++] = r;
-    }
+    var nodes = this.nodes = [];
+    this.nodeObjects.forEach(function (node) {
+      for (var position = 0; position < 3; position++) {
+        nodes.push(position);
+        nodes.push(node.color[0]);
+        nodes.push(node.color[1]);
+        nodes.push(node.color[2]);
+        nodes.push(node.color[3]);
+        nodes.push(node.x);
+        nodes.push(node.y);
+        nodes.push(node.r);
+      }
+    });
   },
 
   updateLinksBuffer: function () {
@@ -98,10 +78,10 @@ var WebGLRenderer = Renderer.extend({
     this.links = [];
     for (var i = 0; i < this.linkObjects.length; i++) {
       var link = this.linkObjects[i];
-      var x1 = this.transformX(link.x1) * this.resolution;
-      var y1 = this.transformY(link.y1) * this.resolution;
-      var x2 = this.transformX(link.x2) * this.resolution;
-      var y2 = this.transformY(link.y2) * this.resolution;
+      var x1 = this.transformX(link.x1);
+      var y1 = this.transformY(link.y1);
+      var x2 = this.transformX(link.x2);
+      var y2 = this.transformY(link.y2);
 
       this.links[j++] = x1;
       this.links[j++] = y1;
@@ -175,7 +155,9 @@ var WebGLRenderer = Renderer.extend({
     this.gl.bufferData(this.gl.ARRAY_BUFFER, nodesBuffer, this.gl.STATIC_DRAW);
 
     var resolutionLocation = this.gl.getUniformLocation(program, 'u_resolution');
+    var transformLocation = this.gl.getUniformLocation(program, 'u_transform');
     this.gl.uniform2f(resolutionLocation, this.canvas.width, this.canvas.height);
+    this.gl.uniformMatrix3fv(transformLocation, this.gl.FALSE, this.transform);
 
     var positionLocation = this.gl.getAttribLocation(program, 'a_position');
     var rgbaLocation = this.gl.getAttribLocation(program, 'a_rgba');
@@ -187,13 +169,58 @@ var WebGLRenderer = Renderer.extend({
     this.gl.enableVertexAttribArray(centerLocation);
     this.gl.enableVertexAttribArray(radiusLocation);
 
-    this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, this.NODE_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 0);
+    this.gl.vertexAttribPointer(positionLocation, 1, this.gl.FLOAT, false, this.NODE_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 0);
     this.gl.vertexAttribPointer(rgbaLocation, 4, this.gl.FLOAT, false, this.NODE_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 8);
     this.gl.vertexAttribPointer(centerLocation, 2, this.gl.FLOAT, false, this.NODE_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 24);
     this.gl.vertexAttribPointer(radiusLocation, 1, this.gl.FLOAT, false, this.NODE_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 32);
 
     this.gl.drawArrays(this.gl.TRIANGLES, 0, this.nodes.length/this.NODE_ATTRIBUTES);
+  },
+
+  setTransform: function () {
+    /* We generate this transformation matrix (stored column-wise):
+
+      s,  0,  t[0]
+      0,  s,  t[1]
+      0,  0,  1
+
+    */
+
+    this.transform[0] = this.transform[4] = this.scale * this.resolution;
+    this.transform[6] = this.translate[0] * this.resolution;
+    this.transform[7] = this.translate[1] * this.resolution;
+    return this.transform;
+  },
+
+  setScale: function (scale) {
+    this._super(scale);
+    this.setTransform();
+  },
+
+  setTranslate: function (translate) {
+    this._super(translate);
+    this.setTransform();
   }
 });
 
 module.exports = WebGLRenderer;
+
+function compileShader(gl, shaderSource, shaderType) {
+  // Create the shader object
+  var shader = gl.createShader(shaderType);
+ 
+  // Set the shader source code.
+  gl.shaderSource(shader, shaderSource);
+ 
+  // Compile the shader
+  gl.compileShader(shader);
+ 
+  // Check if it compiled
+  var success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+  if (!success) {
+    // Something went wrong during compilation; get the error
+    throw "could not compile shader:" + gl.getShaderInfoLog(shader);
+  }
+ 
+  return shader;
+}

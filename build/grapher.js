@@ -730,8 +730,14 @@ var WebGLRenderer = Renderer.extend({
     this.nodeVertexShader = o.nodeShaders && o.nodeShaders.vertexCode ||  NodeVertexShaderSource;
     this.nodeFragmentShader = o.nodeShaders && o.nodeShaders.fragmentCode || NodeFragmentShaderSource;
 
-
     this._super(o);
+
+    this.transform = new Float32Array([
+      1, 0, 0,
+      0, 1, 0,
+      0, 0, 1
+    ]);
+    this.setTransform();
     this.initGL();
 
     this.NODE_ATTRIBUTES = 9;
@@ -741,6 +747,7 @@ var WebGLRenderer = Renderer.extend({
   initGL: function (gl) {
     if (gl) this.gl = gl;
 
+    compileShader(this.gl, this.nodeVertexShader, this.gl.VERTEX_SHADER);
     this.linksProgram = this.initShaders(this.linkVertexShader, this.linkFragmentShader);
     this.nodesProgram = this.initShaders(this.nodeVertexShader, this.nodeFragmentShader);
 
@@ -768,46 +775,19 @@ var WebGLRenderer = Renderer.extend({
   },
 
   updateNodesBuffer: function () {
-    var j = 0;
-    this.nodes = [];
-    for (var i = 0; i < this.nodeObjects.length; i++) {
-      var node = this.nodeObjects[i];
-      var cx = this.transformX(node.x) * this.resolution;
-      var cy = this.transformY(node.y) * this.resolution;
-      var r = node.r * Math.abs(this.scale * this.resolution) + 1;
-      // adding few px to keep shader area big enough for antialiasing pixesls
-      var shaderSize = r + 10;
-
-      this.nodes[j++] = (cx - shaderSize);
-      this.nodes[j++] = (cy - shaderSize);
-      this.nodes[j++] = node.color[0];
-      this.nodes[j++] = node.color[1];
-      this.nodes[j++] = node.color[2];
-      this.nodes[j++] = node.color[3];
-      this.nodes[j++] = cx;
-      this.nodes[j++] = cy;
-      this.nodes[j++] = r;
-
-      this.nodes[j++] = (cx + (1 + Math.sqrt(2)) * shaderSize);
-      this.nodes[j++] = cy - shaderSize;
-      this.nodes[j++] = node.color[0];
-      this.nodes[j++] = node.color[1];
-      this.nodes[j++] = node.color[2];
-      this.nodes[j++] = node.color[3];
-      this.nodes[j++] = cx;
-      this.nodes[j++] = cy;
-      this.nodes[j++] = r;
-
-      this.nodes[j++] = (cx - shaderSize);
-      this.nodes[j++] = (cy + (1 + Math.sqrt(2)) * shaderSize);
-      this.nodes[j++] = node.color[0];
-      this.nodes[j++] = node.color[1];
-      this.nodes[j++] = node.color[2];
-      this.nodes[j++] = node.color[3];
-      this.nodes[j++] = cx;
-      this.nodes[j++] = cy;
-      this.nodes[j++] = r;
-    }
+    var nodes = this.nodes = [];
+    this.nodeObjects.forEach(function (node) {
+      for (var position = 0; position < 3; position++) {
+        nodes.push(position);
+        nodes.push(node.color[0]);
+        nodes.push(node.color[1]);
+        nodes.push(node.color[2]);
+        nodes.push(node.color[3]);
+        nodes.push(node.x);
+        nodes.push(node.y);
+        nodes.push(node.r);
+      }
+    });
   },
 
   updateLinksBuffer: function () {
@@ -815,10 +795,10 @@ var WebGLRenderer = Renderer.extend({
     this.links = [];
     for (var i = 0; i < this.linkObjects.length; i++) {
       var link = this.linkObjects[i];
-      var x1 = this.transformX(link.x1) * this.resolution;
-      var y1 = this.transformY(link.y1) * this.resolution;
-      var x2 = this.transformX(link.x2) * this.resolution;
-      var y2 = this.transformY(link.y2) * this.resolution;
+      var x1 = this.transformX(link.x1);
+      var y1 = this.transformY(link.y1);
+      var x2 = this.transformX(link.x2);
+      var y2 = this.transformY(link.y2);
 
       this.links[j++] = x1;
       this.links[j++] = y1;
@@ -892,7 +872,9 @@ var WebGLRenderer = Renderer.extend({
     this.gl.bufferData(this.gl.ARRAY_BUFFER, nodesBuffer, this.gl.STATIC_DRAW);
 
     var resolutionLocation = this.gl.getUniformLocation(program, 'u_resolution');
+    var transformLocation = this.gl.getUniformLocation(program, 'u_transform');
     this.gl.uniform2f(resolutionLocation, this.canvas.width, this.canvas.height);
+    this.gl.uniformMatrix3fv(transformLocation, this.gl.FALSE, this.transform);
 
     var positionLocation = this.gl.getAttribLocation(program, 'a_position');
     var rgbaLocation = this.gl.getAttribLocation(program, 'a_rgba');
@@ -904,16 +886,61 @@ var WebGLRenderer = Renderer.extend({
     this.gl.enableVertexAttribArray(centerLocation);
     this.gl.enableVertexAttribArray(radiusLocation);
 
-    this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, this.NODE_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 0);
+    this.gl.vertexAttribPointer(positionLocation, 1, this.gl.FLOAT, false, this.NODE_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 0);
     this.gl.vertexAttribPointer(rgbaLocation, 4, this.gl.FLOAT, false, this.NODE_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 8);
     this.gl.vertexAttribPointer(centerLocation, 2, this.gl.FLOAT, false, this.NODE_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 24);
     this.gl.vertexAttribPointer(radiusLocation, 1, this.gl.FLOAT, false, this.NODE_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 32);
 
     this.gl.drawArrays(this.gl.TRIANGLES, 0, this.nodes.length/this.NODE_ATTRIBUTES);
+  },
+
+  setTransform: function () {
+    /* We generate this transformation matrix (stored column-wise):
+
+      s,  0,  t[0]
+      0,  s,  t[1]
+      0,  0,  1
+
+    */
+
+    this.transform[0] = this.transform[4] = this.scale * this.resolution;
+    this.transform[6] = this.translate[0] * this.resolution;
+    this.transform[7] = this.translate[1] * this.resolution;
+    return this.transform;
+  },
+
+  setScale: function (scale) {
+    this._super(scale);
+    this.setTransform();
+  },
+
+  setTranslate: function (translate) {
+    this._super(translate);
+    this.setTransform();
   }
 });
 
 module.exports = WebGLRenderer;
+
+function compileShader(gl, shaderSource, shaderType) {
+  // Create the shader object
+  var shader = gl.createShader(shaderType);
+ 
+  // Set the shader source code.
+  gl.shaderSource(shader, shaderSource);
+ 
+  // Compile the shader
+  gl.compileShader(shader);
+ 
+  // Check if it compiled
+  var success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+  if (!success) {
+    // Something went wrong during compilation; get the error
+    throw "could not compile shader:" + gl.getShaderInfoLog(shader);
+  }
+ 
+  return shader;
+}
 
 }, {"./shaders/link.vert.js":9,"./shaders/link.frag.js":10,"./shaders/node.vert.js":11,"./shaders/node.frag.js":12,"../renderer.js":13}],
 9: [function(require, module, exports) {
@@ -942,36 +969,55 @@ module.exports = ' \
 11: [function(require, module, exports) {
 /*jshint multistr: true */
 module.exports = ' \
+  precision mediump float; \
   uniform vec2 u_resolution; \
-  attribute vec2 a_position; \
+  uniform mat3 u_transform; \
+  attribute float a_position; \
   attribute vec4 a_rgba; \
   attribute vec2 a_center; \
   attribute float a_radius; \
   varying vec4 rgba; \
   varying vec2 center; \
-  varying vec2 resolution; \
   varying float radius; \
   void main() { \
-    vec2 clipspace = a_position / u_resolution * 2.0 - 1.0; \
-    gl_Position = vec4(clipspace * vec2(1, -1), 0, 1); \
     rgba = a_rgba / 255.0; \
-    radius = a_radius; \
+    radius = a_radius * u_transform[0][0] + 1.0; \
+    \
+    float shaderSize = radius + 10.0; \
+    float triangleAdjust = shaderSize * (1.0 + sqrt(2.0)); \
+    \
+    vec3 transformed = u_transform * vec3(a_center, 1); \
     center = a_center; \
-    resolution = u_resolution; \
+    vec2 position; \
+    \
+    if (a_position == 0.0) { \
+      position = a_center + vec2(1.0, 0.0); \
+    } else if (a_position == 1.0) { \
+      position = a_center + vec2(0.0, 1.0); \
+    } else if (a_position == 2.0) { \
+      position = a_center + vec2(-1.0, 0.0); \
+    } \
+    \
+    vec2 clipspace = position / u_resolution * 2.0 - 1.0; \
+    gl_Position = vec4(clipspace * vec2(1, -1), 0, 1); \
+    \
   }';
+// gl_Position = vec4(clipspace * vec2(1, -1), 0, 1); \
+
 }, {}],
 12: [function(require, module, exports) {
 /*jshint multistr: true */
 module.exports = ' \
   precision mediump float; \
+  uniform vec2 u_resolution; \
+  uniform mat3 u_transform; \
   varying vec4 rgba; \
   varying vec2 center; \
-  varying vec2 resolution; \
   varying float radius; \
   void main() { \
     vec4 color0 = vec4(0.0, 0.0, 0.0, 0.0); \
     float x = gl_FragCoord.x; \
-    float y = resolution[1] - gl_FragCoord.y; \
+    float y = u_resolution[1] - gl_FragCoord.y; \
     float dx = center[0] - x; \
     float dy = center[1] - y; \
     float distance = sqrt(dx * dx + dy * dy); \
@@ -982,97 +1028,95 @@ module.exports = ' \
       gl_FragColor = vec4(rgba.r, rgba.g, rgba.b, rgba.a - diff); \
     else  \
       gl_FragColor = color0; \
+    gl_FragColor = vec4(1, 0, 0, 1); \
   }';
 }, {}],
 13: [function(require, module, exports) {
-;(function () {
+var Renderer = function () {
+  if ( !initializing && this.init )
+    this.init.apply(this, arguments);
+  return this;
+};
 
-  var Renderer = function () {
+Renderer.prototype = {
+  init: function (o) {
+    this.canvas = o.canvas;
+    this.lineWidth = o.lineWidth || 2;
+    this.resolution = o.resolution || 1;
+    this.scale = o.scale;
+    this.translate = o.translate;
+
+    this.resize();
+  },
+  setNodes: function (nodes) { this.nodeObjects = nodes; },
+  setLinks: function (links) { this.linkObjects = links; },
+  setScale: function (scale) { this.scale = scale; },
+  setTranslate: function (translate) { this.translate = translate; },
+  transformX: function (x) { return x * this.scale + this.translate[0]; },
+  transformY: function (y) { return y * this.scale + this.translate[1]; },
+  untransformX: function (x) { return (x - this.translate[0]) / this.scale; },
+  untransformY: function (y) { return (y - this.translate[1]) / this.scale; },
+  resize: function (width, height) {
+    var displayWidth  = (width || this.canvas.clientWidth) * this.resolution;
+    var displayHeight = (height || this.canvas.clientHeight) * this.resolution;
+
+    if (this.canvas.width != displayWidth) this.canvas.width  = displayWidth;
+    if (this.canvas.height != displayHeight) this.canvas.height = displayHeight;
+  }
+};
+
+var initializing = false;
+
+Renderer.extend = function (prop) {
+  var _super = this.prototype;
+
+  initializing = true;
+  var prototype = new this();
+  initializing = false;
+
+  prototype._super = this.prototype;
+  for (var name in prop) {
+    prototype[name] = typeof prop[name] == "function" &&
+      typeof _super[name] == "function" && /\b_super\b/.test(prop[name]) ?
+      (function(name, fn){
+        return function() {
+          var tmp = this._super;
+         
+          // Add a new ._super() method that is the same method
+          // but on the super-class
+          this._super = _super[name];
+         
+          // The method only need to be bound temporarily, so we
+          // remove it when we're done executing
+          var ret = fn.apply(this, arguments);
+          this._super = tmp;
+         
+          return ret;
+        };
+      })(name, prop[name]) :
+      prop[name];
+  }
+
+  // The dummy class constructor
+  function Renderer () {
+    // All construction is actually done in the init method
     if ( !initializing && this.init )
       this.init.apply(this, arguments);
-    return this;
-  };
-
-  Renderer.prototype = {
-    init: function (o) {
-      this.canvas = o.canvas;
-      this.lineWidth = o.lineWidth || 2;
-      this.resolution = o.resolution || 1;
-      this.scale = o.scale;
-      this.translate = o.translate;
-
-      this.resize();
-    },
-    setNodes: function (nodes) { this.nodeObjects = nodes; },
-    setLinks: function (links) { this.linkObjects = links; },
-    setScale: function (scale) { this.scale = scale; },
-    setTranslate: function (translate) { this.translate = translate; },
-    transformX: function (x) { return x * this.scale + this.translate[0]; },
-    transformY: function (y) { return y * this.scale + this.translate[1]; },
-    untransformX: function (x) { return (x - this.translate[0]) / this.scale; },
-    untransformY: function (y) { return (y - this.translate[1]) / this.scale; },
-    resize: function (width, height) {
-      var displayWidth  = (width || this.canvas.clientWidth) * this.resolution;
-      var displayHeight = (height || this.canvas.clientHeight) * this.resolution;
-
-      if (this.canvas.width != displayWidth) this.canvas.width  = displayWidth;
-      if (this.canvas.height != displayHeight) this.canvas.height = displayHeight;
-    }
-  };
-
-  var initializing = false;
-
-  Renderer.extend = function (prop) {
-    var _super = this.prototype;
-
-    initializing = true;
-    var prototype = new this();
-    initializing = false;
-
-    prototype._super = this.prototype;
-    for (var name in prop) {
-      prototype[name] = typeof prop[name] == "function" &&
-        typeof _super[name] == "function" && /\b_super\b/.test(prop[name]) ?
-        (function(name, fn){
-          return function() {
-            var tmp = this._super;
-           
-            // Add a new ._super() method that is the same method
-            // but on the super-class
-            this._super = _super[name];
-           
-            // The method only need to be bound temporarily, so we
-            // remove it when we're done executing
-            var ret = fn.apply(this, arguments);
-            this._super = tmp;
-           
-            return ret;
-          };
-        })(name, prop[name]) :
-        prop[name];
-    }
-
-    // The dummy class constructor
-    function Renderer () {
-      // All construction is actually done in the init method
-      if ( !initializing && this.init )
-        this.init.apply(this, arguments);
-    }
-   
-    // Populate our constructed prototype object
-    Renderer.prototype = prototype;
-   
-    // Enforce the constructor to be what we expect
-    Renderer.prototype.constructor = Renderer;
+  }
  
-    // And make this class extendable
-    Renderer.extend = arguments.callee;
-   
-    return Renderer;
-  };
+  // Populate our constructed prototype object
+  Renderer.prototype = prototype;
+ 
+  // Enforce the constructor to be what we expect
+  Renderer.prototype.constructor = Renderer;
 
-  if (module && module.exports) module.exports = Renderer;
-})();
+  // And make this class extendable
+  Renderer.extend = arguments.callee;
+ 
+  return Renderer;
+};
+
+module.exports = Renderer;
 
 }, {}],
 3: [function(require, module, exports) {

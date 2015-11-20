@@ -1,14 +1,15 @@
 /*jshint multistr: true */
 module.exports = ' \
   precision mediump float; \
+  uniform vec2 u_resolution; \
+  uniform mat3 u_transform; \
   varying vec4 rgba; \
   varying vec2 center; \
-  varying vec2 resolution; \
   varying float radius; \
   void main() { \
     vec4 color0 = vec4(0.0, 0.0, 0.0, 0.0); \
     float x = gl_FragCoord.x; \
-    float y = resolution[1] - gl_FragCoord.y; \
+    float y = u_resolution[1] - gl_FragCoord.y; \
     float dx = center[0] - x; \
     float dy = center[1] - y; \
     float distance = sqrt(dx * dx + dy * dy); \
@@ -19,4 +20,5 @@ module.exports = ' \
       gl_FragColor = vec4(rgba.r, rgba.g, rgba.b, rgba.a - diff); \
     else  \
       gl_FragColor = color0; \
+    gl_FragColor = vec4(1, 0, 0, 1); \
   }';
