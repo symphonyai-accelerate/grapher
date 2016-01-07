@@ -1,5 +1,5 @@
 {
-  "name": "grapher",
+  "name": "ayasdi-grapher",
   "repository": "ayasdi/grapher",
   "description": "WebGL/Canvas Network Graphs",
   "version": "1.0.1",
