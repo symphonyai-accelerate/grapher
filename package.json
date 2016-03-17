@@ -1,7 +1,7 @@
 {
   "name": "ayasdi-grapher",
   "repository": "ayasdi/grapher",
-  "main": "./build/grapher.js",
+  "main": "./modules/grapher.js",
   "description": "WebGL/Canvas Network Graphs",
   "version": "1.1.2",
   "license": "Apache 2.0",
