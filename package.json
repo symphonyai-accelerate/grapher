@@ -12,8 +12,7 @@
     "test": "npm run build && grunt jasmine",
     "grapher.js": "npm run shader-bundle && browserify modules/grapher.js -o build/grapher.js -x modules/renderers/gl/shaders/bundle.js -s Grapher",
     "grapher-min.js": "uglifyjs build/grapher.js -o build/grapher-min.js --preamble='// Ayasdi Inc. 2016\n// Grapher.js may be freely distributed under the Apache 2.0 license.\n'",
-    "build": "npm run build-shaders && webpack && npm run grapher-min.js",
-    "build-shaders": "webpack --config webpack.shader.config.js"
+    "build": "webpack && npm run grapher-min.js"
   },
   "dependencies": {
     "glslify-loader": "^1.0.2",

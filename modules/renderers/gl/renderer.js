@@ -1,4 +1,9 @@
-var shaders = require('./shaders/bundle.js');
+var shaders = {
+  link_vs: require('./shaders/link.vert'),
+  link_fs: require('./shaders/link.frag'),
+  node_vs: require('./shaders/node.vert'),
+  node_fs: require('./shaders/node.frag')
+};
 var Renderer = require('../renderer.js');
 
 var WebGLRenderer = Renderer.extend({
