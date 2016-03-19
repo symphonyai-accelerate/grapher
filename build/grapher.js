@@ -928,51 +928,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* 0 */
 	/***/ function(module, exports, __webpack_require__) {
 
-		/* WEBPACK VAR INJECTION */(function(module) {module.export = {
-		  link_vs: __webpack_require__(2),
-		  link_fs: __webpack_require__(3),
-		  node_vs: __webpack_require__(4),
-		  node_fs: __webpack_require__(5)
+		module.exports = {
+		  link_vs: __webpack_require__(1),
+		  link_fs: __webpack_require__(2),
+		  node_vs: __webpack_require__(3),
+		  node_fs: __webpack_require__(4)
 		};
 
-		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module)))
 
 	/***/ },
 	/* 1 */
 	/***/ function(module, exports) {
 
-		module.exports = function(module) {
-			if(!module.webpackPolyfill) {
-				module.deprecate = function() {};
-				module.paths = [];
-				// module.parent = undefined by default
-				module.children = [];
-				module.webpackPolyfill = 1;
-			}
-			return module;
-		}
-
+		module.exports = "#define GLSLIFY 1\nuniform vec2 u_resolution;\nattribute vec2 a_position;\nattribute vec4 a_rgba;\nvarying vec4 rgba;\nvoid main() {\n  vec2 clipspace = a_position / u_resolution * 2.0 - 1.0;\n  gl_Position = vec4(clipspace * vec2(1, -1), 0, 1);\n  rgba = a_rgba / 255.0;\n}"
 
 	/***/ },
 	/* 2 */
 	/***/ function(module, exports) {
 
-		module.exports = "#define GLSLIFY 1\nuniform vec2 u_resolution;\nattribute vec2 a_position;\nattribute vec4 a_rgba;\nvarying vec4 rgba;\nvoid main() {\n  vec2 clipspace = a_position / u_resolution * 2.0 - 1.0;\n  gl_Position = vec4(clipspace * vec2(1, -1), 0, 1);\n  rgba = a_rgba / 255.0;\n}"
+		module.exports = "precision mediump float;\n#define GLSLIFY 1\nvarying vec4 rgba;\nvoid main() {\n  gl_FragColor = rgba;\n}\n"
 
 	/***/ },
 	/* 3 */
 	/***/ function(module, exports) {
 
-		module.exports = "precision mediump float;\n#define GLSLIFY 1\nvarying vec4 rgba;\nvoid main() {\n  gl_FragColor = rgba;\n}\n"
-
-	/***/ },
-	/* 4 */
-	/***/ function(module, exports) {
-
 		module.exports = "#define GLSLIFY 1\nuniform vec2 u_resolution;\nattribute vec2 a_position;\nattribute vec4 a_rgba;\nattribute vec2 a_center;\nattribute float a_radius;\nvarying vec4 rgba;\nvarying vec2 center;\nvarying vec2 resolution;\nvarying float radius;\nvoid main() {\n  vec2 clipspace = a_position / u_resolution * 2.0 - 1.0;\n  gl_Position = vec4(clipspace * vec2(1, -1), 0, 1);\n  rgba = a_rgba / 255.0;\n  radius = a_radius;\n  center = a_center;\n  resolution = u_resolution;\n}"
 
 	/***/ },
-	/* 5 */
+	/* 4 */
 	/***/ function(module, exports) {
 
 		module.exports = "precision mediump float;\n#define GLSLIFY 1\nvarying vec4 rgba;\nvarying vec2 center;\nvarying vec2 resolution;\nvarying float radius;\nvoid main() {\n  vec4 color0 = vec4(0.0, 0.0, 0.0, 0.0);\n  float x = gl_FragCoord.x;\n  float y = resolution[1] - gl_FragCoord.y;\n  float dx = center[0] - x;\n  float dy = center[1] - y;\n  float distance = sqrt(dx * dx + dy * dy);\n  float diff = distance - radius;\n  if ( diff < 0.0 )\n    gl_FragColor = rgba;\n  else if ( diff >= 0.0 && diff <= 1.0 )\n    gl_FragColor = vec4(rgba.r, rgba.g, rgba.b, rgba.a - diff);\n  else \n    gl_FragColor = color0;\n}"
