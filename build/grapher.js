@@ -1,96 +1,4 @@
-(function umd(require){
-  if ('object' == typeof exports) {
-    module.exports = require('1');
-  } else if ('function' == typeof define && define.amd) {
-    define(function(){ return require('1'); });
-  } else {
-    this['Grapher'] = require('1');
-  }
-})((function outer(modules, cache, entries){
-
-  /**
-   * Global
-   */
-
-  var global = (function(){ return this; })();
-
-  /**
-   * Require `name`.
-   *
-   * @param {String} name
-   * @param {Boolean} jumped
-   * @api public
-   */
-
-  function require(name, jumped){
-    if (cache[name]) return cache[name].exports;
-    if (modules[name]) return call(name, require);
-    throw new Error('cannot find module "' + name + '"');
-  }
-
-  /**
-   * Call module `id` and cache it.
-   *
-   * @param {Number} id
-   * @param {Function} require
-   * @return {Function}
-   * @api private
-   */
-
-  function call(id, require){
-    var m = cache[id] = { exports: {} };
-    var mod = modules[id];
-    var name = mod[2];
-    var fn = mod[0];
-
-    fn.call(m.exports, function(req){
-      var dep = modules[id][1][req];
-      return require(dep ? dep : req);
-    }, m, m.exports, outer, modules, cache, entries);
-
-    // expose as `name`.
-    if (name) cache[name] = cache[id];
-
-    return cache[id].exports;
-  }
-
-  /**
-   * Require all entries exposing them on global if needed.
-   */
-
-  for (var id in entries) {
-    if (entries[id]) {
-      global[entries[id]] = require(id);
-    } else {
-      require(id);
-    }
-  }
-
-  /**
-   * Duo flag.
-   */
-
-  require.duo = true;
-
-  /**
-   * Expose cache.
-   */
-
-  require.cache = cache;
-
-  /**
-   * Expose modules
-   */
-
-  require.modules = modules;
-
-  /**
-   * Return newest require.
-   */
-
-   return require;
-})({
-1: [function(require, module, exports) {
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Grapher = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 // Ayasdi Inc. Copyright 2014
 // Grapher.js may be freely distributed under the Apache 2.0 license
 
@@ -713,420 +621,7 @@ var LINKS = Grapher.LINKS = 'links';
 
 module.exports = Grapher;
 
-}, {"./renderers/gl/renderer.js":2,"./renderers/canvas/renderer.js":3,"./helpers/color.js":4,"./helpers/link.js":5,"./helpers/node.js":6,"./helpers/shaders.js":7,"./helpers/utilities.js":8}],
-2: [function(require, module, exports) {
-var LinkVertexShaderSource = require('./shaders/link.vert.js'),
-    LinkFragmentShaderSource = require('./shaders/link.frag.js'),
-    NodeVertexShaderSource = require('./shaders/node.vert.js'),
-    NodeFragmentShaderSource = require('./shaders/node.frag.js'),
-    Renderer = require('../renderer.js');
-
-var WebGLRenderer = Renderer.extend({
-  init: function (o) {
-    this.gl = o.webGL;
-    
-    this.linkVertexShader = o.linkShaders && o.linkShaders.vertexCode || LinkVertexShaderSource;
-    this.linkFragmentShader = o.linkShaders && o.linkShaders.fragmentCode || LinkFragmentShaderSource;
-    this.nodeVertexShader = o.nodeShaders && o.nodeShaders.vertexCode ||  NodeVertexShaderSource;
-    this.nodeFragmentShader = o.nodeShaders && o.nodeShaders.fragmentCode || NodeFragmentShaderSource;
-
-
-    this._super(o);
-    this.initGL();
-
-    this.NODE_ATTRIBUTES = 9;
-    this.LINK_ATTRIBUTES = 6;
-  },
-
-  initGL: function (gl) {
-    if (gl) this.gl = gl;
-
-    this.linksProgram = this.initShaders(this.linkVertexShader, this.linkFragmentShader);
-    this.nodesProgram = this.initShaders(this.nodeVertexShader, this.nodeFragmentShader);
-
-    this.gl.linkProgram(this.linksProgram);
-    this.gl.linkProgram(this.nodesProgram);
-
-    this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.ONE, this.gl.ONE_MINUS_SRC_ALPHA);
-    this.gl.enable(this.gl.BLEND);
-  },
-
-  initShaders: function (vertexShaderSource, fragmentShaderSource) {
-    var vertexShader = this.getShaders(this.gl.VERTEX_SHADER, vertexShaderSource);
-    var fragmentShader = this.getShaders(this.gl.FRAGMENT_SHADER, fragmentShaderSource);
-    var shaderProgram = this.gl.createProgram();
-    this.gl.attachShader(shaderProgram, vertexShader);
-    this.gl.attachShader(shaderProgram, fragmentShader);
-    return shaderProgram;
-  },
-
-  getShaders: function (type, source) {
-    var shader = this.gl.createShader(type);
-    this.gl.shaderSource(shader, source);
-    this.gl.compileShader(shader);
-    return shader;
-  },
-
-  updateNodesBuffer: function () {
-    var j = 0;
-    this.nodes = [];
-    for (var i = 0; i < this.nodeObjects.length; i++) {
-      var node = this.nodeObjects[i];
-      var cx = this.transformX(node.x) * this.resolution;
-      var cy = this.transformY(node.y) * this.resolution;
-      var r = node.r * Math.abs(this.scale * this.resolution) + 1;
-      // adding few px to keep shader area big enough for antialiasing pixesls
-      var shaderSize = r + 10;
-
-      this.nodes[j++] = (cx - shaderSize);
-      this.nodes[j++] = (cy - shaderSize);
-      this.nodes[j++] = node.color[0];
-      this.nodes[j++] = node.color[1];
-      this.nodes[j++] = node.color[2];
-      this.nodes[j++] = node.color[3];
-      this.nodes[j++] = cx;
-      this.nodes[j++] = cy;
-      this.nodes[j++] = r;
-
-      this.nodes[j++] = (cx + (1 + Math.sqrt(2)) * shaderSize);
-      this.nodes[j++] = cy - shaderSize;
-      this.nodes[j++] = node.color[0];
-      this.nodes[j++] = node.color[1];
-      this.nodes[j++] = node.color[2];
-      this.nodes[j++] = node.color[3];
-      this.nodes[j++] = cx;
-      this.nodes[j++] = cy;
-      this.nodes[j++] = r;
-
-      this.nodes[j++] = (cx - shaderSize);
-      this.nodes[j++] = (cy + (1 + Math.sqrt(2)) * shaderSize);
-      this.nodes[j++] = node.color[0];
-      this.nodes[j++] = node.color[1];
-      this.nodes[j++] = node.color[2];
-      this.nodes[j++] = node.color[3];
-      this.nodes[j++] = cx;
-      this.nodes[j++] = cy;
-      this.nodes[j++] = r;
-    }
-  },
-
-  updateLinksBuffer: function () {
-    var j = 0;
-    this.links = [];
-    for (var i = 0; i < this.linkObjects.length; i++) {
-      var link = this.linkObjects[i];
-      var x1 = this.transformX(link.x1) * this.resolution;
-      var y1 = this.transformY(link.y1) * this.resolution;
-      var x2 = this.transformX(link.x2) * this.resolution;
-      var y2 = this.transformY(link.y2) * this.resolution;
-
-      this.links[j++] = x1;
-      this.links[j++] = y1;
-      this.links[j++] = link.color[0];
-      this.links[j++] = link.color[1];
-      this.links[j++] = link.color[2];
-      this.links[j++] = link.color[3];
-
-      this.links[j++] = x2;
-      this.links[j++] = y2;
-      this.links[j++] = link.color[0];
-      this.links[j++] = link.color[1];
-      this.links[j++] = link.color[2];
-      this.links[j++] = link.color[3];
-    }
-  },
-
-  resize: function (width, height) {
-    this._super(width, height);
-    this.gl.viewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
-  },
-
-  render: function () {
-    this.gl.clear(this.gl.COLOR_BUFFER_BIT);
-
-    this.resize();
-    this.updateNodesBuffer();
-    this.updateLinksBuffer();
-    this.renderLinks(); // links have to be rendered first because of blending;
-    this.renderNodes();
-  },
-
-  renderLinks: function () {
-    var program = this.linksProgram;
-    this.gl.useProgram(program);
-
-    var linksBuffer = new Float32Array(this.links);
-    var buffer = this.gl.createBuffer();
-
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, linksBuffer, this.gl.STATIC_DRAW);
-
-    var resolutionLocation = this.gl.getUniformLocation(program, 'u_resolution');
-    this.gl.uniform2f(resolutionLocation, this.canvas.width, this.canvas.height);
-
-    var positionLocation = this.gl.getAttribLocation(program, 'a_position');
-    var rgbaLocation = this.gl.getAttribLocation(program, 'a_rgba');
-    
-    this.gl.enableVertexAttribArray(positionLocation);
-    this.gl.enableVertexAttribArray(rgbaLocation);
-
-    this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, this.LINK_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 0);
-    this.gl.vertexAttribPointer(rgbaLocation, 4, this.gl.FLOAT, false, this.LINK_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 8);
-
-    var lineWidthRange = this.gl.getParameter(this.gl.ALIASED_LINE_WIDTH_RANGE), // ex [1,10] 
-        lineWidth = this.lineWidth * Math.abs(this.scale * this.resolution),
-        lineWidthInRange = Math.min(Math.max(lineWidth, lineWidthRange[0]), lineWidthRange[1]);
-
-    this.gl.lineWidth(lineWidthInRange);
-    this.gl.drawArrays(this.gl.LINES, 0, this.links.length/this.LINK_ATTRIBUTES);
-  },
-
-  renderNodes: function () {
-    var program = this.nodesProgram;
-    this.gl.useProgram(program);
-
-    var nodesBuffer = new Float32Array(this.nodes);
-    var buffer = this.gl.createBuffer();
-
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, nodesBuffer, this.gl.STATIC_DRAW);
-
-    var resolutionLocation = this.gl.getUniformLocation(program, 'u_resolution');
-    this.gl.uniform2f(resolutionLocation, this.canvas.width, this.canvas.height);
-
-    var positionLocation = this.gl.getAttribLocation(program, 'a_position');
-    var rgbaLocation = this.gl.getAttribLocation(program, 'a_rgba');
-    var centerLocation = this.gl.getAttribLocation(program, 'a_center');
-    var radiusLocation = this.gl.getAttribLocation(program, 'a_radius');
-    
-    this.gl.enableVertexAttribArray(positionLocation);
-    this.gl.enableVertexAttribArray(rgbaLocation);
-    this.gl.enableVertexAttribArray(centerLocation);
-    this.gl.enableVertexAttribArray(radiusLocation);
-
-    this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, this.NODE_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 0);
-    this.gl.vertexAttribPointer(rgbaLocation, 4, this.gl.FLOAT, false, this.NODE_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 8);
-    this.gl.vertexAttribPointer(centerLocation, 2, this.gl.FLOAT, false, this.NODE_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 24);
-    this.gl.vertexAttribPointer(radiusLocation, 1, this.gl.FLOAT, false, this.NODE_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 32);
-
-    this.gl.drawArrays(this.gl.TRIANGLES, 0, this.nodes.length/this.NODE_ATTRIBUTES);
-  }
-});
-
-module.exports = WebGLRenderer;
-
-}, {"./shaders/link.vert.js":9,"./shaders/link.frag.js":10,"./shaders/node.vert.js":11,"./shaders/node.frag.js":12,"../renderer.js":13}],
-9: [function(require, module, exports) {
-/*jshint multistr: true */
-module.exports = ' \
-  uniform vec2 u_resolution; \
-  attribute vec2 a_position; \
-  attribute vec4 a_rgba; \
-  varying vec4 rgba; \
-  void main() { \
-    vec2 clipspace = a_position / u_resolution * 2.0 - 1.0; \
-    gl_Position = vec4(clipspace * vec2(1, -1), 0, 1); \
-    rgba = a_rgba / 255.0; \
-  }';
-}, {}],
-10: [function(require, module, exports) {
-/*jshint multistr: true */
-module.exports = ' \
-  precision mediump float; \
-  varying vec4 rgba; \
-  void main() { \
-    gl_FragColor = rgba; \
-  }';
-
-}, {}],
-11: [function(require, module, exports) {
-/*jshint multistr: true */
-module.exports = ' \
-  uniform vec2 u_resolution; \
-  attribute vec2 a_position; \
-  attribute vec4 a_rgba; \
-  attribute vec2 a_center; \
-  attribute float a_radius; \
-  varying vec4 rgba; \
-  varying vec2 center; \
-  varying vec2 resolution; \
-  varying float radius; \
-  void main() { \
-    vec2 clipspace = a_position / u_resolution * 2.0 - 1.0; \
-    gl_Position = vec4(clipspace * vec2(1, -1), 0, 1); \
-    rgba = a_rgba / 255.0; \
-    radius = a_radius; \
-    center = a_center; \
-    resolution = u_resolution; \
-  }';
-}, {}],
-12: [function(require, module, exports) {
-/*jshint multistr: true */
-module.exports = ' \
-  precision mediump float; \
-  varying vec4 rgba; \
-  varying vec2 center; \
-  varying vec2 resolution; \
-  varying float radius; \
-  void main() { \
-    vec4 color0 = vec4(0.0, 0.0, 0.0, 0.0); \
-    float x = gl_FragCoord.x; \
-    float y = resolution[1] - gl_FragCoord.y; \
-    float dx = center[0] - x; \
-    float dy = center[1] - y; \
-    float distance = sqrt(dx * dx + dy * dy); \
-    float diff = distance - radius; \
-    if ( diff < 0.0 ) \
-      gl_FragColor = rgba; \
-    else if ( diff >= 0.0 && diff <= 1.0 ) \
-      gl_FragColor = vec4(rgba.r, rgba.g, rgba.b, rgba.a - diff); \
-    else  \
-      gl_FragColor = color0; \
-  }';
-}, {}],
-13: [function(require, module, exports) {
-;(function () {
-
-  var Renderer = function () {
-    if ( !initializing && this.init )
-      this.init.apply(this, arguments);
-    return this;
-  };
-
-  Renderer.prototype = {
-    init: function (o) {
-      this.canvas = o.canvas;
-      this.lineWidth = o.lineWidth || 2;
-      this.resolution = o.resolution || 1;
-      this.scale = o.scale;
-      this.translate = o.translate;
-
-      this.resize();
-    },
-    setNodes: function (nodes) { this.nodeObjects = nodes; },
-    setLinks: function (links) { this.linkObjects = links; },
-    setScale: function (scale) { this.scale = scale; },
-    setTranslate: function (translate) { this.translate = translate; },
-    transformX: function (x) { return x * this.scale + this.translate[0]; },
-    transformY: function (y) { return y * this.scale + this.translate[1]; },
-    untransformX: function (x) { return (x - this.translate[0]) / this.scale; },
-    untransformY: function (y) { return (y - this.translate[1]) / this.scale; },
-    resize: function (width, height) {
-      var displayWidth  = (width || this.canvas.clientWidth) * this.resolution;
-      var displayHeight = (height || this.canvas.clientHeight) * this.resolution;
-
-      if (this.canvas.width != displayWidth) this.canvas.width  = displayWidth;
-      if (this.canvas.height != displayHeight) this.canvas.height = displayHeight;
-    }
-  };
-
-  var initializing = false;
-
-  Renderer.extend = function (prop) {
-    var _super = this.prototype;
-
-    initializing = true;
-    var prototype = new this();
-    initializing = false;
-
-    prototype._super = this.prototype;
-    for (var name in prop) {
-      prototype[name] = typeof prop[name] == "function" &&
-        typeof _super[name] == "function" && /\b_super\b/.test(prop[name]) ?
-        (function(name, fn){
-          return function() {
-            var tmp = this._super;
-           
-            // Add a new ._super() method that is the same method
-            // but on the super-class
-            this._super = _super[name];
-           
-            // The method only need to be bound temporarily, so we
-            // remove it when we're done executing
-            var ret = fn.apply(this, arguments);
-            this._super = tmp;
-           
-            return ret;
-          };
-        })(name, prop[name]) :
-        prop[name];
-    }
-
-    // The dummy class constructor
-    function Renderer () {
-      // All construction is actually done in the init method
-      if ( !initializing && this.init )
-        this.init.apply(this, arguments);
-    }
-   
-    // Populate our constructed prototype object
-    Renderer.prototype = prototype;
-   
-    // Enforce the constructor to be what we expect
-    Renderer.prototype.constructor = Renderer;
- 
-    // And make this class extendable
-    Renderer.extend = arguments.callee;
-   
-    return Renderer;
-  };
-
-  if (module && module.exports) module.exports = Renderer;
-})();
-
-}, {}],
-3: [function(require, module, exports) {
-var Renderer = require('../renderer.js');
-
-var CanvasRenderer = Renderer.extend({
-  init: function (o) {
-    this._super(o);
-    this.context = this.canvas.getContext('2d');
-  },
-
-  render: function () {
-    this.resize();
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.renderLinks();
-    this.renderNodes();
-  },
-
-  renderNodes: function () {
-    for (var i = 0 ; i < this.nodeObjects.length; i ++) {
-      var node = this.nodeObjects[i];
-      var cx = this.transformX(node.x) * this.resolution;
-      var cy = this.transformY(node.y) * this.resolution;
-      var r = node.r * Math.abs(this.scale * this.resolution);
-
-      this.context.beginPath();
-      this.context.arc(cx, cy, r, 0, 2 * Math.PI, false);
-      this.context.fillStyle = 'rgba(' + node.color.join(',') + ')';
-      this.context.fill();
-    }
-  },
-
-  renderLinks: function () {
-    for (var i = 0 ; i < this.linkObjects.length; i ++) {
-      var link = this.linkObjects[i];
-      var x1 = this.transformX(link.x1) * this.resolution;
-      var y1 = this.transformY(link.y1) * this.resolution;
-      var x2 = this.transformX(link.x2) * this.resolution;
-      var y2 = this.transformY(link.y2) * this.resolution;
-
-      this.context.beginPath();
-      this.context.moveTo(x1, y1);
-      this.context.lineTo(x2, y2);
-      this.context.lineWidth = this.lineWidth * Math.abs(this.scale * this.resolution);
-      this.context.strokeStyle = 'rgba(' + link.color.join(',') + ')';
-      this.context.stroke();
-    }
-  }
-});
-
-module.exports = CanvasRenderer;
-
-}, {"../renderer.js":13}],
-4: [function(require, module, exports) {
+},{"./helpers/color.js":2,"./helpers/link.js":3,"./helpers/node.js":4,"./helpers/shaders.js":5,"./helpers/utilities.js":6,"./renderers/canvas/renderer.js":7,"./renderers/gl/renderer.js":8}],2:[function(require,module,exports){
 // Ayasdi Inc. Copyright 2014
 // Color.js may be freely distributed under the Apache 2.0 license
 
@@ -1200,8 +695,7 @@ function parseRgba (string) {
   return rgba;
 }
 
-}, {}],
-5: [function(require, module, exports) {
+},{}],3:[function(require,module,exports){
 function Link () {
   this.x1 = 0;
   this.y1 = 0;
@@ -1222,8 +716,7 @@ Link.prototype.update = function (x1, y1, x2, y2, color) {
 
 module.exports = Link;
 
-}, {}],
-6: [function(require, module, exports) {
+},{}],4:[function(require,module,exports){
 function Node () {
   this.x = 0;
   this.y = 0;
@@ -1242,8 +735,7 @@ Node.prototype.update = function (x, y, r, color) {
 
 module.exports = Node;
 
-}, {}],
-7: [function(require, module, exports) {
+},{}],5:[function(require,module,exports){
 ;(function () {
   function Shaders (obj) {
     this.vertexCode = obj && obj.vertexCode || null;
@@ -1275,8 +767,7 @@ module.exports = Node;
   if (module && module.exports) module.exports = Shaders;
 })();
 
-}, {}],
-8: [function(require, module, exports) {
+},{}],6:[function(require,module,exports){
 /**
  * Utilities
  * =========
@@ -1550,5 +1041,345 @@ function isNaN (o) {
   return isNumber(o) && o !== +o;
 }
 
-}, {}]}, {}, {"1":""})
-);
+},{}],7:[function(require,module,exports){
+var Renderer = require('../renderer.js');
+
+var CanvasRenderer = Renderer.extend({
+  init: function (o) {
+    this._super(o);
+    this.context = this.canvas.getContext('2d');
+  },
+
+  render: function () {
+    this.resize();
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.renderLinks();
+    this.renderNodes();
+  },
+
+  renderNodes: function () {
+    for (var i = 0 ; i < this.nodeObjects.length; i ++) {
+      var node = this.nodeObjects[i];
+      var cx = this.transformX(node.x) * this.resolution;
+      var cy = this.transformY(node.y) * this.resolution;
+      var r = node.r * Math.abs(this.scale * this.resolution);
+
+      this.context.beginPath();
+      this.context.arc(cx, cy, r, 0, 2 * Math.PI, false);
+      this.context.fillStyle = 'rgba(' + node.color.join(',') + ')';
+      this.context.fill();
+    }
+  },
+
+  renderLinks: function () {
+    for (var i = 0 ; i < this.linkObjects.length; i ++) {
+      var link = this.linkObjects[i];
+      var x1 = this.transformX(link.x1) * this.resolution;
+      var y1 = this.transformY(link.y1) * this.resolution;
+      var x2 = this.transformX(link.x2) * this.resolution;
+      var y2 = this.transformY(link.y2) * this.resolution;
+
+      this.context.beginPath();
+      this.context.moveTo(x1, y1);
+      this.context.lineTo(x2, y2);
+      this.context.lineWidth = this.lineWidth * Math.abs(this.scale * this.resolution);
+      this.context.strokeStyle = 'rgba(' + link.color.join(',') + ')';
+      this.context.stroke();
+    }
+  }
+});
+
+module.exports = CanvasRenderer;
+
+},{"../renderer.js":9}],8:[function(require,module,exports){
+
+var LinkVertexShaderSource = "#define GLSLIFY 1\nuniform vec2 u_resolution;\nattribute vec2 a_position;\nattribute vec4 a_rgba;\nvarying vec4 rgba;\nvoid main() {\n  vec2 clipspace = a_position / u_resolution * 2.0 - 1.0;\n  gl_Position = vec4(clipspace * vec2(1, -1), 0, 1);\n  rgba = a_rgba / 255.0;\n}",
+    LinkFragmentShaderSource = "#define GLSLIFY 1\nprecision mediump float;\nvarying vec4 rgba;\nvoid main() {\n  gl_FragColor = rgba;\n}\n",
+    NodeVertexShaderSource = "#define GLSLIFY 1\nuniform vec2 u_resolution;\nattribute vec2 a_position;\nattribute vec4 a_rgba;\nattribute vec2 a_center;\nattribute float a_radius;\nvarying vec4 rgba;\nvarying vec2 center;\nvarying vec2 resolution;\nvarying float radius;\nvoid main() {\n  vec2 clipspace = a_position / u_resolution * 2.0 - 1.0;\n  gl_Position = vec4(clipspace * vec2(1, -1), 0, 1);\n  rgba = a_rgba / 255.0;\n  radius = a_radius;\n  center = a_center;\n  resolution = u_resolution;\n}",
+    NodeFragmentShaderSource = "#define GLSLIFY 1\nprecision mediump float;\nvarying vec4 rgba;\nvarying vec2 center;\nvarying vec2 resolution;\nvarying float radius;\nvoid main() {\n  vec4 color0 = vec4(0.0, 0.0, 0.0, 0.0);\n  float x = gl_FragCoord.x;\n  float y = resolution[1] - gl_FragCoord.y;\n  float dx = center[0] - x;\n  float dy = center[1] - y;\n  float distance = sqrt(dx * dx + dy * dy);\n  float diff = distance - radius;\n  if ( diff < 0.0 )\n    gl_FragColor = rgba;\n  else if ( diff >= 0.0 && diff <= 1.0 )\n    gl_FragColor = vec4(rgba.r, rgba.g, rgba.b, rgba.a - diff);\n  else \n    gl_FragColor = color0;\n}",
+    Renderer = require('../renderer.js');
+
+var WebGLRenderer = Renderer.extend({
+  init: function (o) {
+    this.gl = o.webGL;
+    this.linkVertexShader = o.linkShaders && o.linkShaders.vertexCode || LinkVertexShaderSource;
+    this.linkFragmentShader = o.linkShaders && o.linkShaders.fragmentCode || LinkFragmentShaderSource;
+    this.nodeVertexShader = o.nodeShaders && o.nodeShaders.vertexCode ||  NodeVertexShaderSource;
+    this.nodeFragmentShader = o.nodeShaders && o.nodeShaders.fragmentCode || NodeFragmentShaderSource;
+
+    this._super(o);
+    this.initGL();
+
+    this.NODE_ATTRIBUTES = 9;
+    this.LINK_ATTRIBUTES = 6;
+  },
+
+  initGL: function (gl) {
+    if (gl) this.gl = gl;
+
+    this.linksProgram = this.initShaders(this.linkVertexShader, this.linkFragmentShader);
+    this.nodesProgram = this.initShaders(this.nodeVertexShader, this.nodeFragmentShader);
+
+    this.gl.linkProgram(this.linksProgram);
+    this.gl.linkProgram(this.nodesProgram);
+
+    this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.ONE, this.gl.ONE_MINUS_SRC_ALPHA);
+    this.gl.enable(this.gl.BLEND);
+  },
+
+  initShaders: function (vertexShaderSource, fragmentShaderSource) {
+    var vertexShader = this.getShaders(this.gl.VERTEX_SHADER, vertexShaderSource);
+    var fragmentShader = this.getShaders(this.gl.FRAGMENT_SHADER, fragmentShaderSource);
+    var shaderProgram = this.gl.createProgram();
+    this.gl.attachShader(shaderProgram, vertexShader);
+    this.gl.attachShader(shaderProgram, fragmentShader);
+    return shaderProgram;
+  },
+
+  getShaders: function (type, source) {
+    var shader = this.gl.createShader(type);
+    this.gl.shaderSource(shader, source);
+    this.gl.compileShader(shader);
+    return shader;
+  },
+
+  updateNodesBuffer: function () {
+    var j = 0;
+    this.nodes = [];
+    for (var i = 0; i < this.nodeObjects.length; i++) {
+      var node = this.nodeObjects[i];
+      var cx = this.transformX(node.x) * this.resolution;
+      var cy = this.transformY(node.y) * this.resolution;
+      var r = node.r * Math.abs(this.scale * this.resolution) + 1;
+      // adding few px to keep shader area big enough for antialiasing pixesls
+      var shaderSize = r + 10;
+
+      this.nodes[j++] = (cx - shaderSize);
+      this.nodes[j++] = (cy - shaderSize);
+      this.nodes[j++] = node.color[0];
+      this.nodes[j++] = node.color[1];
+      this.nodes[j++] = node.color[2];
+      this.nodes[j++] = node.color[3];
+      this.nodes[j++] = cx;
+      this.nodes[j++] = cy;
+      this.nodes[j++] = r;
+
+      this.nodes[j++] = (cx + (1 + Math.sqrt(2)) * shaderSize);
+      this.nodes[j++] = cy - shaderSize;
+      this.nodes[j++] = node.color[0];
+      this.nodes[j++] = node.color[1];
+      this.nodes[j++] = node.color[2];
+      this.nodes[j++] = node.color[3];
+      this.nodes[j++] = cx;
+      this.nodes[j++] = cy;
+      this.nodes[j++] = r;
+
+      this.nodes[j++] = (cx - shaderSize);
+      this.nodes[j++] = (cy + (1 + Math.sqrt(2)) * shaderSize);
+      this.nodes[j++] = node.color[0];
+      this.nodes[j++] = node.color[1];
+      this.nodes[j++] = node.color[2];
+      this.nodes[j++] = node.color[3];
+      this.nodes[j++] = cx;
+      this.nodes[j++] = cy;
+      this.nodes[j++] = r;
+    }
+  },
+
+  updateLinksBuffer: function () {
+    var j = 0;
+    this.links = [];
+    for (var i = 0; i < this.linkObjects.length; i++) {
+      var link = this.linkObjects[i];
+      var x1 = this.transformX(link.x1) * this.resolution;
+      var y1 = this.transformY(link.y1) * this.resolution;
+      var x2 = this.transformX(link.x2) * this.resolution;
+      var y2 = this.transformY(link.y2) * this.resolution;
+
+      this.links[j++] = x1;
+      this.links[j++] = y1;
+      this.links[j++] = link.color[0];
+      this.links[j++] = link.color[1];
+      this.links[j++] = link.color[2];
+      this.links[j++] = link.color[3];
+
+      this.links[j++] = x2;
+      this.links[j++] = y2;
+      this.links[j++] = link.color[0];
+      this.links[j++] = link.color[1];
+      this.links[j++] = link.color[2];
+      this.links[j++] = link.color[3];
+    }
+  },
+
+  resize: function (width, height) {
+    this._super(width, height);
+    this.gl.viewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
+  },
+
+  render: function () {
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+
+    this.resize();
+    this.updateNodesBuffer();
+    this.updateLinksBuffer();
+    this.renderLinks(); // links have to be rendered first because of blending;
+    this.renderNodes();
+  },
+
+  renderLinks: function () {
+    var program = this.linksProgram;
+    this.gl.useProgram(program);
+
+    var linksBuffer = new Float32Array(this.links);
+    var buffer = this.gl.createBuffer();
+
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, linksBuffer, this.gl.STATIC_DRAW);
+
+    var resolutionLocation = this.gl.getUniformLocation(program, 'u_resolution');
+    this.gl.uniform2f(resolutionLocation, this.canvas.width, this.canvas.height);
+
+    var positionLocation = this.gl.getAttribLocation(program, 'a_position');
+    var rgbaLocation = this.gl.getAttribLocation(program, 'a_rgba');
+    
+    this.gl.enableVertexAttribArray(positionLocation);
+    this.gl.enableVertexAttribArray(rgbaLocation);
+
+    this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, this.LINK_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 0);
+    this.gl.vertexAttribPointer(rgbaLocation, 4, this.gl.FLOAT, false, this.LINK_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 8);
+
+    var lineWidthRange = this.gl.getParameter(this.gl.ALIASED_LINE_WIDTH_RANGE), // ex [1,10] 
+        lineWidth = this.lineWidth * Math.abs(this.scale * this.resolution),
+        lineWidthInRange = Math.min(Math.max(lineWidth, lineWidthRange[0]), lineWidthRange[1]);
+
+    this.gl.lineWidth(lineWidthInRange);
+    this.gl.drawArrays(this.gl.LINES, 0, this.links.length/this.LINK_ATTRIBUTES);
+  },
+
+  renderNodes: function () {
+    var program = this.nodesProgram;
+    this.gl.useProgram(program);
+
+    var nodesBuffer = new Float32Array(this.nodes);
+    var buffer = this.gl.createBuffer();
+
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, nodesBuffer, this.gl.STATIC_DRAW);
+
+    var resolutionLocation = this.gl.getUniformLocation(program, 'u_resolution');
+    this.gl.uniform2f(resolutionLocation, this.canvas.width, this.canvas.height);
+
+    var positionLocation = this.gl.getAttribLocation(program, 'a_position');
+    var rgbaLocation = this.gl.getAttribLocation(program, 'a_rgba');
+    var centerLocation = this.gl.getAttribLocation(program, 'a_center');
+    var radiusLocation = this.gl.getAttribLocation(program, 'a_radius');
+    
+    this.gl.enableVertexAttribArray(positionLocation);
+    this.gl.enableVertexAttribArray(rgbaLocation);
+    this.gl.enableVertexAttribArray(centerLocation);
+    this.gl.enableVertexAttribArray(radiusLocation);
+
+    this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, this.NODE_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 0);
+    this.gl.vertexAttribPointer(rgbaLocation, 4, this.gl.FLOAT, false, this.NODE_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 8);
+    this.gl.vertexAttribPointer(centerLocation, 2, this.gl.FLOAT, false, this.NODE_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 24);
+    this.gl.vertexAttribPointer(radiusLocation, 1, this.gl.FLOAT, false, this.NODE_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 32);
+
+    this.gl.drawArrays(this.gl.TRIANGLES, 0, this.nodes.length/this.NODE_ATTRIBUTES);
+  }
+});
+
+module.exports = WebGLRenderer;
+
+},{"../renderer.js":9}],9:[function(require,module,exports){
+;(function () {
+
+  var Renderer = function () {
+    if ( !initializing && this.init )
+      this.init.apply(this, arguments);
+    return this;
+  };
+
+  Renderer.prototype = {
+    init: function (o) {
+      this.canvas = o.canvas;
+      this.lineWidth = o.lineWidth || 2;
+      this.resolution = o.resolution || 1;
+      this.scale = o.scale;
+      this.translate = o.translate;
+
+      this.resize();
+    },
+    setNodes: function (nodes) { this.nodeObjects = nodes; },
+    setLinks: function (links) { this.linkObjects = links; },
+    setScale: function (scale) { this.scale = scale; },
+    setTranslate: function (translate) { this.translate = translate; },
+    transformX: function (x) { return x * this.scale + this.translate[0]; },
+    transformY: function (y) { return y * this.scale + this.translate[1]; },
+    untransformX: function (x) { return (x - this.translate[0]) / this.scale; },
+    untransformY: function (y) { return (y - this.translate[1]) / this.scale; },
+    resize: function (width, height) {
+      var displayWidth  = (width || this.canvas.clientWidth) * this.resolution;
+      var displayHeight = (height || this.canvas.clientHeight) * this.resolution;
+
+      if (this.canvas.width != displayWidth) this.canvas.width  = displayWidth;
+      if (this.canvas.height != displayHeight) this.canvas.height = displayHeight;
+    }
+  };
+
+  var initializing = false;
+
+  Renderer.extend = function (prop) {
+    var _super = this.prototype;
+
+    initializing = true;
+    var prototype = new this();
+    initializing = false;
+
+    prototype._super = this.prototype;
+    for (var name in prop) {
+      prototype[name] = typeof prop[name] == "function" &&
+        typeof _super[name] == "function" && /\b_super\b/.test(prop[name]) ?
+        (function(name, fn){
+          return function() {
+            var tmp = this._super;
+           
+            // Add a new ._super() method that is the same method
+            // but on the super-class
+            this._super = _super[name];
+           
+            // The method only need to be bound temporarily, so we
+            // remove it when we're done executing
+            var ret = fn.apply(this, arguments);
+            this._super = tmp;
+           
+            return ret;
+          };
+        })(name, prop[name]) :
+        prop[name];
+    }
+
+    // The dummy class constructor
+    function Renderer () {
+      // All construction is actually done in the init method
+      if ( !initializing && this.init )
+        this.init.apply(this, arguments);
+    }
+   
+    // Populate our constructed prototype object
+    Renderer.prototype = prototype;
+   
+    // Enforce the constructor to be what we expect
+    Renderer.prototype.constructor = Renderer;
+ 
+    // And make this class extendable
+    Renderer.extend = arguments.callee;
+   
+    return Renderer;
+  };
+
+  if (module && module.exports) module.exports = Renderer;
+})();
+
+},{}]},{},[1])(1)
+});
