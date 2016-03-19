@@ -6,21 +6,25 @@
   "version": "1.1.2",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "npm run grapher.js && npm run grapher-min.js",
+    "build": "npm run build-shaders && webpack && npm run grapher-min.js",
+    "build-shaders": "webpack --config webpack.shader.config.js",
     "preversion": "npm test",
     "version": "groc && git add -A build && git add -A doc",
     "postversion": "git push && git push --tags",
     "test": "npm run build && grunt jasmine",
-    "grapher.js": "browserify modules/grapher.js -o build/grapher.js -s Grapher",
+    "grapher.js": "npm run shader-bundle && browserify modules/grapher.js -o build/grapher.js -x modules/renderers/gl/shaders/bundle.js -s Grapher",
     "grapher-min.js": "uglifyjs build/grapher.js -o build/grapher-min.js --preamble='// Ayasdi Inc. 2016\n// Grapher.js may be freely distributed under the Apache 2.0 license.\n'"
   },
   "dependencies": {
     "browserify": "^12.0.1",
     "glslify": "^5.0.2",
+    "glslify-loader": "^1.0.2",
     "groc": "~0.8.0",
     "grunt": "~0.4.5",
     "grunt-contrib-jasmine": "~0.8.1",
-    "uglify-js": "~2.4.16"
+    "raw-loader": "^0.5.1",
+    "uglify-js": "~2.4.16",
+    "webpack": "^1.12.14"
   },
   "browserify": {
     "transform": [

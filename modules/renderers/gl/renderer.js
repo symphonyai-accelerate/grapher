@@ -1,17 +1,13 @@
-var glslify = require('glslify');
-var LinkVertexShaderSource = glslify('./shaders/link.vert'),
-    LinkFragmentShaderSource = glslify('./shaders/link.frag'),
-    NodeVertexShaderSource = glslify('./shaders/node.vert'),
-    NodeFragmentShaderSource = glslify('./shaders/node.frag'),
-    Renderer = require('../renderer.js');
+var shaders = require('./shaders/bundle.js');
+var Renderer = require('../renderer.js');
 
 var WebGLRenderer = Renderer.extend({
   init: function (o) {
     this.gl = o.webGL;
-    this.linkVertexShader = o.linkShaders && o.linkShaders.vertexCode || LinkVertexShaderSource;
-    this.linkFragmentShader = o.linkShaders && o.linkShaders.fragmentCode || LinkFragmentShaderSource;
-    this.nodeVertexShader = o.nodeShaders && o.nodeShaders.vertexCode ||  NodeVertexShaderSource;
-    this.nodeFragmentShader = o.nodeShaders && o.nodeShaders.fragmentCode || NodeFragmentShaderSource;
+    this.linkVertexShader   = o.linkShaders && o.linkShaders.vertexCode   || shaders.link_vs;
+    this.linkFragmentShader = o.linkShaders && o.linkShaders.fragmentCode || shaders.link_fs;
+    this.nodeVertexShader   = o.nodeShaders && o.nodeShaders.vertexCode   || shaders.node_vs;
+    this.nodeFragmentShader = o.nodeShaders && o.nodeShaders.fragmentCode || shaders.node_fs;
 
     this._super(o);
     this.initGL();

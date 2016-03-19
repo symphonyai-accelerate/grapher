@@ -4,7 +4,7 @@
 /**
   * Grapher
   * =======
-  * WebGL network grapher rendering with PIXI
+  * WebGL network grapher rendering.
   */
 function Grapher () {
   this.initialize.apply(this, arguments);
@@ -29,15 +29,15 @@ Grapher.prototype = {};
 /**
   * grapher.initialize
   * ------------------
-  * 
+  *
   * Initialize is called when a grapher instance is created:
-  *     
+  *
   *     var grapher = new Grapher(width, height, options);
   *
   */
 Grapher.prototype.initialize = function (o) {
   if (!o) o = {};
-  
+
   // Extend default properties with options
   this.props = u.extend({
     color: Color.parse('#222222'),
