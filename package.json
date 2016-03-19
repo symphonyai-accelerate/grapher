@@ -16,7 +16,6 @@
     "grapher-min.js": "uglifyjs build/grapher.js -o build/grapher-min.js --preamble='// Ayasdi Inc. 2016\n// Grapher.js may be freely distributed under the Apache 2.0 license.\n'"
   },
   "dependencies": {
-    "browserify": "^12.0.1",
     "glslify": "^5.0.2",
     "glslify-loader": "^1.0.2",
     "groc": "~0.8.0",
