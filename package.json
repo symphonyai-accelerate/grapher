@@ -16,7 +16,6 @@
     "build-shaders": "webpack --config webpack.shader.config.js"
   },
   "dependencies": {
-    "glslify": "^5.0.2",
     "glslify-loader": "^1.0.2",
     "groc": "~0.8.0",
     "grunt": "~0.4.5",
@@ -24,10 +23,5 @@
     "raw-loader": "^0.5.1",
     "uglify-js": "~2.4.16",
     "webpack": "^1.12.14"
-  },
-  "browserify": {
-    "transform": [
-      "glslify"
-    ]
   }
 }
