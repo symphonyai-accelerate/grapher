@@ -1008,7 +1008,7 @@ module.exports = ' \
     setNodes: function (nodes) { this.nodeObjects = nodes; },
     setLinks: function (links) { this.linkObjects = links; },
     setScale: function (scale) {
-      if (!(scale instanceof Array)) scale = [scale, scale];
+      if (!Array.isArray(scale)) scale = [scale, scale];
       this.scale = scale;
     },
     setTranslate: function (translate) { this.translate = translate; },
