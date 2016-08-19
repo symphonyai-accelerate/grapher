@@ -11,14 +11,17 @@
       this.canvas = o.canvas;
       this.lineWidth = o.lineWidth || 2;
       this.resolution = o.resolution || 1;
-      this.scale = o.scale;
-      this.translate = o.translate;
+      this.setScale(o.scale);
+      this.setTranslate(o.translate);
 
       this.resize();
     },
     setNodes: function (nodes) { this.nodeObjects = nodes; },
     setLinks: function (links) { this.linkObjects = links; },
-    setScale: function (scale) { this.scale = scale; },
+    setScale: function (scale) {
+      if (!(scale instanceof Array)) scale = [scale, scale];
+      this.scale = scale;
+    },
     setTranslate: function (translate) { this.translate = translate; },
     transformX: function (x) { return x * this.scale[0] + this.translate[0]; },
     transformY: function (y) { return y * this.scale[1] + this.translate[1]; },

@@ -56,7 +56,8 @@
       // Create a grapher instance (width, height, options)
       // The options are the same as PIXI's renderer options.
       var grapher = new Grapher({
-        canvas: document.getElementById('graph')
+        canvas: document.getElementById('graph'),
+        scale: [1, 1]
       });
 
       // Give it the network data

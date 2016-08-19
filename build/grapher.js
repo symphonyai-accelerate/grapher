@@ -134,7 +134,7 @@ Grapher.prototype.initialize = function (o) {
   // Extend default properties with options
   this.props = u.extend({
     color: Color.parse('#222222'),
-    scale: [1, 1],
+    scale: 1,
     translate: [0, 0],
     resolution: window.devicePixelRatio || 1
   }, o);
@@ -588,10 +588,7 @@ Grapher.prototype._update = function () {
   else if (updatingNodes && updatingNodes.length) u.eachPop(updatingNodes, this._updateNodeByIndex);
 
   if (this.updateTransform) {
-    var scale = this.props.scale;
-    if (u.isNumber(scale)) scale = [scale, scale];
-
-    this.renderer.setScale(scale);
+    this.renderer.setScale(this.props.scale);
     this.renderer.setTranslate(this.props.translate);
   }
 
@@ -1003,14 +1000,17 @@ module.exports = ' \
       this.canvas = o.canvas;
       this.lineWidth = o.lineWidth || 2;
       this.resolution = o.resolution || 1;
-      this.scale = o.scale;
-      this.translate = o.translate;
+      this.setScale(o.scale);
+      this.setTranslate(o.translate);
 
       this.resize();
     },
     setNodes: function (nodes) { this.nodeObjects = nodes; },
     setLinks: function (links) { this.linkObjects = links; },
-    setScale: function (scale) { this.scale = scale; },
+    setScale: function (scale) {
+      if (!(scale instanceof Array)) scale = [scale, scale];
+      this.scale = scale;
+    },
     setTranslate: function (translate) { this.translate = translate; },
     transformX: function (x) { return x * this.scale[0] + this.translate[0]; },
     transformY: function (y) { return y * this.scale[1] + this.translate[1]; },

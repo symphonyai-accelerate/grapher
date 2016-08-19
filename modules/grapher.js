@@ -41,7 +41,7 @@ Grapher.prototype.initialize = function (o) {
   // Extend default properties with options
   this.props = u.extend({
     color: Color.parse('#222222'),
-    scale: [1, 1],
+    scale: 1,
     translate: [0, 0],
     resolution: window.devicePixelRatio || 1
   }, o);
@@ -495,10 +495,7 @@ Grapher.prototype._update = function () {
   else if (updatingNodes && updatingNodes.length) u.eachPop(updatingNodes, this._updateNodeByIndex);
 
   if (this.updateTransform) {
-    var scale = this.props.scale;
-    if (u.isNumber(scale)) scale = [scale, scale];
-
-    this.renderer.setScale(scale);
+    this.renderer.setScale(this.props.scale);
     this.renderer.setTranslate(this.props.translate);
   }
 
