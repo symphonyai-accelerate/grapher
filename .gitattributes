@@ -1,3 +1,4 @@
-build/* binary
-doc/**/* binary
+build/grapher.js -diff
+build/grapher-min.js -diff
+doc/**/* -diff
 

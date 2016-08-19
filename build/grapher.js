@@ -462,7 +462,7 @@ Grapher.prototype.transform = function (transform) {
   * grapher.scale
   * ------------------
   *
-  * Set the scale.
+  * Set the scale. Scale can be a number or a tuple of numbers representing [x, y] scales.
   * If no arguments are passed in, returns the current scale.
   */
 Grapher.prototype.scale = function (scale) {
