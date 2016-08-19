@@ -3,14 +3,14 @@
   "repository": "ayasdi/grapher",
   "main": "./modules/grapher.js",
   "description": "WebGL/Canvas Network Graphs",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "license": "Apache 2.0",
   "scripts": {
     "test": "npm run grapher.js && grunt jasmine",
     "doc": "groc",
     "build": "npm run grapher.js && npm run grapher-min.js",
     "grapher.js": "duo modules/grapher.js > build/grapher.js -s 'Grapher'",
-    "grapher-min.js": "uglifyjs build/grapher.js -o build/grapher-min.js --preamble='\/\/ Ayasdi Inc. 2015\n\/\/ Grapher.js may be freely distributed under the Apache 2.0 license.\n'"
+    "grapher-min.js": "uglifyjs build/grapher.js -o build/grapher-min.js --preamble='// Ayasdi Inc. 2015\n// Grapher.js may be freely distributed under the Apache 2.0 license.\n'"
   },
   "dependencies": {
     "duo": "~0.8.10",
