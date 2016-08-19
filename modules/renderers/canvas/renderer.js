@@ -18,7 +18,8 @@ var CanvasRenderer = Renderer.extend({
       var node = this.nodeObjects[i];
       var cx = this.transformX(node.x) * this.resolution;
       var cy = this.transformY(node.y) * this.resolution;
-      var r = node.r * Math.abs(this.scale * this.resolution);
+      var avgScale = (this.scale[0] + this.scale[1]) / 2;
+      var r = node.r * Math.abs(avgScale * this.resolution);
 
       this.context.beginPath();
       this.context.arc(cx, cy, r, 0, 2 * Math.PI, false);
@@ -34,11 +35,12 @@ var CanvasRenderer = Renderer.extend({
       var y1 = this.transformY(link.y1) * this.resolution;
       var x2 = this.transformX(link.x2) * this.resolution;
       var y2 = this.transformY(link.y2) * this.resolution;
+      var avgScale = (this.scale[0] + this.scale[1]) / 2;
 
       this.context.beginPath();
       this.context.moveTo(x1, y1);
       this.context.lineTo(x2, y2);
-      this.context.lineWidth = this.lineWidth * Math.abs(this.scale * this.resolution);
+      this.context.lineWidth = this.lineWidth * Math.abs(avgScale * this.resolution);
       this.context.strokeStyle = 'rgba(' + link.color.join(',') + ')';
       this.context.stroke();
     }

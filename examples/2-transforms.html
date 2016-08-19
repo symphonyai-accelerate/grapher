@@ -56,7 +56,8 @@
       // Create a grapher instance (width, height, options)
       // The options are the same as PIXI's renderer options.
       var grapher = new Grapher({
-        canvas: document.getElementById('graph')
+        canvas: document.getElementById('graph'),
+        scale: [1, 1]
       });
 
       // Give it the network data
@@ -67,13 +68,14 @@
 
       // Setup transforms with the mousewheel event
       grapher.on('wheel', function (e) {
-        var offset = getOffset(e),
-            transform = grapher.transform(),
-            delta = e.deltaY / 5000,
-            fromCenterX = offset.x - width / 2;
-            fromCenterY = offset.y - height / 2;
+        var offset = getOffset(e);
+        var transform = grapher.transform();
+        var delta = e.deltaY / 5000;
+        var fromCenterX = offset.x - width / 2;
+        var fromCenterY = offset.y - height / 2;
 
-        transform.scale = transform.scale + delta;
+        transform.scale[0] = transform.scale[0] + delta;
+        transform.scale[1] = transform.scale[1] + delta;
         transform.translate = [
           transform.translate[0] + fromCenterX * delta,
           transform.translate[1] + fromCenterY * delta,
