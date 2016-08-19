@@ -7,7 +7,7 @@ var LinkVertexShaderSource = require('./shaders/link.vert.js'),
 var WebGLRenderer = Renderer.extend({
   init: function (o) {
     this.gl = o.webGL;
-    
+
     this.linkVertexShader = o.linkShaders && o.linkShaders.vertexCode || LinkVertexShaderSource;
     this.linkFragmentShader = o.linkShaders && o.linkShaders.fragmentCode || LinkFragmentShaderSource;
     this.nodeVertexShader = o.nodeShaders && o.nodeShaders.vertexCode ||  NodeVertexShaderSource;
@@ -57,7 +57,8 @@ var WebGLRenderer = Renderer.extend({
       var node = this.nodeObjects[i];
       var cx = this.transformX(node.x) * this.resolution;
       var cy = this.transformY(node.y) * this.resolution;
-      var r = node.r * Math.abs(this.scale * this.resolution) + 1;
+      var avgScale = (this.scale[0] + this.scale[1]) / 2;
+      var r = node.r * Math.abs(avgScale * this.resolution) + 1;
       // adding few px to keep shader area big enough for antialiasing pixesls
       var shaderSize = r + 10;
 
@@ -149,16 +150,17 @@ var WebGLRenderer = Renderer.extend({
 
     var positionLocation = this.gl.getAttribLocation(program, 'a_position');
     var rgbaLocation = this.gl.getAttribLocation(program, 'a_rgba');
-    
+
     this.gl.enableVertexAttribArray(positionLocation);
     this.gl.enableVertexAttribArray(rgbaLocation);
 
     this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, this.LINK_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 0);
     this.gl.vertexAttribPointer(rgbaLocation, 4, this.gl.FLOAT, false, this.LINK_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 8);
 
-    var lineWidthRange = this.gl.getParameter(this.gl.ALIASED_LINE_WIDTH_RANGE), // ex [1,10] 
-        lineWidth = this.lineWidth * Math.abs(this.scale * this.resolution),
-        lineWidthInRange = Math.min(Math.max(lineWidth, lineWidthRange[0]), lineWidthRange[1]);
+    var avgScale = (this.scale[0] + this.scale[1]) / 2;
+    var lineWidthRange = this.gl.getParameter(this.gl.ALIASED_LINE_WIDTH_RANGE); // ex [1,10]
+    var lineWidth = this.lineWidth * Math.abs(avgScale * this.resolution);
+    var lineWidthInRange = Math.min(Math.max(lineWidth, lineWidthRange[0]), lineWidthRange[1]);
 
     this.gl.lineWidth(lineWidthInRange);
     this.gl.drawArrays(this.gl.LINES, 0, this.links.length/this.LINK_ATTRIBUTES);

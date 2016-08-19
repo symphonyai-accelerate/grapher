@@ -20,10 +20,10 @@
     setLinks: function (links) { this.linkObjects = links; },
     setScale: function (scale) { this.scale = scale; },
     setTranslate: function (translate) { this.translate = translate; },
-    transformX: function (x) { return x * this.scale + this.translate[0]; },
-    transformY: function (y) { return y * this.scale + this.translate[1]; },
-    untransformX: function (x) { return (x - this.translate[0]) / this.scale; },
-    untransformY: function (y) { return (y - this.translate[1]) / this.scale; },
+    transformX: function (x) { return x * this.scale[0] + this.translate[0]; },
+    transformY: function (y) { return y * this.scale[1] + this.translate[1]; },
+    untransformX: function (x) { return (x - this.translate[0]) / this.scale[0]; },
+    untransformY: function (y) { return (y - this.translate[1]) / this.scale[1]; },
     resize: function (width, height) {
       var displayWidth  = (width || this.canvas.clientWidth) * this.resolution;
       var displayHeight = (height || this.canvas.clientHeight) * this.resolution;
