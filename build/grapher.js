@@ -774,7 +774,7 @@ var WebGLRenderer = Renderer.extend({
       var node = this.nodeObjects[i];
       var cx = this.transformX(node.x) * this.resolution;
       var cy = this.transformY(node.y) * this.resolution;
-      var avgScale = (this.scale[0] + this.scale[1]) / 2;
+      var avgScale = (Math.abs(this.scale[0]) + Math.abs(this.scale[1])) / 2;
       var r = node.r * Math.abs(avgScale * this.resolution) + 1;
       // adding few px to keep shader area big enough for antialiasing pixesls
       var shaderSize = r + 10;
@@ -874,7 +874,7 @@ var WebGLRenderer = Renderer.extend({
     this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, this.LINK_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 0);
     this.gl.vertexAttribPointer(rgbaLocation, 4, this.gl.FLOAT, false, this.LINK_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 8);
 
-    var avgScale = (this.scale[0] + this.scale[1]) / 2;
+    var avgScale = (Math.abs(this.scale[0]) + Math.abs(this.scale[1])) / 2;
     var lineWidthRange = this.gl.getParameter(this.gl.ALIASED_LINE_WIDTH_RANGE); // ex [1,10]
     var lineWidth = this.lineWidth * Math.abs(avgScale * this.resolution);
     var lineWidthInRange = Math.min(Math.max(lineWidth, lineWidthRange[0]), lineWidthRange[1]);
@@ -1101,7 +1101,7 @@ var CanvasRenderer = Renderer.extend({
       var node = this.nodeObjects[i];
       var cx = this.transformX(node.x) * this.resolution;
       var cy = this.transformY(node.y) * this.resolution;
-      var avgScale = (this.scale[0] + this.scale[1]) / 2;
+      var avgScale = (Math.abs(this.scale[0]) + Math.abs(this.scale[1])) / 2;
       var r = node.r * Math.abs(avgScale * this.resolution);
 
       this.context.beginPath();
@@ -1118,7 +1118,7 @@ var CanvasRenderer = Renderer.extend({
       var y1 = this.transformY(link.y1) * this.resolution;
       var x2 = this.transformX(link.x2) * this.resolution;
       var y2 = this.transformY(link.y2) * this.resolution;
-      var avgScale = (this.scale[0] + this.scale[1]) / 2;
+      var avgScale = (Math.abs(this.scale[0]) + Math.abs(this.scale[1])) / 2;
 
       this.context.beginPath();
       this.context.moveTo(x1, y1);
