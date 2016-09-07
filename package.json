@@ -3,8 +3,8 @@
   "repository": "ayasdi/grapher",
   "main": "./modules/grapher.js",
   "description": "WebGL/Canvas Network Graphs",
-  "version": "1.2.0",
-  "license": "Apache 2.0",
+  "version": "1.2.1",
+  "license": "Apache-2.0",
   "scripts": {
     "test": "npm run grapher.js && grunt jasmine",
     "doc": "groc",
