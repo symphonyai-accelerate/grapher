@@ -16,6 +16,9 @@
 
       this.resize();
     },
+    getNodeScale: function () {
+      return Math.min(Math.abs(this.scale[0]),Math.abs(this.scale[1]));
+    },
     setNodes: function (nodes) { this.nodeObjects = nodes; },
     setLinks: function (links) { this.linkObjects = links; },
     setScale: function (scale) {
