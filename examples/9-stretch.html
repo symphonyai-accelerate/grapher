@@ -51,9 +51,6 @@
         data: network
       });
 
-      // Play the graph
-      grapher.play();
-
       function stretch() {
         var width = window.innerWidth;
         var height = window.innerHeight;
@@ -62,6 +59,9 @@
         grapher.scale(scale);
       }
 
+      stretch();
+      // Play the graph
+      grapher.play();
       window.addEventListener('resize', stretch);
     </script>
   </body>
