@@ -57,7 +57,7 @@ var WebGLRenderer = Renderer.extend({
       var node = this.nodeObjects[i];
       var cx = this.transformX(node.x) * this.resolution;
       var cy = this.transformY(node.y) * this.resolution;
-      var r = node.r * this.resolution + 1;
+      var r = node.r * this.nodeScale * this.resolution + 1;
       // adding few px to keep shader area big enough for antialiasing pixesls
       var shaderSize = r + 10;
 

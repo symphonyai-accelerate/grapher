@@ -13,11 +13,15 @@
       this.resolution = o.resolution || 1;
       this.setScale(o.scale);
       this.setTranslate(o.translate);
+      this.setNodeScale(o.nodeScale);
 
       this.resize();
     },
     setNodes: function (nodes) { this.nodeObjects = nodes; },
     setLinks: function (links) { this.linkObjects = links; },
+    setNodeScale: function (scale) {
+      this.nodeScale = scale;
+    },
     setScale: function (scale) {
       if (!Array.isArray(scale)) scale = [scale, scale];
       this.scale = scale;

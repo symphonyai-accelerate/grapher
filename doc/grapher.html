@@ -18,6 +18,7 @@ Grapher.prototype = {};</div></div></div><div class="segment"><div class="commen
   <span class="hljs-keyword">if</span> (!o) o = {};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Extend default properties with options</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">this</span>.props = u.extend({
     color: Color.parse(<span class="hljs-string">'#222222'</span>),
     scale: <span class="hljs-number">1</span>,
+    nodeScale: <span class="hljs-number">1</span>,
     translate: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
     resolution: <span class="hljs-built_in">window</span>.devicePixelRatio || <span class="hljs-number">1</span>
   }, o);
@@ -193,6 +194,13 @@ If no arguments are passed in, returns the current transform object.</p></div></
   <span class="hljs-keyword">this</span>.scale(transform.scale);
   <span class="hljs-keyword">this</span>.translate(transform.translate);
   <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="graphernodescale">grapher.nodeScale</h2>
+<p>Set the nodeScale. The displayed radius of the node will be the nodeScale multiplied by the node radius.
+If no arguments are passed in, returns the current scale.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.nodeScale = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(scale)</span> </span>{
+  <span class="hljs-keyword">if</span> (u.isUndefined(scale)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.props.nodeScale;
+  <span class="hljs-keyword">if</span> (u.isNumber(scale)) <span class="hljs-keyword">this</span>.props.nodeScale = scale;
+  <span class="hljs-keyword">this</span>.updateTransform = <span class="hljs-literal">true</span>;
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
 };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherscale">grapher.scale</h2>
 <p>Set the scale. Scale can be a number or a tuple of numbers representing [x, y] scales.
 If no arguments are passed in, returns the current scale.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.scale = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(scale)</span> </span>{
@@ -261,6 +269,7 @@ If a single argument passed in, function considers first argument an object with
   <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (updatingNodes &amp;&amp; updatingNodes.length) u.eachPop(updatingNodes, <span class="hljs-keyword">this</span>._updateNodeByIndex);
 
   <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.updateTransform) {
+    <span class="hljs-keyword">this</span>.renderer.setNodeScale(<span class="hljs-keyword">this</span>.props.nodeScale);
     <span class="hljs-keyword">this</span>.renderer.setScale(<span class="hljs-keyword">this</span>.props.scale);
     <span class="hljs-keyword">this</span>.renderer.setTranslate(<span class="hljs-keyword">this</span>.props.translate);
   }

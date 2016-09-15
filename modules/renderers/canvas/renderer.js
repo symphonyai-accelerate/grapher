@@ -18,7 +18,7 @@ var CanvasRenderer = Renderer.extend({
       var node = this.nodeObjects[i];
       var cx = this.transformX(node.x) * this.resolution;
       var cy = this.transformY(node.y) * this.resolution;
-      var r = node.r * this.resolution;
+      var r = node.r * this.nodeScale * this.resolution;
 
       this.context.beginPath();
       this.context.arc(cx, cy, r, 0, 2 * Math.PI, false);
