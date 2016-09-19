@@ -374,7 +374,7 @@ Grapher.prototype.transform = function (transform) {
   * If no arguments are passed in, returns the current scale.
   */
 Grapher.prototype.nodeScale = function (scale) {
-  if (u.isUndefined(scale)) return this.props.nodeScale;
+  if (u.isUndefined(scale) || u.isNaN(scale)) return this.props.nodeScale;
   if (u.isNumber(scale)) this.props.nodeScale = scale;
   this.updateTransform = true;
   return this;
