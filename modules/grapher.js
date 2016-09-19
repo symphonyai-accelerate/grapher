@@ -42,6 +42,7 @@ Grapher.prototype.initialize = function (o) {
   this.props = u.extend({
     color: Color.parse('#222222'),
     scale: 1,
+    nodeScale: 1,
     translate: [0, 0],
     resolution: window.devicePixelRatio || 1
   }, o);
@@ -366,6 +367,20 @@ Grapher.prototype.transform = function (transform) {
 };
 
 /**
+  * grapher.nodeScale
+  * ------------------
+  *
+  * Set the nodeScale. The displayed radius of the node will be the nodeScale multiplied by the node radius.
+  * If no arguments are passed in, returns the current scale.
+  */
+Grapher.prototype.nodeScale = function (scale) {
+  if (u.isUndefined(scale) || u.isNaN(scale)) return this.props.nodeScale;
+  if (u.isNumber(scale)) this.props.nodeScale = scale;
+  this.updateTransform = true;
+  return this;
+};
+
+/**
   * grapher.scale
   * ------------------
   *
@@ -495,6 +510,7 @@ Grapher.prototype._update = function () {
   else if (updatingNodes && updatingNodes.length) u.eachPop(updatingNodes, this._updateNodeByIndex);
 
   if (this.updateTransform) {
+    this.renderer.setNodeScale(this.props.nodeScale);
     this.renderer.setScale(this.props.scale);
     this.renderer.setTranslate(this.props.translate);
   }

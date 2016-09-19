@@ -135,6 +135,7 @@ Grapher.prototype.initialize = function (o) {
   this.props = u.extend({
     color: Color.parse('#222222'),
     scale: 1,
+    nodeScale: 1,
     translate: [0, 0],
     resolution: window.devicePixelRatio || 1
   }, o);
@@ -459,6 +460,20 @@ Grapher.prototype.transform = function (transform) {
 };
 
 /**
+  * grapher.nodeScale
+  * ------------------
+  *
+  * Set the nodeScale. The displayed radius of the node will be the nodeScale multiplied by the node radius.
+  * If no arguments are passed in, returns the current scale.
+  */
+Grapher.prototype.nodeScale = function (scale) {
+  if (u.isUndefined(scale) || u.isNaN(scale)) return this.props.nodeScale;
+  if (u.isNumber(scale)) this.props.nodeScale = scale;
+  this.updateTransform = true;
+  return this;
+};
+
+/**
   * grapher.scale
   * ------------------
   *
@@ -588,6 +603,7 @@ Grapher.prototype._update = function () {
   else if (updatingNodes && updatingNodes.length) u.eachPop(updatingNodes, this._updateNodeByIndex);
 
   if (this.updateTransform) {
+    this.renderer.setNodeScale(this.props.nodeScale);
     this.renderer.setScale(this.props.scale);
     this.renderer.setTranslate(this.props.translate);
   }
@@ -774,7 +790,7 @@ var WebGLRenderer = Renderer.extend({
       var node = this.nodeObjects[i];
       var cx = this.transformX(node.x) * this.resolution;
       var cy = this.transformY(node.y) * this.resolution;
-      var r = node.r * this.resolution + 1;
+      var r = node.r * this.nodeScale * this.resolution + 1;
       // adding few px to keep shader area big enough for antialiasing pixesls
       var shaderSize = r + 10;
 
@@ -1000,11 +1016,15 @@ module.exports = ' \
       this.resolution = o.resolution || 1;
       this.setScale(o.scale);
       this.setTranslate(o.translate);
+      this.setNodeScale(o.nodeScale);
 
       this.resize();
     },
     setNodes: function (nodes) { this.nodeObjects = nodes; },
     setLinks: function (links) { this.linkObjects = links; },
+    setNodeScale: function (scale) {
+      this.nodeScale = scale;
+    },
     setScale: function (scale) {
       if (!Array.isArray(scale)) scale = [scale, scale];
       this.scale = scale;
@@ -1099,7 +1119,7 @@ var CanvasRenderer = Renderer.extend({
       var node = this.nodeObjects[i];
       var cx = this.transformX(node.x) * this.resolution;
       var cy = this.transformY(node.y) * this.resolution;
-      var r = node.r * this.resolution;
+      var r = node.r * this.nodeScale * this.resolution;
 
       this.context.beginPath();
       this.context.arc(cx, cy, r, 0, 2 * Math.PI, false);

@@ -83,6 +83,7 @@
 
         // Set the new transform
         grapher.transform(transform);
+        grapher.nodeScale(grapher.scale()[0]);
         // Render the graph
         grapher.render();
       });
