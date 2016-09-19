@@ -197,7 +197,7 @@ If no arguments are passed in, returns the current transform object.</p></div></
 };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="graphernodescale">grapher.nodeScale</h2>
 <p>Set the nodeScale. The displayed radius of the node will be the nodeScale multiplied by the node radius.
 If no arguments are passed in, returns the current scale.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype.nodeScale = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(scale)</span> </span>{
-  <span class="hljs-keyword">if</span> (u.isUndefined(scale)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.props.nodeScale;
+  <span class="hljs-keyword">if</span> (u.isUndefined(scale) || u.isNaN(scale)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.props.nodeScale;
   <span class="hljs-keyword">if</span> (u.isNumber(scale)) <span class="hljs-keyword">this</span>.props.nodeScale = scale;
   <span class="hljs-keyword">this</span>.updateTransform = <span class="hljs-literal">true</span>;
   <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
