@@ -18,7 +18,7 @@ var CanvasRenderer = Renderer.extend({
       var node = this.nodeObjects[i];
       var cx = this.transformX(node.x) * this.resolution;
       var cy = this.transformY(node.y) * this.resolution;
-      var r = node.r * Math.abs(this.scale * this.resolution);
+      var r = node.r * this.nodeScale * this.resolution;
 
       this.context.beginPath();
       this.context.arc(cx, cy, r, 0, 2 * Math.PI, false);
@@ -38,7 +38,7 @@ var CanvasRenderer = Renderer.extend({
       this.context.beginPath();
       this.context.moveTo(x1, y1);
       this.context.lineTo(x2, y2);
-      this.context.lineWidth = this.lineWidth * Math.abs(this.scale * this.resolution);
+      this.context.lineWidth = this.lineWidth * this.resolution;
       this.context.strokeStyle = 'rgba(' + link.color.join(',') + ')';
       this.context.stroke();
     }

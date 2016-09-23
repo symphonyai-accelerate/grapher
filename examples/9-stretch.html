@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stretch</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <style type="text/css">
+      html, body {
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+      }
+      canvas {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    <canvas id="graph"></canvas>
+    <script type="text/javascript" src="../build/grapher.js"></script>
+    <script type="text/javascript">
+      /* globals Grapher */
+      // Generate some data
+      var network = {nodes: [], links: []},
+          numNodes = 10,
+          numLinks = 30,
+          maxValueX = 0.1,
+          maxValueY = 1000,
+          i;
+
+      for (i = 0; i < numNodes; i++) {
+        network.nodes.push({
+          x: Math.random() * maxValueX,
+          y: Math.random() * maxValueY,
+          r: Math.random() * 10 + 5
+        });
+      }
+
+      for (i = 0; i < numLinks; i++) {
+        network.links.push({
+          from: Math.floor(Math.random() * numNodes),
+          to: Math.floor(Math.random() * numNodes),
+        });
+      }
+
+      // Create a grapher instance
+      var grapher = new Grapher({
+        canvas: document.getElementById('graph'),
+        data: network
+      });
+
+      function stretch() {
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+        // compute the scale
+        var scale = [width / maxValueX, height / maxValueY];
+        grapher.scale(scale);
+      }
+
+      stretch();
+      // Play the graph
+      grapher.play();
+      window.addEventListener('resize', stretch);
+    </script>
+  </body>
+</html>

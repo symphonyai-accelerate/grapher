@@ -98,6 +98,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  this.props = u.extend({
 	    color: Color.parse('#222222'),
 	    scale: 1,
+	    nodeScale: 1,
 	    translate: [0, 0],
 	    resolution: window.devicePixelRatio || 1
 	  }, o);
@@ -147,7 +148,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.set
 	  * ------------------
-	  * 
+	  *
 	  * General setter for a grapher's properties.
 	  *
 	  *     grapher.set(1, 'scale');
@@ -161,7 +162,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.on
 	  * ------------------
-	  * 
+	  *
 	  * Add a listener to a grapher event. Only one listener can be bound to an
 	  * event at this time. Available events:
 	  *
@@ -179,7 +180,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.off
 	  * ------------------
-	  * 
+	  *
 	  * Remove a listener from an event, or all listeners from an event if fn is not specified.
 	  */
 	Grapher.prototype.off = function (event, fn) {
@@ -198,7 +199,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.data
 	  * ------------------
-	  * 
+	  *
 	  * Accepts network data in the form:
 	  *
 	  *     {
@@ -220,7 +221,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.enter
 	  * ------------------
-	  * 
+	  *
 	  * Creates node and link sprites to match the number of nodes and links in the
 	  * data.
 	  */
@@ -242,7 +243,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.exit
 	  * ------------------
-	  * 
+	  *
 	  * Removes node and link sprites to match the number of nodes and links in the
 	  * data.
 	  */
@@ -262,8 +263,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.update
 	  * ------------------
-	  * 
-	  * Add nodes and/or links to the update queue by index. Passing in no arguments will 
+	  *
+	  * Add nodes and/or links to the update queue by index. Passing in no arguments will
 	  * add all nodes and links to the update queue. Node and link sprites in the update
 	  * queue are updated at the time of rendering.
 	  *
@@ -290,7 +291,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.updateNode
 	  * ------------------
-	  * 
+	  *
 	  * Add an individual node to the update queue. Optionally pass in a boolean to
 	  * specify whether or not to also add links connected with the node to the update queue.
 	  */
@@ -303,7 +304,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.updateLink
 	  * ------------------
-	  * 
+	  *
 	  * Add an individual link to the update queue.
 	  */
 	Grapher.prototype.updateLink = function (index) {
@@ -314,7 +315,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.clear
 	  * ------------------
-	  * 
+	  *
 	  * Clears the canvas and grapher data.
 	  */
 	Grapher.prototype.clear = function () {
@@ -326,7 +327,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.render
 	  * ------------------
-	  * 
+	  *
 	  * Updates each sprite and renders the network.
 	  */
 	Grapher.prototype.render = function () {
@@ -339,7 +340,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.animate
 	  * ------------------
-	  * 
+	  *
 	  * Calls render in a requestAnimationFrame loop.
 	  */
 	Grapher.prototype.animate = function () {
@@ -350,7 +351,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.play
 	  * ------------------
-	  * 
+	  *
 	  * Starts the animate loop.
 	  */
 	Grapher.prototype.play = function () {
@@ -361,7 +362,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.pause
 	  * ------------------
-	  * 
+	  *
 	  * Pauses the animate loop.
 	  */
 	Grapher.prototype.pause = function () {
@@ -373,7 +374,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.resize
 	  * ------------------
-	  * 
+	  *
 	  * Resize the grapher view.
 	  */
 	Grapher.prototype.resize = function (width, height) {
@@ -384,7 +385,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.width
 	  * ------------------
-	  * 
+	  *
 	  * Specify or retrieve the width.
 	  */
 	Grapher.prototype.width = function (width) {
@@ -396,7 +397,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 /**
 	  * grapher.height
 	  * ------------------
-	  * 
+	  *
 	  * Specify or retrieve the height.
 	  */
 	Grapher.prototype.height = function (height) {
@@ -408,7 +409,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.transform
 	  * ------------------
-	  * 
+	  *
 	  * Set the scale and translate as an object.
 	  * If no arguments are passed in, returns the current transform object.
 	  */
@@ -422,15 +423,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
+	  * grapher.nodeScale
+	  * ------------------
+	  *
+	  * Set the nodeScale. The displayed radius of the node will be the nodeScale multiplied by the node radius.
+	  * If no arguments are passed in, returns the current scale.
+	  */
+	Grapher.prototype.nodeScale = function (scale) {
+	  if (u.isUndefined(scale) || u.isNaN(scale)) return this.props.nodeScale;
+	  if (u.isNumber(scale)) this.props.nodeScale = scale;
+	  this.updateTransform = true;
+	  return this;
+	};
+
+	/**
 	  * grapher.scale
 	  * ------------------
-	  * 
-	  * Set the scale.
+	  *
+	  * Set the scale. Scale can be a number or a tuple of numbers representing [x, y] scales.
 	  * If no arguments are passed in, returns the current scale.
 	  */
 	Grapher.prototype.scale = function (scale) {
 	  if (u.isUndefined(scale)) return this.props.scale;
-	  if (u.isNumber(scale)) this.props.scale = scale;
+	  if (u.isNumber(scale) || u.isArray(scale)) this.props.scale = scale;
 	  this.updateTransform = true;
 	  return this;
 	};
@@ -438,7 +453,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.translate
 	  * ------------------
-	  * 
+	  *
 	  * Set the translate.
 	  * If no arguments are passed in, returns the current translate.
 	  */
@@ -452,7 +467,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.color
 	  * ------------------
-	  * 
+	  *
 	  * Set the default color of nodes and links.
 	  * If no arguments are passed in, returns the current default color.
 	  */
@@ -465,7 +480,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.getDataPosition
 	  * ------------------
-	  * 
+	  *
 	  * Returns data space coordinates given display coordinates.
 	  * If a single argument passed in, function considers first argument an object with x and y props.
 	  */
@@ -480,7 +495,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher.getDisplayPosition
 	  * ------------------
-	  * 
+	  *
 	  * Returns display space coordinates given data coordinates.
 	  * If a single argument passed in, function considers first argument an object with x and y props.
 	  */
@@ -500,7 +515,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher._addToUpdateQueue
 	  * -------------------
-	  * 
+	  *
 	  * Add indices to the nodes or links update queue.
 	  *
 	  */
@@ -521,7 +536,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher._clearUpdateQueue
 	  * -------------------
-	  * 
+	  *
 	  * Clear the update queue.
 	  *
 	  */
@@ -536,13 +551,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher._update
 	  * -------------------
-	  * 
+	  *
 	  * Update nodes and links in the update queue.
 	  *
 	  */
 	Grapher.prototype._update = function () {
-	  var updatingLinks = this.willUpdate.links,
-	      updatingNodes = this.willUpdate.nodes;
+	  var updatingLinks = this.willUpdate.links;
+	  var updatingNodes = this.willUpdate.nodes;
 
 	  if (this.updateAll.links) u.each(this.links, this._updateLink);
 	  else if (updatingLinks && updatingLinks.length) u.eachPop(updatingLinks, this._updateLinkByIndex);
@@ -551,6 +566,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  else if (updatingNodes && updatingNodes.length) u.eachPop(updatingNodes, this._updateNodeByIndex);
 
 	  if (this.updateTransform) {
+	    this.renderer.setNodeScale(this.props.nodeScale);
 	    this.renderer.setScale(this.props.scale);
 	    this.renderer.setTranslate(this.props.translate);
 	  }
@@ -582,7 +598,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher._findLinks
 	  * -------------------
-	  * 
+	  *
 	  * Search for links connected to the node indices provided.
 	  *
 	  * isLinked is a helper function that returns true if a link is
@@ -614,7 +630,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher._findColor
 	  * -------------------
-	  * 
+	  *
 	  * Search for a color whether it's defined by palette index, string,
 	  * integer.
 	  */
@@ -629,8 +645,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher._getWebGL
 	  * -------------------
-	  * 
-	  *get webGL context if available
+	  *
+	  * get webGL context if available
 	  *
 	  */
 	Grapher.prototype._getWebGL = function () {
@@ -643,7 +659,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher._onContextLost
 	  * ----------------------
-	  * 
+	  *
 	  * Handle context lost.
 	  *
 	  */
@@ -655,7 +671,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	  * grapher._onContextRestored
 	  * --------------------------
-	  * 
+	  *
 	  * Handle context restored.
 	  *
 	  */
@@ -692,6 +708,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var WebGLRenderer = Renderer.extend({
 	  init: function (o) {
 	    this.gl = o.webGL;
+
 	    this.linkVertexShader   = o.linkShaders && o.linkShaders.vertexCode   || shaders.link_vs;
 	    this.linkFragmentShader = o.linkShaders && o.linkShaders.fragmentCode || shaders.link_fs;
 	    this.nodeVertexShader   = o.nodeShaders && o.nodeShaders.vertexCode   || shaders.node_vs;
@@ -740,7 +757,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var node = this.nodeObjects[i];
 	      var cx = this.transformX(node.x) * this.resolution;
 	      var cy = this.transformY(node.y) * this.resolution;
-	      var r = node.r * Math.abs(this.scale * this.resolution) + 1;
+	      var r = node.r * this.nodeScale * this.resolution + 1;
 	      // adding few px to keep shader area big enough for antialiasing pixesls
 	      var shaderSize = r + 10;
 
@@ -832,16 +849,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var positionLocation = this.gl.getAttribLocation(program, 'a_position');
 	    var rgbaLocation = this.gl.getAttribLocation(program, 'a_rgba');
-	    
+
 	    this.gl.enableVertexAttribArray(positionLocation);
 	    this.gl.enableVertexAttribArray(rgbaLocation);
 
 	    this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, this.LINK_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 0);
 	    this.gl.vertexAttribPointer(rgbaLocation, 4, this.gl.FLOAT, false, this.LINK_ATTRIBUTES  * Float32Array.BYTES_PER_ELEMENT, 8);
 
-	    var lineWidthRange = this.gl.getParameter(this.gl.ALIASED_LINE_WIDTH_RANGE), // ex [1,10] 
-	        lineWidth = this.lineWidth * Math.abs(this.scale * this.resolution),
-	        lineWidthInRange = Math.min(Math.max(lineWidth, lineWidthRange[0]), lineWidthRange[1]);
+	    var lineWidthRange = this.gl.getParameter(this.gl.ALIASED_LINE_WIDTH_RANGE); // ex [1,10]
+	    var lineWidth = this.lineWidth * this.resolution;
+	    var lineWidthInRange = Math.min(Math.max(lineWidth, lineWidthRange[0]), lineWidthRange[1]);
 
 	    this.gl.lineWidth(lineWidthInRange);
 	    this.gl.drawArrays(this.gl.LINES, 0, this.links.length/this.LINK_ATTRIBUTES);
@@ -864,7 +881,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var rgbaLocation = this.gl.getAttribLocation(program, 'a_rgba');
 	    var centerLocation = this.gl.getAttribLocation(program, 'a_center');
 	    var radiusLocation = this.gl.getAttribLocation(program, 'a_radius');
-	    
+
 	    this.gl.enableVertexAttribArray(positionLocation);
 	    this.gl.enableVertexAttribArray(rgbaLocation);
 	    this.gl.enableVertexAttribArray(centerLocation);
@@ -923,19 +940,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.canvas = o.canvas;
 	      this.lineWidth = o.lineWidth || 2;
 	      this.resolution = o.resolution || 1;
-	      this.scale = o.scale;
-	      this.translate = o.translate;
+	      this.setScale(o.scale);
+	      this.setTranslate(o.translate);
+	      this.setNodeScale(o.nodeScale);
 
 	      this.resize();
 	    },
 	    setNodes: function (nodes) { this.nodeObjects = nodes; },
 	    setLinks: function (links) { this.linkObjects = links; },
-	    setScale: function (scale) { this.scale = scale; },
+	    setNodeScale: function (scale) {
+	      this.nodeScale = scale;
+	    },
+	    setScale: function (scale) {
+	      if (!Array.isArray(scale)) scale = [scale, scale];
+	      this.scale = scale;
+	    },
 	    setTranslate: function (translate) { this.translate = translate; },
-	    transformX: function (x) { return x * this.scale + this.translate[0]; },
-	    transformY: function (y) { return y * this.scale + this.translate[1]; },
-	    untransformX: function (x) { return (x - this.translate[0]) / this.scale; },
-	    untransformY: function (y) { return (y - this.translate[1]) / this.scale; },
+	    transformX: function (x) { return x * this.scale[0] + this.translate[0]; },
+	    transformY: function (y) { return y * this.scale[1] + this.translate[1]; },
+	    untransformX: function (x) { return (x - this.translate[0]) / this.scale[0]; },
+	    untransformY: function (y) { return (y - this.translate[1]) / this.scale[1]; },
 	    resize: function (width, height) {
 	      var displayWidth  = (width || this.canvas.clientWidth) * this.resolution;
 	      var displayHeight = (height || this.canvas.clientHeight) * this.resolution;
@@ -1041,7 +1065,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var node = this.nodeObjects[i];
 	      var cx = this.transformX(node.x) * this.resolution;
 	      var cy = this.transformY(node.y) * this.resolution;
-	      var r = node.r * Math.abs(this.scale * this.resolution);
+	      var r = node.r * this.nodeScale * this.resolution;
 
 	      this.context.beginPath();
 	      this.context.arc(cx, cy, r, 0, 2 * Math.PI, false);
@@ -1061,7 +1085,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.context.beginPath();
 	      this.context.moveTo(x1, y1);
 	      this.context.lineTo(x2, y2);
-	      this.context.lineWidth = this.lineWidth * Math.abs(this.scale * this.resolution);
+	      this.context.lineWidth = this.lineWidth * this.resolution;
 	      this.context.strokeStyle = 'rgba(' + link.color.join(',') + ')';
 	      this.context.stroke();
 	    }

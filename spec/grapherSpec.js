@@ -128,6 +128,12 @@ describe('a grapher instance', function () {
     expect(grapher.translate()[1]).toEqual(transform.translate[1]);
   });
 
+  it('scales', function () {
+    var scale = [1, 2];
+    grapher.scale(scale);
+    expect(grapher.scale()).toEqual(scale);
+  });
+
   it('resizes', function () {
     expect(grapher.resize).toBeDefined();
     grapher.resize(800, 600);
