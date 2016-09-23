@@ -16,6 +16,11 @@ using [Duo](http://duojs.org/):
 
     var Grapher = require('ayasdi/grapher');
 
+You can also install grapher using npm:
+
+    npm install --save git://github.com/ayasdi/grapher.git
+
+
 Additional Modules
 ------------------
 
@@ -58,31 +63,27 @@ This will install the development dependencies that Grapher uses to run its vari
 
 **Building**
 
-To build Grapher, run make:
+To build Grapher, run the build script:
 
-    make
+    npm run build
 
 This will bundle modules/grapher.js with its dependencies and outputs the result to
-grapher.js and grapher-min.js in the build folder. This will also generate documentation
-files in the doc folder. If you want to avoid creating docs, run this instead:
-
-    make grapher.js
-
-This will only build grapher.js and grapher-min.js.
+grapher.js and grapher-min.js in the build folder. The build script also gets run 
+during tests and in preversion.
 
 **Testing**
 
 Unit tests are run using Jasmine with this command:
 
-    make test
+    npm test
 
 This will also make grapher.js. Test specs can be found in the spec folder.
 
 **Documentation**
 
-Documentation is generated from the make command when building.
+Documentation is generated using groc, and is also done during version upgrades.
 
-    make
+    groc
 
 If you need to generate docs into the gh-pages branch, you can use:
 

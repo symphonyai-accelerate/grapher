@@ -4,7 +4,7 @@
 /**
   * Grapher
   * =======
-  * WebGL network grapher rendering with PIXI
+  * WebGL network grapher rendering.
   */
 function Grapher () {
   this.initialize.apply(this, arguments);
