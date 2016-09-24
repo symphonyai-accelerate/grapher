@@ -1,5 +1,4 @@
-;(function () {
-
+export default (function () {
   var Renderer = function () {
     if ( !initializing && this.init )
       this.init.apply(this, arguments);
@@ -91,5 +90,5 @@
     return Renderer;
   };
 
-  if (module && module.exports) module.exports = Renderer;
+  return Renderer;
 })();

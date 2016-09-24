@@ -14,4 +14,4 @@ Node.prototype.update = function (x, y, r, color) {
   return this;
 };
 
-module.exports = Node;
+export default Node;

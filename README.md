@@ -11,13 +11,6 @@ Download
 Installing
 ----------
 
-You can import grapher in a script tag, or build grapher into your application
-using [Duo](http://duojs.org/):
-
-    var Grapher = require('ayasdi/grapher');
-
-You can also install grapher using npm:
-
     npm install --save git://github.com/ayasdi/grapher.git
 
 

@@ -4,7 +4,7 @@
  *
  * Various utility functions
  */
-var Utilities = module.exports = {
+var Utilities = {
   each: each,
   eachPop: eachPop,
   eachKey: eachKey,
@@ -25,13 +25,15 @@ var Utilities = module.exports = {
   isNaN: isNaN
 };
 
+export default Utilities;
+
 /**
  * noop
  * -----
  *
  * A function that does nothing.
  */
-function noop () {}
+export function noop () {}
 
 /**
  * each
@@ -42,7 +44,7 @@ function noop () {}
  *     var arr = [1, 2, 3];
  *     u.each(arr, fn);
  */
-function each (arr, fn, ctx) {
+export function each (arr, fn, ctx) {
   fn = bind(fn, ctx);
   var i = arr.length;
   while (--i > -1) {
@@ -60,7 +62,7 @@ function each (arr, fn, ctx) {
  *
  *     u.eachPop([1, 2, 3], fn);
  */
-function eachPop (arr, fn, ctx) {
+export function eachPop (arr, fn, ctx) {
   fn = bind(fn, ctx);
   while (arr.length) {
     fn(arr.pop());
@@ -77,7 +79,7 @@ function eachPop (arr, fn, ctx) {
  *     var obj = {foo: 0, bar: 0};
  *     u.eachKey(obj, fn);
  */
-function eachKey (obj, fn, ctx) {
+export function eachKey (obj, fn, ctx) {
   fn = bind(fn, ctx);
   if (isObject(obj)) {
     var keys = Object.keys(obj);
@@ -99,7 +101,7 @@ function eachKey (obj, fn, ctx) {
  *     var arr = [1, 2, 3];
  *     var newArr = u.map(arr, fn);
  */
-function map (arr, fn, ctx) {
+export function map (arr, fn, ctx) {
   fn = bind(fn, ctx);
   var i = arr.length,
       mapped = new Array(i);
@@ -118,7 +120,7 @@ function map (arr, fn, ctx) {
  *     var arr = [1, 2, 3];
  *     u.clean(arr); // arr = []
  */
-function clean (arr) {
+export function clean (arr) {
   eachPop(arr, noop);
   return arr;
 }
@@ -129,7 +131,7 @@ function clean (arr) {
  *
  * Create an array of numbers from start to end, incremented by step.
  */
-function range (start, end, step) {
+export function range (start, end, step) {
   step = isNumber(step) ? step : 1;
   if (isUndefined(end)) {
     end = start;
@@ -151,7 +153,7 @@ function range (start, end, step) {
  *
  * Finds the sorted position of a number in an Array of numbers.
  */
-function sortedIndex (arr, n) {
+export function sortedIndex (arr, n) {
   var min = 0,
       max = arr.length;
 
@@ -171,7 +173,7 @@ function sortedIndex (arr, n) {
  * Finds the index of a variable in an array.
  * Returns -1 if not found.
  */
-function indexOf (arr, n) {
+export function indexOf (arr, n) {
   var i = arr.length;
   while (--i > -1) {
     if (arr[i] === n) return i;
@@ -186,7 +188,7 @@ function indexOf (arr, n) {
  * Inserts a value into an array only if it does not already exist
  * in the array.
  */
-function uniqueInsert (arr, n) {
+export function uniqueInsert (arr, n) {
   if (indexOf(arr, n) === -1) arr.push(n);
   return arr;
 }
@@ -197,7 +199,7 @@ function uniqueInsert (arr, n) {
  *
  * Extend an object with the properties of one other objects
  */
-function extend (obj, source) {
+export function extend (obj, source) {
   if (isObject(obj) && isObject(source)) {
     var props = Object.getOwnPropertyNames(source),
       i = props.length;
@@ -216,7 +218,7 @@ function extend (obj, source) {
    * Bind a function to a context. Optionally pass in the number of arguments
    * which will use the faster fn.call if the number of arguments is 0, 1, or 2.
    */
-function bind (fn, ctx) {
+export function bind (fn, ctx) {
   if (!ctx) return fn;
   return function () { return fn.apply(ctx, arguments); };
 }
@@ -227,7 +229,7 @@ function bind (fn, ctx) {
  *
  * Checks if a variable is undefined.
  */
-function isUndefined (o) {
+export function isUndefined (o) {
   return typeof o === 'undefined';
 }
 
@@ -237,7 +239,7 @@ function isUndefined (o) {
  *
  * Checks if a variable is a function.
  */
-function isFunction (o) {
+export function isFunction (o) {
   return typeof o === 'function';
 }
 
@@ -247,7 +249,7 @@ function isFunction (o) {
  *
  * Checks if a variable is an object.
  */
-function isObject (o) {
+export function isObject (o) {
   return typeof o === 'object' && !!o;
 }
 
@@ -257,7 +259,7 @@ function isObject (o) {
  *
  * Checks if a variable is a number.
  */
-function isNumber (o) {
+export function isNumber (o) {
   return typeof o === 'number';
 }
 
@@ -267,6 +269,6 @@ function isNumber (o) {
  *
  * Checks if a variable is NaN.
  */
-function isNaN (o) {
+export function isNaN (o) {
   return isNumber(o) && o !== +o;
 }

@@ -1,4 +1,4 @@
-var Renderer = require('../renderer.js');
+import Renderer from '../renderer.js';
 
 var CanvasRenderer = Renderer.extend({
   init: function (o) {
@@ -45,4 +45,4 @@ var CanvasRenderer = Renderer.extend({
   }
 });
 
-module.exports = CanvasRenderer;
+export default CanvasRenderer;

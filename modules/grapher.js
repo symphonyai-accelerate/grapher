@@ -16,13 +16,33 @@ function Grapher () {
   * =====================
   * Load helpers and renderers.
   */
-var WebGLRenderer = Grapher.WebGLRenderer = require('./renderers/gl/renderer.js'),
-    CanvasRenderer = Grapher.CanvasRenderer = require('./renderers/canvas/renderer.js'),
-    Color = Grapher.Color = require('./helpers/color.js'),
-    Link = Grapher.Link = require('./helpers/link.js'),
-    Node = Grapher.Node = require('./helpers/node.js'),
-    Shaders = Grapher.Shaders = require('./helpers/shaders.js'),
-    u = Grapher.utils = require('./helpers/utilities.js');
+import WebGLRenderer from './renderers/gl/renderer.js';
+import CanvasRenderer from './renderers/canvas/renderer.js';
+import Color from './helpers/color.js';
+import Link from './helpers/link.js';
+import Node from './helpers/node.js';
+import Shaders from './helpers/shaders.js';
+import u from './helpers/utilities.js';
+
+Grapher.WebGLRenderer = WebGLRenderer;
+Grapher.CanvasRenderer = CanvasRenderer;
+Grapher.Color = Color;
+Grapher.Link = Link;
+Grapher.Node = Node;
+Grapher.Shaders = Shaders;
+Grapher.utils = u;
+
+/**
+  * Grapher Static Properties
+  * =========================
+  */
+var NODES = Grapher.NODES = 'nodes';
+var LINKS = Grapher.LINKS = 'links';
+
+/**
+  * Grapher Prototype
+  * =================
+  */
 
 Grapher.prototype = {};
 
@@ -626,12 +646,4 @@ Grapher.prototype._onContextRestored = function () {
   else if (this.rendered) this.render();
 };
 
-
-/**
-  * Grapher Static Properties
-  * =========================
-  */
-var NODES = Grapher.NODES = 'nodes';
-var LINKS = Grapher.LINKS = 'links';
-
-module.exports = Grapher;
+export default Grapher;
