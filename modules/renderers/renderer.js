@@ -80,13 +80,10 @@ export default (function () {
    
     // Populate our constructed prototype object
     Renderer.prototype = prototype;
-   
+
     // Enforce the constructor to be what we expect
     Renderer.prototype.constructor = Renderer;
- 
-    // And make this class extendable
-    Renderer.extend = arguments.callee;
-   
+
     return Renderer;
   };
 
