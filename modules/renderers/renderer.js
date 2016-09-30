@@ -1,5 +1,4 @@
-;(function () {
-
+export default (function () {
   var Renderer = function () {
     if ( !initializing && this.init )
       this.init.apply(this, arguments);
@@ -81,15 +80,12 @@
    
     // Populate our constructed prototype object
     Renderer.prototype = prototype;
-   
+
     // Enforce the constructor to be what we expect
     Renderer.prototype.constructor = Renderer;
- 
-    // And make this class extendable
-    Renderer.extend = arguments.callee;
-   
+
     return Renderer;
   };
 
-  if (module && module.exports) module.exports = Renderer;
+  return Renderer;
 })();

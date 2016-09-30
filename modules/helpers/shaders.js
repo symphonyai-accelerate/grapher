@@ -1,4 +1,4 @@
-;(function () {
+export default (function () {
   function Shaders (obj) {
     this.vertexCode = obj && obj.vertexCode || null;
     this.fragmentCode = obj && obj.fragmentCode || null;
@@ -26,5 +26,5 @@
     this.uniformAttrs.push(attrs);
   };
 
-  if (module && module.exports) module.exports = Shaders;
+  return Shaders;
 })();

@@ -11,12 +11,12 @@
   * where each color attribute is a value between 0-255.
   */
 
-module.exports = {
+export default {
   interpolate: interpolate,
   parse: parse
 };
 
-function interpolate (a, b, amt) {
+export function interpolate (a, b, amt) {
   amt = amt === undefined ? 0.5 : amt;
   var interpolated = a.map(function (colorA, index) {
     var colorB = b[index];
@@ -25,7 +25,7 @@ function interpolate (a, b, amt) {
   return interpolated;
 }
 
-function parse (c) {
+export function parse (c) {
   var color;
   if (typeof c === 'string') {
     var string = c.replace(/ /g, ''); // strip spaces immediately

@@ -1,3 +1,5 @@
+/* globals Grapher */
+
 describe('a grapher instance', function () {
   var options = {width: 100, height: 100};
 

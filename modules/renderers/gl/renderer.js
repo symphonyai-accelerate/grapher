@@ -1,18 +1,18 @@
-var LinkVertexShaderSource = require('./shaders/link.vert.js'),
-    LinkFragmentShaderSource = require('./shaders/link.frag.js'),
-    NodeVertexShaderSource = require('./shaders/node.vert.js'),
-    NodeFragmentShaderSource = require('./shaders/node.frag.js'),
-    Renderer = require('../renderer.js');
+import linkVert from './shaders/link.vert';
+import linkFrag from './shaders/link.frag';
+import nodeVert from './shaders/node.vert';
+import nodeFrag from './shaders/node.frag';
+
+import Renderer from '../renderer.js';
 
 var WebGLRenderer = Renderer.extend({
   init: function (o) {
     this.gl = o.webGL;
 
-    this.linkVertexShader = o.linkShaders && o.linkShaders.vertexCode || LinkVertexShaderSource;
-    this.linkFragmentShader = o.linkShaders && o.linkShaders.fragmentCode || LinkFragmentShaderSource;
-    this.nodeVertexShader = o.nodeShaders && o.nodeShaders.vertexCode ||  NodeVertexShaderSource;
-    this.nodeFragmentShader = o.nodeShaders && o.nodeShaders.fragmentCode || NodeFragmentShaderSource;
-
+    this.linkVertexShader   = o.linkShaders && o.linkShaders.vertexCode   || linkVert;
+    this.linkFragmentShader = o.linkShaders && o.linkShaders.fragmentCode || linkFrag;
+    this.nodeVertexShader   = o.nodeShaders && o.nodeShaders.vertexCode   || nodeVert;
+    this.nodeFragmentShader = o.nodeShaders && o.nodeShaders.fragmentCode || nodeFrag;
 
     this._super(o);
     this.initGL();
@@ -196,4 +196,4 @@ var WebGLRenderer = Renderer.extend({
   }
 });
 
-module.exports = WebGLRenderer;
+export default WebGLRenderer;

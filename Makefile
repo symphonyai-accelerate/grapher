@@ -7,21 +7,9 @@ else
 	isbranch = no
 endif
 
-all: grapher.js grapher-min.js doc
-
-test: grapher.js
-	@npm test
-
-doc: grapher.js
+gh-pages:
+	@npm run build
 	@npm run doc
-
-grapher.js:
-	@npm run grapher.js
-
-grapher-min.js: grapher.js
-	@npm run grapher-min.js
-
-gh-pages: grapher.js grapher-min.js doc
 
 # create a temporary branch and commit any changes
 	@git checkout -b temp-$(commit)
