@@ -229,7 +229,8 @@
       this.resize();
       this.updateNodesBuffer();
       this.updateLinksBuffer();
-      this.renderLinks(); // links have to be rendered first because of blending;
+      // links have to be rendered first because of blending;
+      if (this.links.length) this.renderLinks();
       this.renderNodes();
     },
 
