@@ -4,15 +4,22 @@ Grapher.js may be freely distributed under the Apache 2.0 license</p></div></div
   <span class="hljs-keyword">this</span>.initialize.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
   <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
 }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="helpers-and-renderers">Helpers and Renderers</h1>
-<p>Load helpers and renderers.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> WebGLRenderer = Grapher.WebGLRenderer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./renderers/gl/renderer.js'</span>),
-    CanvasRenderer = Grapher.CanvasRenderer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./renderers/canvas/renderer.js'</span>),
-    Color = Grapher.Color = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./helpers/color.js'</span>),
-    Link = Grapher.Link = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./helpers/link.js'</span>),
-    Node = Grapher.Node = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./helpers/node.js'</span>),
-    Shaders = Grapher.Shaders = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./helpers/shaders.js'</span>),
-    u = Grapher.utils = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./helpers/utilities.js'</span>);
+<p>Load helpers and renderers.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">import</span> WebGLRenderer <span class="hljs-keyword">from</span> <span class="hljs-string">'./renderers/gl/renderer.js'</span>;
+<span class="hljs-keyword">import</span> CanvasRenderer <span class="hljs-keyword">from</span> <span class="hljs-string">'./renderers/canvas/renderer.js'</span>;
+<span class="hljs-keyword">import</span> Color <span class="hljs-keyword">from</span> <span class="hljs-string">'./helpers/color.js'</span>;
+<span class="hljs-keyword">import</span> Link <span class="hljs-keyword">from</span> <span class="hljs-string">'./helpers/link.js'</span>;
+<span class="hljs-keyword">import</span> Node <span class="hljs-keyword">from</span> <span class="hljs-string">'./helpers/node.js'</span>;
+<span class="hljs-keyword">import</span> Shaders <span class="hljs-keyword">from</span> <span class="hljs-string">'./helpers/shaders.js'</span>;
+<span class="hljs-keyword">import</span> u <span class="hljs-keyword">from</span> <span class="hljs-string">'./helpers/utilities.js'</span>;
 
-Grapher.prototype = {};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherinitialize">grapher.initialize</h2>
+Grapher.WebGLRenderer = WebGLRenderer;
+Grapher.CanvasRenderer = CanvasRenderer;
+Grapher.Color = Color;
+Grapher.Link = Link;
+Grapher.Node = Node;
+Grapher.Shaders = Shaders;
+Grapher.utils = u;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="grapher-static-properties">Grapher Static Properties</h1></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> NODES = Grapher.NODES = <span class="hljs-string">'nodes'</span>;
+<span class="hljs-keyword">var</span> LINKS = Grapher.LINKS = <span class="hljs-string">'links'</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="grapher-prototype">Grapher Prototype</h1></div></div></div><div class="segment"><div class="code"><div class="wrapper">Grapher.prototype = {};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="grapherinitialize">grapher.initialize</h2>
 <p>Initialize is called when a grapher instance is created:</p>
 <pre><code>var grapher = new Grapher(width, height, options);</code></pre></div></div><div class="code"><div class="wrapper">Grapher.prototype.initialize = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">o</span>) </span>{
   <span class="hljs-keyword">if</span> (!o) o = {};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Extend default properties with options</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">this</span>.props = u.extend({
@@ -341,7 +348,6 @@ integer.</p></div></div><div class="code"><div class="wrapper">Grapher.prototype
   <span class="hljs-keyword">this</span>.renderer.initGL(webGL);
   <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.currentFrame) <span class="hljs-keyword">this</span>.play(); <span class="hljs-comment">// Play the graph if it was running.</span>
   <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.rendered) <span class="hljs-keyword">this</span>.render();
-};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="grapher-static-properties">Grapher Static Properties</h1></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> NODES = Grapher.NODES = <span class="hljs-string">'nodes'</span>;
-<span class="hljs-keyword">var</span> LINKS = Grapher.LINKS = <span class="hljs-string">'links'</span>;
+};
 
-<span class="hljs-built_in">module</span>.exports = Grapher;</div></div></div></div></body></html>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Grapher;</div></div></div></div></body></html>

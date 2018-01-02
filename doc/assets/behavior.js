@@ -13,13 +13,64 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "commentsOnly": true,
           "name": "Markdown"
         },
-        "sourcePath": "/Users/cindy/Documents/grapher/README.md",
+        "sourcePath": "/Users/cindy/Documents/archive/grapher/README.md",
         "projectPath": "README.md",
         "targetPath": "index",
         "pageTitle": "index",
         "title": "index"
       },
-      "depth": 1
+      "depth": 1,
+      "outline": [
+        {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Download",
+            "slug": "download"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Installing",
+            "slug": "installing"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Additional Modules",
+            "slug": "additional-modules"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Examples",
+            "slug": "examples"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Developing",
+            "slug": "developing"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "License",
+            "slug": "license"
+          },
+          "depth": 2
+        }
+      ]
     }, {
       "type": "file",
       "data": {
@@ -32,7 +83,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "foldPrefix": "^",
           "name": "JavaScript"
         },
-        "sourcePath": "/Users/cindy/Documents/grapher/modules/grapher.js",
+        "sourcePath": "/Users/cindy/Documents/archive/grapher/modules/grapher.js",
         "projectPath": "modules/grapher.js",
         "targetPath": "grapher",
         "pageTitle": "grapher",
@@ -54,6 +105,22 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "level": 1,
             "title": "Helpers and Renderers",
             "slug": "helpers-and-renderers"
+          },
+          "depth": 1
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Grapher Static Properties",
+            "slug": "grapher-static-properties"
+          },
+          "depth": 1
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Grapher Prototype",
+            "slug": "grapher-prototype"
           },
           "depth": 1,
           "children": [
@@ -334,14 +401,6 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "depth": 2
             }
           ]
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 1,
-            "title": "Grapher Static Properties",
-            "slug": "grapher-static-properties"
-          },
-          "depth": 1
         }
       ]
     }
