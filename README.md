@@ -11,7 +11,7 @@ Download
 Installing
 ----------
 
-    npm install --save git://github.com/ayasdi/grapher.git
+    npm install --save ayasdi-grapher
 
 
 Additional Modules
