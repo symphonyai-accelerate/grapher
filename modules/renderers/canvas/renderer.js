@@ -18,11 +18,19 @@ var CanvasRenderer = Renderer.extend({
       var node = this.nodeObjects[i];
       var cx = this.transformX(node.x) * this.resolution;
       var cy = this.transformY(node.y) * this.resolution;
-      var r = node.r * this.nodeScale * this.resolution;
+      var r = node.r * this.nodeScale * this.resolution + 2;
 
       this.context.beginPath();
       this.context.arc(cx, cy, r, 0, 2 * Math.PI, false);
-      this.context.fillStyle = 'rgba(' + node.color.join(',') + ')';
+      var colorWithCorrectAlpha = node.color.slice();
+      colorWithCorrectAlpha[3] = colorWithCorrectAlpha[3] / 255;
+      var borderColor = colorWithCorrectAlpha.map(function (val, i) {
+        // darken rgb, ignore alpha
+         return i === 3 ? val : Math.max(val - 140, 0);
+      });
+      this.context.strokeStyle = 'rgba(' + borderColor.join(',') + ')';
+      this.context.fillStyle = 'rgba(' + colorWithCorrectAlpha.join(',') + ')';
+      this.context.stroke();
       this.context.fill();
     }
   },
@@ -38,8 +46,10 @@ var CanvasRenderer = Renderer.extend({
       this.context.beginPath();
       this.context.moveTo(x1, y1);
       this.context.lineTo(x2, y2);
-      this.context.lineWidth = this.lineWidth * this.resolution;
-      this.context.strokeStyle = 'rgba(' + link.color.join(',') + ')';
+      this.context.lineWidth = this.lineWidth * 0.5 * this.resolution;
+      var colorWithCorrectAlpha = link.color.slice();
+      colorWithCorrectAlpha[3] = colorWithCorrectAlpha[3] / 255;
+      this.context.strokeStyle = 'rgba(' + colorWithCorrectAlpha.join(',') + ')';
       this.context.stroke();
     }
   }

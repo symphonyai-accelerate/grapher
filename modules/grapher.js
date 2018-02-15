@@ -69,6 +69,7 @@ Grapher.prototype.initialize = function (o) {
 
   if (!o.canvas) this.props.canvas = document.createElement('canvas');
   this.canvas = this.props.canvas;
+  this.alwaysUse2dCanvas = this.props.alwaysUse2dCanvas || false;
 
   var webGL = this._getWebGL();
   if (webGL) {
@@ -614,6 +615,7 @@ Grapher.prototype._findColor = function (c) {
   *
   */
 Grapher.prototype._getWebGL = function () {
+  if (this.alwaysUse2dCanvas) return null;
   var gl = null;
   try { gl = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl"); }
   catch (x) { gl = null; }
