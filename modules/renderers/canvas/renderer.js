@@ -35,16 +35,9 @@ var CanvasRenderer = Renderer.extend({
       } else {
         this.context.beginPath();
         this.context.arc(cx, cy, r, 0, 2 * Math.PI, false);
-        // var borderColor = colorWithCorrectAlpha.map(function (val, i) {
-        //   // darken rgb, ignore alpha
-        //   return i === 3 ? val : Math.max(val - 140, 0);
-        // });
-        // this.context.strokeStyle = 'rgba(' + borderColor.join(',') + ')';
         this.context.fillStyle = 'rgba(' + colorWithCorrectAlpha.join(',') + ')';
-        // this.context.stroke();
         this.context.fill();
       }
-
     }
   },
 
