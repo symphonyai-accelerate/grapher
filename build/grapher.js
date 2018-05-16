@@ -10,7 +10,7 @@
 
   var nodeVert = "uniform vec2 u_resolution;\nattribute vec2 a_position;\nattribute vec4 a_rgba;\nattribute vec2 a_center;\nattribute float a_radius;\nvarying vec4 rgba;\nvarying vec2 center;\nvarying vec2 resolution;\nvarying float radius;\nvoid main() {\n  vec2 clipspace = a_position / u_resolution * 2.0 - 1.0;\n  gl_Position = vec4(clipspace * vec2(1, -1), 0, 1);\n  rgba = a_rgba / 255.0;\n  radius = a_radius;\n  center = a_center;\n  resolution = u_resolution;\n}";
 
-  var nodeFrag = "precision mediump float;\nvarying vec4 rgba;\nvarying vec2 center;\nvarying vec2 resolution;\nvarying float radius;\nvoid main() {\n  vec4 color0 = vec4(0.0, 0.0, 0.0, 0.0);\n  float x = gl_FragCoord.x;\n  float y = resolution[1] - gl_FragCoord.y;\n  float dx = center[0] - x;\n  float dy = center[1] - y;\n  float distance = sqrt(dx * dx + dy * dy);\n  float diff = distance - radius;\n  if ( diff < 0.0 )\n    gl_FragColor = rgba;\n  else if ( diff >= 0.0 && diff <= 1.0 )\n    gl_FragColor = vec4(rgba.r, rgba.g, rgba.b, rgba.a - diff);\n  else \n    gl_FragColor = color0;\n}";
+  var nodeFrag = "precision mediump float;\nvarying vec4 rgba;\nvarying vec2 center;\nvarying vec2 resolution;\nvarying float radius;\nvoid main() {\n  vec4 color0 = vec4(0.0, 0.0, 0.0, 0.0);\n  float x = gl_FragCoord.x;\n  float y = resolution[1] - gl_FragCoord.y;\n  float dx = center[0] - x;\n  float dy = center[1] - y;\n  float distance = sqrt(dx * dx + dy * dy);\n  float diff = distance - radius;\n  if ( diff < 0.0 )\n    gl_FragColor = rgba;\n  else if ( diff >= 0.0 && diff <= 1.0 )\n    gl_FragColor = vec4(rgba.r, rgba.g, rgba.b, rgba.a - diff);\n  else \n    gl_FragColor = color0;\n}\n";
 
   var Renderer = (function () {
     var Renderer = function () {
@@ -300,6 +300,8 @@
     init: function (o) {
       this._super(o);
       this.context = this.canvas.getContext('2d');
+      this.custom2dNodeRenderFunction = o.custom2dNodeRenderFunction;
+      this.custom2dLinkRenderFunction = o.custom2dLinkRenderFunction;
     },
 
     render: function () {
@@ -315,11 +317,30 @@
         var cx = this.transformX(node.x) * this.resolution;
         var cy = this.transformY(node.y) * this.resolution;
         var r = node.r * this.nodeScale * this.resolution;
+        var colorWithCorrectAlpha = node.color.slice();
+        colorWithCorrectAlpha[3] = colorWithCorrectAlpha[3] / 255;
+        if (this.custom2dNodeRenderFunction) {
+          this.custom2dNodeRenderFunction({
+            context: this.context,
+            node: node,
+            cx: cx,
+            cy: cy,
+            r: r,
+            color: colorWithCorrectAlpha,
+          });
+        } else {
+          this.context.beginPath();
+          this.context.arc(cx, cy, r, 0, 2 * Math.PI, false);
+          // var borderColor = colorWithCorrectAlpha.map(function (val, i) {
+          //   // darken rgb, ignore alpha
+          //   return i === 3 ? val : Math.max(val - 140, 0);
+          // });
+          // this.context.strokeStyle = 'rgba(' + borderColor.join(',') + ')';
+          this.context.fillStyle = 'rgba(' + colorWithCorrectAlpha.join(',') + ')';
+          // this.context.stroke();
+          this.context.fill();
+        }
 
-        this.context.beginPath();
-        this.context.arc(cx, cy, r, 0, 2 * Math.PI, false);
-        this.context.fillStyle = 'rgba(' + node.color.join(',') + ')';
-        this.context.fill();
       }
     },
 
@@ -330,13 +351,28 @@
         var y1 = this.transformY(link.y1) * this.resolution;
         var x2 = this.transformX(link.x2) * this.resolution;
         var y2 = this.transformY(link.y2) * this.resolution;
+        var colorWithCorrectAlpha = link.color.slice();
+        var lineWidth = this.lineWidth * 0.5 * this.resolution;
+        colorWithCorrectAlpha[3] = colorWithCorrectAlpha[3] / 255;
+        if (this.custom2dLinkRenderFunction) {
+          this.custom2dLinkRenderFunction({
+            context: this.context,
+            x1: x1,
+            y1: y1,
+            x2: x2,
+            y2: y2,
+            color: colorWithCorrectAlpha,
+            lineWidth: lineWidth,
+          });
+        } else {
+          this.context.beginPath();
+          this.context.moveTo(x1, y1);
+          this.context.lineTo(x2, y2);
+          this.context.lineWidth = lineWidth;
+          this.context.strokeStyle = 'rgba(' + colorWithCorrectAlpha.join(',') + ')';
+          this.context.stroke();
+        }
 
-        this.context.beginPath();
-        this.context.moveTo(x1, y1);
-        this.context.lineTo(x2, y2);
-        this.context.lineWidth = this.lineWidth * this.resolution;
-        this.context.strokeStyle = 'rgba(' + link.color.join(',') + ')';
-        this.context.stroke();
       }
     }
   });
@@ -815,6 +851,7 @@
 
     if (!o.canvas) this.props.canvas = document.createElement('canvas');
     this.canvas = this.props.canvas;
+    this.alwaysUse2dCanvas = this.props.alwaysUse2dCanvas || false;
 
     var webGL = this._getWebGL();
     if (webGL) {
@@ -1360,6 +1397,7 @@
     *
     */
   Grapher.prototype._getWebGL = function () {
+    if (this.alwaysUse2dCanvas) return null;
     var gl = null;
     try { gl = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl"); }
     catch (x) { gl = null; }

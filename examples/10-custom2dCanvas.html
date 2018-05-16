@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Custom 2d Canvas</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <style type="text/css">
+      html, body {
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+      }
+      canvas {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    <canvas id="graph"></canvas>
+    <script type="text/javascript" src="../build/grapher.js"></script>
+    <script type="text/javascript">
+      /* globals Grapher */
+
+      // Generate some data
+      // Generate some data
+      var network = {nodes: [], links: []},
+          width = window.innerWidth,
+          height = window.innerHeight,
+          numNodes = 10,
+          numLinks = 30,
+          i;
+
+      for (i = 0; i < numNodes; i++) {
+        network.nodes.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: Math.random() * 10 + 5,
+          color: '#42e2f4',
+        });
+      }
+
+      for (i = 0; i < numLinks; i++) {
+        network.links.push({
+          from: Math.floor(Math.random() * numNodes),
+          to: Math.floor(Math.random() * numNodes),
+        });
+      }
+      // use triangles with border
+      function customNodeRender(obj) {
+        obj.context.beginPath();
+        obj.context.moveTo(obj.cx, obj.cy - obj.r);
+        obj.context.lineTo(obj.cx - obj.r, obj.cy + obj.r);
+        obj.context.lineTo(obj.cx + obj.r, obj.cy + obj.r);
+        obj.context.closePath();
+        obj.context.strokeStyle = 'purple';
+        obj.context.fillStyle = 'rgba(' + obj.color.join(',') + ')';
+        obj.context.lineWidth = 10;
+        obj.context.stroke();
+        obj.context.fill();
+      }
+
+      // use thick curved lines
+      function customLinkRender(obj) {
+        obj.context.beginPath();
+        obj.context.moveTo(obj.x1, obj.y1);
+        obj.context.quadraticCurveTo(obj.x1 + 150, obj.y1 + 150, obj.x2, obj.y2);
+        obj.context.lineWidth = obj.lineWidth * 3;
+        obj.context.strokeStyle = 'purple';
+        obj.context.stroke();
+      }
+
+      // Create a grapher instance
+      var grapher = new Grapher({
+        canvas: document.getElementById('graph'),
+        data: network,
+        alwaysUse2dCanvas: true,
+        custom2dNodeRenderFunction: customNodeRender,
+        custom2dLinkRenderFunction: customLinkRender,
+      });
+
+      // Give it the network data
+      grapher.data(network);
+
+      // Render the graph
+      grapher.render();
+    </script>
+  </body>
+</html>
